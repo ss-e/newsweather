@@ -1,0 +1,1638 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+  :root {
+    --mawe: 575.6px;
+    --mw: 250px;
+    --mwb: 680px;
+  }
+@keyframes marquee {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+@keyframes wmarq {
+  0%   { transform: translateX(0); }
+  20% { transform: translateX(0); }
+  70% { transform: translateX(calc(-100% + var(--mawe))); }
+  100% { transform: translateX(calc(-100% + var(--mawe))); }
+  /*80% { transform: translateX(calc(-100% + 500px)); }
+  100% { transform: translateX(calc(-100% + 500px)); }*/
+}
+@keyframes slide {
+  0% { transform: translateY(0); }
+  10% { transform: translateY(0); }
+  80% { transform: translateY(calc(-100% + var(--mw))); }
+  100% { transform: translateY(calc(-100% + var(--mw))); }
+}
+@keyframes bigslide {
+  0% { transform: translateY(0); }
+  10% { transform: translateY(0); }
+  80% { transform: translateY(calc(-100% + var(--mwb))); }
+  100% { transform: translateY(calc(-100% + var(--mwb))); }
+}
+.body {
+  padding:0;
+  border-width:0;
+}
+.date {
+  height: 5%;
+  width: 20%;
+  left: 70%;
+  top: 0;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.time {
+  height: 5%;
+  width: 20%;
+  left: 70%;
+  top: 5%;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo {
+  height: 10%;
+  width: 10%;
+  left: 90%;
+  top: 0;
+  position: absolute;
+  background: #111111;
+  font-size: 4vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stock {
+  height: 10%;
+  width: 30%;
+  left: 70%;
+  top: 10%;
+  position: absolute;
+  background: #111111;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stock p {
+  font-size: 2vw;
+}
+.sports {
+  height: 30%;
+  width: 30%;
+  left: 70%;
+  top: 20%;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 4vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.weather {
+  height: 40%;
+  width: 30%;
+  left: 70%;
+  bottom: 10%;
+  position: absolute;
+  background: #111111;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color:white;
+  display: block;
+  overflow:hidden;
+}
+.wheader {
+  /*width: 100%;*/
+  /*left: 0px;*/
+  font-size: 4vw;
+  text-align: center;
+  /*padding-left: 100%;*/
+  white-space: nowrap;
+  display: inline-block;
+  animation: wmarq 15s linear 1;
+  overflow:visible;
+  min-width: 575.6px
+}
+/*
+.wheader p {
+  display: inline-block;
+  animation: wmarq 15s linear 1;
+}*/
+.wcontainer{
+  display: flex;
+}
+.weathernow {
+  font-size: 3vw;
+  text-align: center;
+}
+.wchild {
+  font-size: 3vw;
+  text-align: center;
+  width: 33%;
+}
+.wpopup {
+  font-size: 1vw;
+  /*text-align: center;*/
+  width:75px;
+  /*background: #111111;*/
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: #111111;
+  white-space: nowrap;
+  text-shadow:
+    -1px -1px 0 white,
+    1px -1px 0 white,
+    -1px 1px 0 white,
+    1px 1px 0 white;
+}
+.inet {
+  height: 30%;
+  width: 30%;
+  left: 70%;
+  bottom: 50%;
+  position: absolute;
+  background: #EEEEEE;
+  color: #000000;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+}
+.inettitle {
+  font-size: 3vw;
+  vertical-align: top;
+}
+.inetstatus {
+  font-size: 25px;
+  position: relative;
+  /*position: absolute;*/
+  height: var(--mw);
+  left: 0px;
+  /*top: 3vw;*/
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.inetstatus p {
+  /*display: inline-block;*/
+  position: absolute;
+  animation: slide 30s linear 1;
+  width: 100%;
+  /*padding-bottom: 100%;*/
+  margin-top: 0px;
+  margin-bottom: 0px;
+  vertical-align: bottom;
+  text-align: center;
+  line-height:1.2em;
+  min-height: var(--mw);
+}
+.main {
+  height: 90%;
+  width: 70%;
+  left: 0;
+  top: 0;
+  position: absolute;
+  background: #111111;
+  /*background: darkblue;
+  font-size: 4vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;*/
+}
+.ticker {
+  height: 10%;
+  width: 100%;
+  left: 0px;
+  bottom: 0;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 3vw;
+  text-align: right;
+  font: 'Avant Garde';
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.ticker p {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 300s linear 1;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.bumper {
+  background: #111111;
+  font-size: 6vw;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: white;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.textmain {
+  background: #111111;
+  font: 'Avant Garde';
+  color: white;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  /*animation: slide 20s linear 1;*/
+}
+.tmheader {
+  font-size: 3vw;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  /*height: 100%;*/
+  width: 100%;
+  overflow: hidden;
+  justify-content: center;
+  /*animation: slide 20s linear 1;*/
+}
+.tmtext {
+  background: #111111;
+  font-size: 2vw;
+  color: white;
+  display: flex;
+  height: 80%;
+  width: 100%;
+  overflow: hidden;
+  /*margin-left: 250px;
+  animation: bigslide 20s linear 1;*/
+}
+.wmap{
+  background: #111111;
+  font-size: 6vw;
+  text-align: center;
+  font: 'Avant Garde';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+</style>
+<script>
+var weatherdb = [
+{name:"Aberdeen", id: "2657832", tz:"Europe/London", lat:"57.14369", lon:"-2.09814", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Amsterdam", id: "2759794", tz:"Europe/Amsterdam", lat:"52.37403", lon:"4.88969", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Ankara", id: "323786", tz:"Europe/Istanbul", lat:"39.91987", lon:"32.85427", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Athens", id: "264371", tz:"Europe/Athens", lat:"37.98376", lon:"23.72784", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Barcelona", id: "3128760", tz:"Europe/Madrid", lat:"41.38879", lon:"2.15899", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bari", id: "3182351", tz:"Europe/Rome", lat:"41.12066", lon:"16.86982", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Belfast", id: "2655984", tz:"Europe/London", lat:"54.59682", lon:"-5.92541", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Belgrade", id: "792680", tz:"Europe/Belgrade", lat:"44.80401", lon:"20.46513", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Berlin", id: "2950159", tz:"Europe/Berlin", lat:"52.52437", lon:"13.41053", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bordeaux", id: "3031582", tz:"Europe/Paris", lat:"44.84044", lon:"-0.5805", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Brussels", id: "2800866", tz:"Europe/Brussels", lat:"50.85045", lon:"4.34878", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bucharest", id: "683506", tz:"Europe/Bucharest", lat:"44.43225", lon:"26.10626", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Budapest", id: "3054643", tz:"Europe/Budapest", lat:"47.49835", lon:"19.04045", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Copenhagen", id: "2618425", tz:"Europe/Copenhagen", lat:"55.67594", lon:"12.56553", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cork", id: "2965140", tz:"Europe/Dublin", lat:"51.89797", lon:"-8.47061", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cluj-Napoca", id: "681290", tz:"Europe/Bucharest", lat:"46.76667", lon:"23.6", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dublin", id: "2964574", tz:"Europe/Dublin", lat:"53.33306", lon:"-6.24889", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Donetsk", id: "709717", tz:"Europe/Kiev", lat:"48.023", lon:"37.80224", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Edinburgh", id: "2650225", tz:"Europe/London", lat:"55.95206", lon:"-3.19648", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Gdansk", id: "3099434", tz:"Europe/Warsaw", lat:"54.35227", lon:"18.64912", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Hamburg", id: "2911298", tz:"Europe/Berlin", lat:"53.55073", lon:"9.99302", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Helsinki", id: "658225", tz:"Europe/Helsinki", lat:"60.16952", lon:"24.93545", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Katowice", id: "3096472", tz:"Europe/Warsaw", lat:"50.25841", lon:"19.02754", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Koeln", id: "2886242", tz:"Europe/Berlin", lat:"50.93333", lon:"6.95", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kyiv", id: "703448", tz:"Europe/Kiev", lat:"50.45466", lon:"30.5238", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Krasnodar", id: "542420", tz:"Europe/Moscow", lat:"45.04484", lon:"38.97603", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Lisbon", id: "2267057", tz:"Europe/Lisbon", lat:"38.71667", lon:"-9.13333", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"London", id: "2643743", tz:"Europe/London", lat:"51.50853", lon:"-0.12574", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Lviv", id: "702550", tz:"Europe/Kiev", lat:"49.83826", lon:"24.02324", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Madrid", id: "3117735", tz:"Europe/Madrid", lat:"40.4165", lon:"-3.70256", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Manchester", id: "2643123", tz:"Europe/London", lat:"53.48095", lon:"-2.23743", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Milan", id: "3173435", tz:"Europe/Rome", lat:"45.46427", lon:"9.18951", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Minsk", id: "625144", tz:"Europe/Minsk", lat:"53.9", lon:"27.56667", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Moscow", id: "524901", tz:"Europe/Moscow", lat:"55.75222", lon:"37.61556", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Munich", id: "2867714", tz:"Europe/Berlin", lat:"48.13743", lon:"11.57549", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Nice", id: "2990440", tz:"Europe/Paris", lat:"43.70313", lon:"7.26608", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Nizhniy Novgorod", id: "520555", tz:"Europe/Moscow", lat:"56.32867", lon:"44.00205", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Odessa", id: "698740", tz:"Europe/Kiev", lat:"46.48572", lon:"30.74383", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Oslo", id: "3143244", tz:"Europe/Oslo", lat:"59.91273", lon:"10.74609", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Palermo", id: "2523920", tz:"Europe/Rome", lat:"38.13205", lon:"13.33561", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Paris", id: "2968815", tz:"Europe/Paris", lat:"48.85341", lon:"2.3488", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Perm", id: "511196", tz:"Asia/Yekaterinburg", lat:"58.01046", lon:"56.25017", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Plymouth", id: "2640194", tz:"Europe/London", lat:"50.37153", lon:"-4.14305", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Poznan", id: "3088171", tz:"Europe/Warsaw", lat:"52.40692", lon:"16.92993", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Prague", id: "3067696", tz:"Europe/Prague", lat:"50.08804", lon:"14.42076", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Reykjavik", id: "3413829", tz:"Atlantic/Reykjavik", lat:"64.13548", lon:"-21.89541", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Rome", id: "3169070", tz:"Europe/Rome", lat:"41.89193", lon:"12.51133", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Riga", id: "456172", tz:"Europe/Riga", lat:"56.946", lon:"24.10589", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Saint Petersburg", id: "498817", tz:"Europe/Moscow", lat:"59.93863", lon:"30.31413", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Samara", id: "499099", tz:"Europe/Samara", lat:"53.20007", lon:"50.15", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Sofia", id: "727011", tz:"Europe/Sofia", lat:"42.69751", lon:"23.32415", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Stockholm", id: "2673730", tz:"Europe/Stockholm", lat:"59.32938", lon:"18.06871", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tirana", id: "3183875", tz:"Europe/Tirane", lat:"41.3275", lon:"19.81889", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Trondheim", id: "3133880", tz:"Europe/Oslo", lat:"63.43049", lon:"10.39506", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Venice", id: "3164603", tz:"Europe/Rome", lat:"45.43713", lon:"12.33265", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Vienna", id: "2761369", tz:"Europe/Vienna", lat:"48.20849", lon:"16.37208", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Volgograd", id: "472757", tz:"Europe/Volgograd", lat:"48.71939", lon:"44.50183", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Voronezh", id: "472045", tz:"Europe/Moscow", lat:"51.67204", lon:"39.1843", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Warsaw", id: "756135", tz:"Europe/Warsaw", lat:"52.22977", lon:"21.01178", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Vilnius", id: "593116", tz:"Europe/Vilnius", lat:"54.68916", lon:"25.2798", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Zagreb", id: "3186886", tz:"Europe/Zagreb", lat:"45.81444", lon:"15.97798", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Zurich", id: "2657896", tz:"Europe/Zurich", lat:"47.36667", lon:"8.55", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Adelaide", id: "2078025", tz:"Australia/Adelaide", lat:"-34.92866", lon:"138.59863", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Auckland", id: "2193733", tz:"Pacific/Auckland", lat:"-36.84853", lon:"174.76349", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Ashgabat", id: "162183", tz:"Asia/Ashgabat", lat:"37.95", lon:"58.38333", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bangkok", id: "1609350", tz:"Asia/Bangkok", lat:"13.75398", lon:"100.50144", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Beijing", id: "1816670", tz:"Asia/Shanghai", lat:"39.9075", lon:"116.39723", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Brisbane", id: "2174003", tz:"Australia/Brisbane", lat:"-27.46794", lon:"153.02809", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Chennai", id: "1264527", tz:"Asia/Kolkata", lat:"13.08784", lon:"80.27847", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Chongqing", id: "1814906", tz:"Asia/Shanghai", lat:"29.56278", lon:"106.55278", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Colombo", id: "1248991", tz:"Asia/Colombo", lat:"6.93548", lon:"79.84868", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Darwin", id: "2073124", tz:"Australia/Darwin", lat:"-12.46113", lon:"130.84185", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Davao", id: "1715348", tz:"Asia/Manila", lat:"7.07306", lon:"125.61278", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Harbin", id: "2037013", tz:"Asia/Shanghai", lat:"45.75", lon:"126.65", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Hong Kong", id: "1819729", tz:"Asia/Hong_Kong", lat:"22.27832", lon:"114.17469", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Jakarta", id: "1642911", tz:"Asia/Jakarta", lat:"-6.21462", lon:"106.84513", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kuala Lumpur", id: "1735161", tz:"Asia/Kuala_Lumpur", lat:"4.0412", lon:"101.68653", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Makassar", id: "1622786", tz:"Asia/Makassar", lat:"-5.14861", lon:"119.43194", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Manila", id: "1701668", tz:"Asia/Manila", lat:"14.6042", lon:"120.9822", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Melbourne", id: "2158177", tz:"Australia/Melbourne", lat:"-37.814", lon:"144.96332", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Mumbai", id: "1275339", tz:"Asia/Kolkata", lat:"19.07283", lon:"72.88261", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Nanjing", id: "1799962", tz:"Asia/Shanghai", lat:"32.06167", lon:"118.77778", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Nagpur", id: "1262180", tz:"Asia/Kolkata", lat:"21.14631", lon:"79.08491", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"New Delhi", id: "1261481", tz:"Asia/Kolkata", lat:"28.63576", lon:"77.22445", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Osaka", id: "1853909", tz:"Asia/Tokyo", lat:"34.69374", lon:"135.50218", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Perth", id: "2063523", tz:"Australia/Perth", lat:"-31.95224", lon:"115.8614", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Port Moresby", id: "2088122", tz:"Pacific/Port_Moresby", lat:"-9.47723", lon:"147.15089", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Pyongyang", id: "1871859", tz:"Asia/Pyongyang", lat:"39.03385", lon:"125.75432", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Sapporo", id: "2128295", tz:"Asia/Tokyo", lat:"43.06667", lon:"141.35", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Shanghai", id: "1796236", tz:"Asia/Shanghai", lat:"31.22222", lon:"121.45806", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Shenyang", id: "2034937", tz:"Asia/Shanghai", lat:"41.79222", lon:"123.43278", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Shiraz", id: "115019", tz:"Asia/Tehran", lat:"29.61031", lon:"52.53113", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Singapore", id: "1880252", tz:"Asia/Singapore", lat:"0.08967", lon:"103.85007", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Sydney", id: "2147714", tz:"Australia/Sydney", lat:"-33.86785", lon:"151.20732", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Sydney", id: "6354908", tz:"America/Glace_Bay", lat:"46.1351", lon:"-60.1831", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tokyo", id: "1850147", tz:"Asia/Tokyo", lat:"35.6895", lon:"139.69171", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Wellington", id: "2179537", tz:"Pacific/Auckland", lat:"-41.28664", lon:"174.77557", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Wuhan", id: "1791247", tz:"Asia/Shanghai", lat:"30.58333", lon:"114.26667", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Irkutsk", id: "2023469", tz:"Asia/Irkutsk", lat:"52.29778", lon:"104.29639", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Vladivostok", id: "2013348", tz:"Asia/Vladivostok", lat:"43.10562", lon:"131.87353", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Xi'an", id: "1790630", tz:"Asia/Shanghai", lat:"34.25833", lon:"108.92861", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Zahedan", id: "1159301", tz:"Asia/Tehran", lat:"29.4963", lon:"60.8629", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Mecca", id: "104515", tz:"Asia/Riyadh", lat:"21.42664", lon:"39.82563", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Abuja", id: "2352778", tz:"Africa/Lagos", lat:"9.05785", lon:"7.49508", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Agadez", id: "2448085", tz:"Africa/Niamey", lat:"16.97333", lon:"7.99111", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Algiers", id: "2507480", tz:"Africa/Algiers", lat:"36.73225", lon:"3.08746", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Antananarivo", id: "1070940", tz:"Indian/Antananarivo", lat:"-18.91368", lon:"47.53613", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bamako", id: "2460596", tz:"Africa/Bamako", lat:"12.65", lon:"-8", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bangui", id: "2389853", tz:"Africa/Bangui", lat:"4.36122", lon:"18.55496", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cairo", id: "360630", tz:"Africa/Cairo", lat:"30.06263", lon:"31.24967", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cape Town", id: "3369157", tz:"Africa/Johannesburg", lat:"-33.92584", lon:"18.42322", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dakar", id: "2253354", tz:"Africa/Dakar", lat:"14.6937", lon:"-17.44406", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Djibouti", id: "223817", tz:"Africa/Djibouti", lat:"11.58901", lon:"43.14503", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Durban", id: "1007311", tz:"Africa/Johannesburg", lat:"-29.8579", lon:"31.0292", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Gaborone", id: "933773", tz:"Africa/Gaborone", lat:"-24.65451", lon:"25.90859", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Harare", id: "890299", tz:"Africa/Harare", lat:"-17.82772", lon:"31.05337", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Johannesburg", id: "993800", tz:"Africa/Johannesburg", lat:"-26.20227", lon:"28.04363", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Juba", id: "373303", tz:"Africa/Juba", lat:"4.85165", lon:"31.58247", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kano", id: "2335204", tz:"Africa/Lagos", lat:"12.00012", lon:"8.51672", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kampala", id: "232422", tz:"Africa/Kampala", lat:"0.31628", lon:"32.58219", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kinshasa", id: "2314302", tz:"Africa/Kinshasa", lat:"-4.32758", lon:"15.31357", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Libreville", id: "2399697", tz:"Africa/Libreville", lat:"0.39241", lon:"9.45356", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Lilongwe", id: "927967", tz:"Africa/Blantyre", lat:"-13.96692", lon:"33.78725", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Livingstone", id: "910111", tz:"Africa/Lusaka", lat:"-17.84194", lon:"25.85425", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Luanda", id: "2240449", tz:"Africa/Luanda", lat:"-8.83682", lon:"13.23432", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Lusaka", id: "909137", tz:"Africa/Lusaka", lat:"-15.40669", lon:"28.28713", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Luxor", id: "360502", tz:"Africa/Cairo", lat:"25.69893", lon:"32.6421", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Maputo", id: "1040652", tz:"Africa/Maputo", lat:"-25.76553", lon:"32.58322", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Mbuji-Mayi", id: "209228", tz:"Africa/Lubumbashi", lat:"-6.13603", lon:"23.58979", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Mogadishu", id: "53654", tz:"Africa/Mogadishu", lat:"2.03711", lon:"45.34375", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Nairobi", id: "184745", tz:"Africa/Nairobi", lat:"-1.28333", lon:"36.81667", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"N'Djamena", id: "2427123", tz:"Africa/Ndjamena", lat:"12.10672", lon:"15.0444", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Niamey", id: "2440485", tz:"Africa/Niamey", lat:"13.51366", lon:"2.1098", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tripoli", id: "2210247", tz:"Africa/Tripoli", lat:"32.88743", lon:"13.18733", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tunis", id: "2464470", tz:"Africa/Tunis", lat:"36.81897", lon:"10.16579", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Windhoek", id: "3352136", tz:"Africa/Windhoek", lat:"-22.55941", lon:"17.08323", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Asuncion", id: "3439389", tz:"America/Asuncion", lat:"-25.28646", lon:"-57.647", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Belem", id: "3405870", tz:"America/Belem", lat:"-1.45583", lon:"-48.50444", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Bogota", id: "3688689", tz:"America/Bogota", lat:"4.60971", lon:"-74.08175", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Buenos Aires", id: "3435910", tz:"America/Argentina/Buenos_Aires", lat:"-34.61315", lon:"-58.37723", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Brasilia", id: "3469058", tz:"America/Sao_Paulo", lat:"-15.77972", lon:"-47.92972", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Caracas", id: "3646738", tz:"America/Caracas", lat:"10.48801", lon:"-66.87919", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cordoba", id: "3860259", tz:"America/Argentina/Cordoba", lat:"-31.4135", lon:"-64.18105", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Georgetown", id: "3378644", tz:"America/Guyana", lat:"6.80448", lon:"-58.15527", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Guayaquil", id: "3657509", tz:"America/Guayaquil", lat:"-2.19616", lon:"-79.88621", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Iquique", id: "3887127", tz:"America/Santiago", lat:"-20.21326", lon:"-70.15027", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"La Paz", id: "3911925", tz:"America/La_Paz", lat:"-16.5", lon:"-68.15", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Lima", id: "3936456", tz:"America/Lima", lat:"-12.04318", lon:"-77.02824", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Manaus", id: "3663517", tz:"America/Manaus", lat:"-3.10194", lon:"-60.025", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Paramaribo", id: "3383330", tz:"America/Paramaribo", lat:"5.86638", lon:"-55.16682", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Porto Alegre", id: "3452925", tz:"America/Sao_Paulo", lat:"-30.03283", lon:"-51.23019", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Rio de Janeiro", id: "3451190", tz:"America/Sao_Paulo", lat:"-22.90642", lon:"-43.18223", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Salvador", id: "3450554", tz:"America/Bahia", lat:"-12.97111", lon:"-38.51083", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Santiago", id: "3871336", tz:"America/Santiago", lat:"-33.45694", lon:"-70.64827", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Santa Cruz de la Sierra", id: "3904906", tz:"America/La_Paz", lat:"-17.78629", lon:"-63.18117", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Sao Paulo", id: "3448439", tz:"America/Sao_Paulo", lat:"-23.5475", lon:"-46.63611", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Panama", id: "3703443", tz:"America/Panama", lat:"8.9936", lon:"-79.51973", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Guatemala City", id: "3598132", tz:"America/Guatemala", lat:"14.64072", lon:"-90.51327", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kingston", id: "3489854", tz:"America/Jamaica", lat:"17.99702", lon:"-76.79358", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"San Jose", id: "3621849", tz:"America/Costa_Rica", lat:"9.93333", lon:"-84.08333", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Taipei", id: "1668341", tz:"Asia/Taipei", lat:"25.04776", lon:"121.53185", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Seoul", id: "1835848", tz:"Asia/Seoul", lat:"37.566", lon:"126.9784", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Busan", id: "1838524", tz:"Asia/Seoul", lat:"35.10168", lon:"129.03004", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Ho Chi Minh City", id: "1566083", tz:"Asia/Ho_Chi_Minh", lat:"10.82302", lon:"106.62965", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Hanoi", id: "1581130", tz:"Asia/Bangkok", lat:"21.0245", lon:"105.84117", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Atyrau", id: "610529", tz:"Asia/Atyrau", lat:"47.11667", lon:"51.88333", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dhaka", id: "1185241", tz:"Asia/Dhaka", lat:"23.7104", lon:"90.40744", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Karachi", id: "1174872", tz:"Asia/Karachi", lat:"24.8608", lon:"67.0104", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Islamabad", id: "1176615", tz:"Asia/Karachi", lat:"33.72148", lon:"73.04329", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dubai", id: "292223", tz:"Asia/Dubai", lat:"25.07725", lon:"55.30927", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Riyadh", id: "108410", tz:"Asia/Riyadh", lat:"24.68773", lon:"46.72185", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Baghdad", id: "98182", tz:"Asia/Baghdad", lat:"33.34058", lon:"44.40088", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kabul", id: "1138958", tz:"Asia/Kabul", lat:"34.52813", lon:"69.17233", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tehran", id: "112931", tz:"Asia/Tehran", lat:"35.69439", lon:"51.42151", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tbilisi", id: "611717", tz:"Asia/Tbilisi", lat:"41.69411", lon:"44.83368", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Baku", id: "587084", tz:"Asia/Baku", lat:"40.37767", lon:"49.89201", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Beirut", id: "276781", tz:"Asia/Beirut", lat:"33.89332", lon:"35.50157", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Jerusalem", id: "281184", tz:"Asia/Jerusalem", lat:"31.76904", lon:"35.21633", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Muscat", id: "287286", tz:"Asia/Muscat", lat:"23.58413", lon:"58.40778", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Tashkent", id: "1512569", tz:"Asia/Tashkent", lat:"41.26465", lon:"69.21627", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Doha", id: "290030", tz:"Asia/Qatar", lat:"25.28545", lon:"51.53096", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Lagos", id: "2332459", tz:"Africa/Lagos", lat:"6.45407", lon:"3.39467", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Casablanca", id: "2553604", tz:"Africa/Casablanca", lat:"33.58831", lon:"-7.61138", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kinshasa", id: "2314302", tz:"Africa/Kinshasa", lat:"-4.32758", lon:"15.31357", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dar es Salaam", id: "160263", tz:"Africa/Dar_es_Salaam", lat:"-6.82349", lon:"39.26951", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Abidjan", id: "2293538", tz:"Africa/Abidjan", lat:"5.35444", lon:"-4.00167", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Khartoum", id: "379252", tz:"Africa/Khartoum", lat:"15.55177", lon:"32.53241", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dakar", id: "2253354", tz:"Africa/Dakar", lat:"14.6937", lon:"-17.44406", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Addis Ababa", id: "344979", tz:"Africa/Addis_Ababa", lat:"9.02497", lon:"38.74689", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Douala", id: "2232593", tz:"Africa/Douala", lat:"4.04827", lon:"9.70428", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Accra", id: "2306104", tz:"Africa/Accra", lat:"5.55602", lon:"-0.1969", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Toronto", id: "6167865", tz:"America/Toronto", lat:"43.70011", lon:"-79.4163", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Vancouver", id: "6173331", tz:"America/Vancouver", lat:"49.24966", lon:"-123.11934", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Montreal", id: "6077243", tz:"America/Toronto", lat:"45.50884", lon:"-73.58781", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Ottawa", id: "6094817", tz:"America/Toronto", lat:"45.41117", lon:"-75.69812", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Calgary", id: "5913490", tz:"America/Edmonton", lat:"51.05011", lon:"-114.08529", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Edmonton", id: "5946768", tz:"America/Edmonton", lat:"53.55014", lon:"-113.46871", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Winnipeg", id: "6183235", tz:"America/Winnipeg", lat:"49.8844", lon:"-97.14704", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Mexico City", id: "3530597", tz:"America/Mexico_City", lat:"19.42847", lon:"-99.12766", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"New York City", id: "5128581", tz:"America/New_York", lat:"40.71427", lon:"-74.00597", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Los Angeles", id: "5368361", tz:"America/Los_Angeles", lat:"34.05223", lon:"-118.24368", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Chicago", id: "4887398", tz:"America/Chicago", lat:"41.85003", lon:"-87.65005", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Dallas", id: "4684888", tz:"America/Chicago", lat:"32.78306", lon:"-96.80667", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Houston", id: "4699066", tz:"America/Chicago", lat:"29.96328", lon:"-95.36327", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Kansas City", id: "4393217", tz:"America/Chicago", lat:"39.09973", lon:"-94.57857", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Havana", id: "3553478", tz:"America/Havana", lat:"23.13302", lon:"-82.38304", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Monterrey", id: "3995465", tz:"America/Monterrey", lat:"25.67507", lon:"-100.31847", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Guadalajara", id: "4005539", tz:"America/Mexico_City", lat:"20.66682", lon:"-103.39182", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cancun", id: "3531673", tz:"America/Cancun", lat:"21.17429", lon:"-86.84656", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Santo Domingo", id: "3492908", tz:"America/Santo_Domingo", lat:"18.67186", lon:"-69.89232", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"San Juan", id: "4568127", tz:"America/Puerto_Rico", lat:"18.06633", lon:"-66.10572", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Washington", id: "4140963", tz:"America/New_York", lat:"38.89511", lon:"-77.03637", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Philadelphia", id: "4560349", tz:"America/New_York", lat:"39.95233", lon:"-75.16379", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Miami", id: "4164138", tz:"America/New_York", lat:"25.77427", lon:"-80.19366", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Atlanta", id: "4180439", tz:"America/New_York", lat:"33.749", lon:"-84.38798", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Boston", id: "4930956", tz:"America/New_York", lat:"42.35843", lon:"-71.05977", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"San Francisco", id: "5391959", tz:"America/Los_Angeles", lat:"37.77493", lon:"-122.41942", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Phoenix", id: "5308655", tz:"America/Phoenix", lat:"33.44838", lon:"-112.07404", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Detroit", id: "4990729", tz:"America/Detroit", lat:"42.33143", lon:"-83.04575", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Seattle", id: "5809844", tz:"America/Los_Angeles", lat:"47.60621", lon:"-122.33207", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Minneapolis", id: "5037649", tz:"America/Chicago", lat:"44.97997", lon:"-93.26384", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Denver", id: "5419384", tz:"America/Denver", lat:"39.73915", lon:"-104.9847", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"St. Louis", id: "4407066", tz:"America/Chicago", lat:"38.62727", lon:"-90.19789", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Charlotte", id: "4460243", tz:"America/New_York", lat:"35.22709", lon:"-80.84313", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Portland", id: "5746545", tz:"America/Los_Angeles", lat:"45.52345", lon:"-122.67621", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Orlando", id: "4167147", tz:"America/New_York", lat:"28.53834", lon:"-81.37924", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"San Antonio", id: "4726206", tz:"America/Chicago", lat:"29.42412", lon:"-98.49363", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Salt Lake City", id: "5780993", tz:"America/Denver", lat:"40.76078", lon:"-111.89105", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Pittsburgh", id: "5206379", tz:"America/New_York", lat:"40.44062", lon:"-79.99589", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cincinnati", id: "4508722", tz:"America/New_York", lat:"39.12711", lon:"-84.51439", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Las Vegas", id: "5506956", tz:"America/Los_Angeles", lat:"36.17497", lon:"-115.13722", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Cleveland", id: "5150529", tz:"America/New_York", lat:"41.4995", lon:"-81.69541", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Columbus", id: "4509177", tz:"America/New_York", lat:"39.96118", lon:"-82.99879", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Indianapolis", id: "4259418", tz:"America/Indiana/Indianapolis", lat:"39.76838", lon:"-86.15804", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"Nashville", id: "4644585", tz:"America/Chicago", lat:"36.16589", lon:"-86.78444", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+{name:"New Orleans", id: "4335045", tz:"America/Chicago", lat:"29.95465", lon:"-90.07507", now:{temp:"", id:""}, w1:{temp:"", id:""}, w2:{temp:"", id:""}, w3:{temp:"", id:""}},
+]
+var weatheri = 0;
+//var mainscreen = ["bmain","bweather","wnanortheast","wnawest","wnasouth","wsacentral","wsasouth","weuwest","weunorth","weueast","wafnorth","wafeast", "wafsouth", "wmecenter","wasiacenter","wasiasouth","bstock","ss0","ss1","ss2","ss3","sc","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
+var mainscreen = ["bmain","bweather","wnanortheast","wnawest","wnasouth","wsacentral","wsasouth","weuwest","weunorth","weueast","wafnorth","wafeast", "wafsouth", "wmecenter","wasiacenter","wasiasouth","bstock","ss0","ss1","ss2","ss3","sc0","sc1","binet","ia"]
+//var mainscreen = ["bstock","ss0","ss1","ss2","ss3","ss4","ss5","sc","sx","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
+//var mainscreen = ["bstock","ss0","ss1","ss2","ss3","sc0","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
+//var mainscreen = ["bstock","sc0","sc1","ss0","ss1","ss2","ss3"]
+var weatherapikey = "de13a6c0963d7352292091b6f234070b"
+//var iexapikey = "Tsk_c25ce14d9c324a0597b81e3a2d804eec"
+//var iexsite = "https://sandbox.iexapis.com/"
+var iexapikey = "pk_e536792fe9314ac4bf94d49a2893af3c"
+var iexsite = "https://cloud.iexapis.com/"
+//var cryptokey = ""
+var cryptoapi = "https://api.cryptowat.ch/markets/binance/"
+var stocki = 0;
+var stockj = "";
+var charti = 0;
+var finStock = [{name:"S&P 500/SPY", ticker:"SPY", value:"", open:"", changePercent:"", chartdata:[]}, {name: "Russell 2000/IWM", ticker:"IWM", value:"", open:"", changePercent:"", chartdata:[]}, {name: "Dow Jones/DIA", ticker:"DIA", value:"", open:"", changePercent:"", chartdata:[]}, {name: "Nasdaq/QQQ", ticker:"QQQ", value:"", open:"", changePercent:"", chartdata:[]}]
+//var finStock = [{name:"S&P 500 - SPY", ticker:"SPY", value:"", open:"", changePercent:""}]
+var finCrypto = [{name:"BTCUSDT", value:"", changepercent:"", chartdata:[]}, {name:"ETHUSDT", value:"", changepercent:"", chartdata:[]}]
+var finFxSym = [{name:"USDEUR", value:""}, {name:"USDJPY", value:""}, {name:"USDGBP", value:""}, {name:"USDAUD", value:""}, {name:"USDCAD", value:""}, {name:"USDCNY", value:""}]
+//var finComSym = [{name:"Gold", ticker:"GLD", value:""}, {name:"Silver", ticker:"SLV", value:""}, {name:"Oil - WTI", ticker:"WTI", value:""}, {name:"Oil - Brent", ticker:"BRENT", value:""}]
+var inetSym = [{name:"Facebook", status:""}, {name:"Microsoft Azure", status:""}, {name:"AWS", status:""}, {name:"Google Cloud", status:""}, {name:"Twitter", status:""}, {name:"Cloudflare", status:""}, {name:"Discord", status:""}]
+var ineti = 0
+var headlines = []
+var Q6hr = []
+var reddit_access_token = ""
+var reddit_access_token_expiry = 0
+var audioNum = 0
+//helper functions
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+	return array
+}
+function next(arr) {
+  arr.push(arr[0]);
+  return arr.shift();
+}
+function emojiParse(weather){
+  weather = weather.toString()
+  //console.log("weather: " + weather)
+  switch (weather.charAt(0)) {
+    case "2":
+    //thunderstorm
+    return "\uD83C\uDF29\uFE0F"
+    case "3":
+    //drizzle
+    return "\uD83C\uDF26\uFE0F"
+    case "5":
+    //rain
+    return "\uD83C\uDF27\uFE0F"
+    case "6":
+    //snow
+    return "\u2744\uFE0F"
+    case "7":
+    //atmosphere
+    return "\uD83C\uDF2B\uFE0F"
+    case "8":
+      //clear
+      if (weather.charAt(2) == 0) {
+        return "\uD83C\uDF1E"
+      }
+      //partly cloudy
+      else if (weather.charAt(2) == "1" || weather.charAt(2) == "2") {
+        return "\uD83C\uDF24\uFE0F"
+      }
+      //clouds
+      else if (weather.charAt(2) == "3" || weather.charAt(2) == "4") {
+        return "\u2601\uFE0F"
+      }
+    default:
+    return ("error: " + weather.charAt(0))
+  }
+  return ("big error: " + weather)
+}
+/* weather info */
+function getWeatherData () {
+  var pending = []
+  for (x in weatherdb) {
+    pending[x] = weatherdb[x].id
+  }
+  do {
+    try {
+      var batch = []
+      for (let i = 0; i < 20; i++) {
+        if (typeof pending[i] != "undefined") {
+          batch.push(pending[i])
+        } else {
+          throw 'end'
+        }
+      }
+      getWeatherDataHlp(batch)
+      pending = pending.splice(20)
+    }
+    catch(err) {
+      console.log(err)
+      //console.log(err.message)
+      getWeatherDataHlp(batch)
+      break
+    }
+  } while (true)
+}
+function getWeatherDataHlp (batch) {
+  batchs = batch.join(",")
+  //console.log("submitting batch: " + batchs)
+  var req = new XMLHttpRequest();
+  //join all weatherdb
+  var url = "https://api.openweathermap.org/data/2.5/group?id=" + batchs + "&units=metric&appid=" + weatherapikey
+  req.onload = function(e) {
+    var temp = JSON.parse(this.responseText).list
+    for (x in weatherdb) {
+      for (y in temp) {
+        if (weatherdb[x].id == temp[y].id) {
+          weatherdb[x].now.temp = temp[y].main.temp
+          weatherdb[x].now.id = temp[y].weather[0].id
+        }
+      }
+    }
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  req.send();
+}
+function getWeatherData6hr() {
+  for (x in weatherdb) {
+    getWeatherData6hrHlp(x)
+  }
+}
+function getWeatherData6hrHlp(x) {
+  var req = new XMLHttpRequest();
+  var url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + weatherdb[x].lat + "&lon=" + weatherdb[x].lon + "&exclude=minutely,current&units=metric&appid=" + weatherapikey
+  req.onload = function(e) {
+    var help = JSON.parse(this.responseText)
+    var temp = help.hourly
+    var now = new Date()
+    var now2 = new Date()
+    var first = new Date(now.setHours(now.getHours() + (6 - (now2.getHours() % 6))))
+    for (y in temp) {
+      var temp2 = new Date(temp[y].dt * 1000)
+      if (temp2.getHours() == first.getHours()) {
+        weatherdb[x].w1.temp = temp[parseInt(y)].temp
+        weatherdb[x].w1.id = temp[parseInt(y)].weather[0].id
+        weatherdb[x].w2.temp = temp[(parseInt(y)+6)].temp
+        weatherdb[x].w2.id = temp[(parseInt(y)+6)].weather[0].id
+        weatherdb[x].w3.temp = temp[(parseInt(y)+12)].temp
+        weatherdb[x].w3.id = temp[(parseInt(y)+12)].weather[0].id
+        break
+      }
+    }
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  Q6hr.push(req)
+  //req.send();
+}
+function getWeatherDataQ() {
+  try {
+    var temp = Q6hr[0]
+    Q6hr.shift();
+    temp.send();
+  } catch (err) {
+    if (err instanceof TypeError) {
+
+    } else {
+      console.log("Error sending queued message: ", err)
+    }
+  }
+  setTimeout("getWeatherDataQ()",1200)
+}
+function nextWeatherTab() {
+  if (weatheri == weatherdb.length) {
+    weatheri = 0
+  }
+  //var s = document.getElementById('weather')
+  var r = document.getElementById('weather')
+  r.innerHTML = ""
+  var t = document.createElement('div')
+  var n = document.createElement('div')
+  n.setAttribute('class', "weathernow")
+  var wc = document.createElement('div')
+  var w1 = document.createElement('div')
+  var w2 = document.createElement('div')
+  var w3 = document.createElement('div')
+  t.setAttribute('class', "wheader")
+  wc.setAttribute('class', "wcontainer")
+  w1.setAttribute('class', "wchild")
+  w2.setAttribute('class', "wchild")
+  w3.setAttribute('class', "wchild")
+  t.innerHTML = weatherdb[weatheri].name
+  n.innerHTML = emojiParse(weatherdb[weatheri].now.id) + " " + Math.round(weatherdb[weatheri].now.temp).toString() + String.fromCharCode(176) + "c"
+  var now = new Date()
+  var now2 = new Date(now.toLocaleString('en-us', {timeZone:weatherdb[weatheri].tz}))
+  //now.setHours(now.getUTCHours() + parseInt(weatherdb[weatheri].tz));
+  var hour = now2.getUTCHours()
+  //console.log("current hour is: " + hour)
+  if (hour < 6) { //overnight
+    w1.innerHTML = "MOR<br />" + Math.round(weatherdb[weatheri].w1.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    //w1.innerHTML = "MOR<br />" + weatherdb[weatheri].w1.temp + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    w2.innerHTML = "AFT<br />" + Math.round(weatherdb[weatheri].w2.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w2.id)
+    w3.innerHTML = "EVE<br />" + Math.round(weatherdb[weatheri].w3.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w3.id)
+  } else if (hour >= 6 && hour < 12) { //morning
+    w1.innerHTML = "AFT<br />" + Math.round(weatherdb[weatheri].w1.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    //w1.innerHTML = "AFT<br />" + weatherdb[weatheri].w1.temp + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    w2.innerHTML = "EVE<br />" + Math.round(weatherdb[weatheri].w2.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w2.id)
+    w3.innerHTML = "OVR<br />" + Math.round(weatherdb[weatheri].w3.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w3.id)
+  } else if (hour >= 12 && hour < 18) { //afternoon
+    w1.innerHTML = "EVE<br />" + Math.round(weatherdb[weatheri].w1.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    //w1.innerHTML = "EVE<br />" + weatherdb[weatheri].w1.temp + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    w2.innerHTML = "OVR<br />" + Math.round(weatherdb[weatheri].w2.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w2.id)
+    w3.innerHTML = "MOR<br />" + Math.round(weatherdb[weatheri].w3.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w3.id)
+  } else if (hour >= 18) { //evening
+    w1.innerHTML = "OVR<br />" + Math.round(weatherdb[weatheri].w1.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    //w1.innerHTML = "OVR<br />" + weatherdb[weatheri].w1.temp + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)
+    w2.innerHTML = "MOR<br />" + Math.round(weatherdb[weatheri].w2.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w2.id)
+    w3.innerHTML = "AFT<br />" + Math.round(weatherdb[weatheri].w3.temp).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w3.id)
+  } else {
+    //error
+    w1.innerHTML = hour
+  }
+  wc.appendChild(w1)
+  wc.appendChild(w2)
+  wc.appendChild(w3)
+  r.appendChild(t)
+  r.appendChild(n)
+  r.appendChild(wc)
+  weatheri++
+  //next(weatherdb)
+}
+/* stock ticker */
+function getStockData() {
+  //every 2 minutes get stock data, every 14 get chart data, lol jk
+  for (w in finStock) {
+    getStockDataHlp(w)
+    getChartData(w);
+  }
+}
+function getStockDataHlp(x) {
+  var timeout = Math.floor(Math.random() * 5000);
+  var req = new XMLHttpRequest();
+  var url = iexsite + "stable/stock/" + finStock[x].ticker + "/book?token=" + iexapikey
+  req.onload = function(e) {
+    var temp = JSON.parse(this.responseText)
+    finStock[x].value = temp.quote.latestPrice
+    finStock[x].open = temp.quote.open
+    finStock[x].changePercent = temp.quote.changePercent
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  setTimeout(function() {
+    req.send();
+  },timeout)
+}
+function getChartData(x) {
+  var timeout = Math.floor(Math.random() * 5000);
+  var req = new XMLHttpRequest();
+  var url = iexsite + "stable/stock/" + finStock[x].ticker + "/intraday-prices?chartInterval=5&token=" + iexapikey
+  req.onload = function(e) {
+    finStock[x].chartdata = []
+    var temp = JSON.parse(this.responseText)
+    for (y in temp) {
+      var date = new Date(temp[y].date + " " + temp[y].minute)
+      //console.log("date is:" + date)
+      finStock[x].chartdata.push([date, temp[y].open, temp[y].high, temp[y].low, temp[y].close])
+      //console.log("for ", x," pushed: ",y," entry ", finChart[x].chartdata)
+    }
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  setTimeout(function() {
+    req.send();
+  },timeout)
+}
+function getChartDataCrypto(x) {
+  var timeout = Math.floor(Math.random() * 5000);
+  var req = new XMLHttpRequest();
+  ///btcusd/ohlc?periods=900
+  //var now = new Date()
+  var tempdate = new Date()
+  tempdate.setHours(tempdate.getHours() - 24);
+  var url = cryptoapi + finCrypto[x].name + "/ohlc?periods=1800&after=" + Math.round(tempdate.getTime() / 1000)
+  req.onload = function(e) {
+    finCrypto[x].chartdata = []
+    var temp = JSON.parse(this.responseText)
+    temp = temp.result[1800]
+    for (y in temp) {
+      var date = new Date(temp[y][0]*1000)
+      //console.log(temp[y])
+      finCrypto[x].chartdata.push([date, temp[y][1], temp[y][2], temp[y][3], temp[y][4]])
+      //console.log("for ", x," pushed: ",y," entry ", finCryptoChart[x].chartdata)
+    }
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  setTimeout(function() {
+    req.send();
+  },timeout)
+}
+function getCurrencyData() {
+  var req = new XMLHttpRequest();
+  var fxString = []
+  for (x in finFxSym) {
+    fxString.push(finFxSym[x].name)
+  }
+  var url = iexsite + "stable/fx/latest?symbols=" + fxString.join(",") + "&token=" + iexapikey
+  req.onload = function(e) {
+    var temp = JSON.parse(this.responseText)
+    for (x in temp) {
+     for (y in finFxSym) {
+        if (finFxSym[y].name == temp[x].symbol) {
+          finFxSym[y].value = temp[x].rate;
+          break;
+        }
+      }
+    }
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  req.send();
+}
+function getCryptoData() {
+  for (z in finCrypto) {
+    getCryptoDataHlp(z)
+    getChartDataCrypto(z)
+  }
+}
+function getCryptoDataHlp(x) {
+  var req = new XMLHttpRequest();
+  //var url = iexsite + "stable/crypto/" + finCrypto[x].name + "/price?token=" + iexapikey
+  var url = cryptoapi + finCrypto[x].name + "/summary"
+  req.onload = function(e) {
+    finCrypto[x].value = JSON.parse(this.responseText).result.price.last
+    finCrypto[x].changePercent = JSON.parse(this.responseText).result.price.change.percentage
+  }
+  req.open("GET", url);
+  req.responseType = "text";
+  var timeout = Math.floor(Math.random() * 5000);
+  setTimeout(function(){
+    req.send();
+  },timeout)
+}
+function getFinanceData() {
+  //getCurrencyData();
+  console.log("getting finance data")
+  getCryptoData();
+  getStockData();
+}
+function nextFinanceTab() {
+  var s = document.getElementById('stock')
+  /*
+  if (stockj == "Crypto") {
+      if (stocki == finCrypto.length) {
+        s.textContent = "Currency"
+        stockj = "Currency"
+        stocki = 0
+    } else {
+        s.textContent = finCrypto[0].name + ": " + finCrypto[0].value
+        stocki++
+    }
+  } else if (stockj == "Currency") {
+    if (stocki == finFxSym.length) {
+        s.textContent = "Stock"
+        stockj = "Stock"
+        stocki = 0
+    } else {
+      var temp = parseFloat(finFxSym[0].value)
+      s.textContent = finFxSym[0].name + ": " + temp.toFixed(4)
+      stocki++
+    }
+  } else if (stockj == "" || stockj == "Stock") {
+    if (stocki == finStock.length) {
+        s.textContent = "Crypto"
+        stockj = "Crypto"
+        stocki = 0
+    } else {
+      var temp = parseFloat(finStock[0].value).toFixed(2)
+      var changepercent = parseFloat(finStock[0].changePercent).toFixed(2);
+      if (changepercent > 0) {
+        var temp2 = "<p style='color:green'>\u2191</p>" + changepercent + "%"
+      } else if (changepercent < 0) {
+        var temp2 = "<p style='color:red'>\u2193</p>" + changepercent + "%"
+      } else if (changepercent == 0) {
+        var temp2 = "\u8211" + changepercent + "%"
+      } else {
+        var temp2 = "err"
+      }
+      s.innerHTML = "<p>" + finStock[0].name + ": " + temp + temp2 + "</p>"
+      stocki++
+    }
+  }
+  */
+  if (stockj == "Crypto") {
+      if (stocki == finCrypto.length) {
+        s.textContent = "Stock"
+        stockj = "Stock"
+        stocki = 0
+    } else {
+        var changepercent = parseFloat(parseFloat(finCrypto[stocki].changePercent*100).toFixed(2));
+        if (changepercent > 0) {
+          var temp2 = "<p style='color:green'> \u2191</p>" + changepercent + "%"
+        } else if (changepercent < 0) {
+          var temp2 = "<p style='color:red'> \u2193</p>" + changepercent + "%"
+        } else if (changepercent == 0) {
+          var temp2 = /*"\u8211"*/ '=' + changepercent + "%"
+        } else {
+          var temp2 = "err"
+        }
+        s.innerHTML = "<p>" + finCrypto[stocki].name + ": " + finCrypto[stocki].value + temp2 + "</p>"
+        stocki++
+    }
+  } else if (stockj == "" || stockj == "Stock") {
+    if (stocki == finStock.length) {
+        s.textContent = "Crypto"
+        stockj = "Crypto"
+        stocki = 0
+    } else {
+      var temp = parseFloat(finStock[stocki].value).toFixed(2)
+      var changepercent = parseFloat(parseFloat(finStock[stocki].changePercent*100).toFixed(2));
+      if (changepercent > 0) {
+        var temp2 = "<p style='color:green'>\u2191</p>" + changepercent + "%"
+      } else if (changepercent < 0) {
+        var temp2 = "<p style='color:red'>\u2193</p>" + changepercent + "%"
+      } else if (changepercent == 0) {
+        var temp2 = /*"\u8211"*/ '=' + changepercent + "%"
+      } else {
+        var temp2 = "err"
+      }
+      s.innerHTML = "<p>" + finStock[stocki].name + " " + temp + temp2 + "</p>"
+      stocki++
+    }
+  }
+}
+/* news headline ticker */
+function getNewsHeadlines () {
+  var now = new Date();
+  if (now > reddit_access_token_expiry) {
+    console.log("reddit access token is expired, renewing");
+    redditOAuth();
+    return;
+  }
+  var req = new XMLHttpRequest();
+  var url = "https://oauth.reddit.com/r/worldnews/hot.json?limit=25"
+  //var url = "https://oauth.reddit.com/r/worldnews/hotfasdfsd.json?limit=25"
+  req.onload = function(e) {
+    try {
+      var temp = JSON.parse(this.responseText).data
+      for (x in temp.children) {
+        if (temp.children[x].data.stickied == false) {
+          headlines.push(temp.children[x].data.title)
+        }
+      }
+      //console.log("headline length: ", headlines.length)
+      if (headlines.length > 25) {
+        headlines = headlines.slice(25,49)
+      }
+      document.getElementById('ticker').innerHTML = "";
+      var m = document.createElement("p");
+      m.id = "tickerchild"
+      m.textContent = headlines.join(" \u2022 ")
+      m.addEventListener('animationend', () => {
+        getNewsHeadlines()
+      });
+      document.getElementById('ticker').appendChild(m)
+    } catch {
+      console.log("attempt at parsing news failed, retrying")
+      setTimeout("getNewsHeadlines()", 5000)
+    }
+  }
+  req.open("GET", url);
+  req.setRequestHeader("Authorization","bearer " + reddit_access_token)
+  req.responseType = "text";
+  req.send();
+}
+/* internet site uptime */
+function nextInetUptime() {
+  if (ineti == inetSym.length) {
+    ineti = 0
+  }
+  var s = document.getElementById('inet')
+  s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].name + "</div><div class='inetstatus' id='inetstatus'><p>" + inetSym[ineti].status + "</p></div>"
+  ineti++
+}
+function inetRSSParse(response, host, selector, date, rootselector) {
+  response.text().then(function(result){
+    var doc = new window.DOMParser().parseFromString(result, "text/xml")
+    var list = doc.querySelectorAll(rootselector)
+    var result = ""
+    try {
+      if (list.length > 0) {
+        list.forEach(
+          function(currentValue, currentIndex, listObj) {
+            //console.log(currentValue)
+            var publishdate = new Date(Date.parse(currentValue.children[date].textContent))
+            var now = new Date()
+            now.setHours(now.getHours() - 6);
+            //now.setDate(now.getDate() - 7);
+            //console.log("comparing: " + publishdate + " and " + now + ", result: " + (publishdate > now))
+            if (publishdate > now) { // publishdate > now
+              result += "\u2022 " + currentValue.children[selector].textContent + " <br />"
+            }
+          }
+        )
+      }
+    } catch (e) {
+      if (e instanceof ReferenceError) {
+        result = "OK"
+        console.log("unable to parse entry for ", host ," error:", e)
+      }
+    }
+    if (result.length == 0) {
+      inetSym[inetSym.findIndex((obj => obj.name == host))].status = "OK"
+    } else {
+      inetSym[inetSym.findIndex((obj => obj.name == host))].status = result
+    }
+    console.log("rss parse for: ", host ," result: ", result)
+  })
+  .catch(function(result){
+    console.log("rss parse failed for: ", host ," result: ", result)
+  });
+}
+function pollFacebook() {
+  var url = "https://www.facebook.com/platform/api-status/"
+  fetch(url)
+  .then(function (response) {
+    response.json().then(function(data) {
+      inetSym[inetSym.findIndex((obj => obj.name == "Facebook"))].status = data.current.subject
+    });
+  }).catch(e => {
+    console.log(e);
+    return e;
+  });
+}
+//response, host, selector, date, rootselector
+function pollAzure() {
+  var url = "https://azurestatuscdn.azureedge.net/en-ca/status/feed/"
+  fetch(url).then(function (response) {inetRSSParse(response,"Microsoft Azure",1,0,"item")})
+  .catch(function (e){
+    console.log("unable to load status page, error: ", e)
+  });
+}
+function pollAWS() {
+  var url = "https://status.aws.amazon.com/rss/all.rss"
+  fetch(url).then(function (response) {inetRSSParse(response,"AWS",4,2,"item")})
+  .catch(function (e){
+    console.log("unable to load status page, error: ", e)
+  });
+}
+function pollTwitter() {
+  var url = "https://api.twitterstat.us/history.rss"
+  fetch(url).then(function (response) {inetRSSParse(response,"Twitter",0,2,"item")})
+  .catch(function (e){
+    console.log("unable to load status page, error: ", e)
+  });
+}
+function pollGCP() {
+  var url = "https://status.cloud.google.com/feed.atom"
+  fetch(url).then(function (response) {inetRSSParse(response,"Google Cloud",0,3,"entry")})
+  .catch(function (e){
+    console.log("unable to load status page, error: ", e)
+  });
+}
+function pollCloudflare() {
+  var url = "https://www.cloudflarestatus.com/history.atom"
+  fetch(url).then(function (response) {inetRSSParse(response,"Cloudflare",4,2,"entry")})
+  .catch(function (e){
+    console.log("unable to load status page, error: ", e)
+  });
+}
+function pollDiscord() {
+  var url = "https://discord.statuspage.io/history.atom"
+  fetch(url).then(function (response) {inetRSSParse(response,"Discord",4,2,"entry")})
+  .catch(function (e){
+    console.log("unable to load status page, error: ", e)
+  });
+}
+function pollAllSites() {
+  pollFacebook();
+  pollAzure();
+  pollAWS();
+  pollTwitter();
+  pollGCP();
+  pollCloudflare();
+  pollDiscord();
+}
+/* date */
+/* update weather map*/
+function updateMap() {
+  mapsPlaceholder[0].eachLayer(function (layer) {
+    //console.log(layer._url)
+    if (!layer._url) {
+      mapsPlaceholder[0].removeLayer(layer)
+    }
+  });
+  for (x in weatherdb) {
+    updateMapData(weatherdb[x].lat,weatherdb[x].lon,weatherdb[x].name,weatherdb[x].now.id,weatherdb[x].now.temp)
+  }
+}
+function updateMapData(lat, lon, name, id, temp) {
+  var newIcon = L.divIcon({className:"wpopup", iconAnchor:[37.5,37.5], iconSize:"0px", html: '<p>' + name + "<br />" + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c</p>"})
+  L.marker([lat,lon],{icon: newIcon}).addTo(mapsPlaceholder[0])
+  //mapsPlaceholder[0].setView([39.09973, -94.57857], 4)
+}
+function datetime() {
+  var timer = document.getElementById('time');
+  var date = document.getElementById('date');
+  var d = new Date();
+  var s = ('0' + d.getUTCSeconds()).slice(-2);
+  var m = ('0' + d.getUTCMinutes()).slice(-2);
+  var h = ('0' + d.getUTCHours()).slice(-2);
+  timer.textContent = h + ":" + m + ":" + s + " UTC";
+  date.textContent = d.toUTCString().slice(0,11);
+}
+/* views */
+function nextMainView() {
+  document.getElementById("tmheader").innerHTML = ""
+  document.getElementById("tmtext").innerHTML = ""
+  //delete chart
+  try {
+    document.querySelector("#tmtext").destroy();
+  } catch (err) {
+    if (err instanceof TypeError) {
+    } else {
+    console.log("attempt to destroy chart failed with: ", err)
+    }
+  }
+  console.log("displaying: ", mainscreen[0])
+  switch (mainscreen[0].charAt(0)) {
+    case 'b':
+      document.getElementById("bumper").style.display = "flex"
+      document.getElementById("wmap").style.display = "none"
+      document.getElementById("textmain").style.display = "none"
+      if (mainscreen[0].substr(1) == "main") {
+        document.getElementById("bumper").innerHTML = "International News and Weather"
+      } else if (mainscreen[0].substr(1) == "weather") {
+        document.getElementById("bumper").innerHTML = "Current International Weather"
+      } else if (mainscreen[0].substr(1) == "stock") {
+        document.getElementById("bumper").innerHTML = "Financial Market Report"
+      } else if (mainscreen[0].substr(1) == "news") {
+        document.getElementById("bumper").innerHTML = "International News Headlines"
+      } else if (mainscreen[0].substr(1) == "inet") {
+        document.getElementById("bumper").innerHTML = "Internet Service Status"
+      } else {
+        document.getElementById("bumper").innerHTML = mainscreen[0].substr(1)
+      }
+      setTimeout("nextMainView()", 20000);
+      break;
+    case 'w':
+      document.getElementById("bumper").style.display = "none"
+      document.getElementById("wmap").style.display = "block"
+      document.getElementById("textmain").style.display = "none"
+      if (mainscreen[0].substr(1) == "nanortheast") {
+        mapsPlaceholder[0].setView([40.71427, -78.00597], 5.5)
+      } else if (mainscreen[0].substr(1) == "nawest") {
+        mapsPlaceholder[0].setView([43.2827, -121.1207], 5.25)
+      } else if (mainscreen[0].substr(1) == "nasouth") {
+        mapsPlaceholder[0].setView([23.76328, -95.36327], 5.49)
+      } else if (mainscreen[0].substr(1) == "sacentral") {
+        mapsPlaceholder[0].setView([13.603278, -79.142208], 5.49)
+      } else if (mainscreen[0].substr(1) == "sasouth") {
+        mapsPlaceholder[0].setView([-19.735657, -56.530847], 5.49)
+      } else if (mainscreen[0].substr(1) == "euwest") {
+        mapsPlaceholder[0].setView([47.532038, -3.511075], 5.49)
+      } else if (mainscreen[0].substr(1) == "eunorth") {
+        mapsPlaceholder[0].setView([62.237233, 0], 5.49)
+      } else if (mainscreen[0].substr(1) == "eueast") {
+        mapsPlaceholder[0].setView([53.501117, 34.204930], 5.49)
+      } else if (mainscreen[0].substr(1) == "afnorth") {
+        mapsPlaceholder[0].setView([27.780772, 14.240158], 5.49)
+      } else if (mainscreen[0].substr(1) == "afeast") {
+        mapsPlaceholder[0].setView([1.428075, 35.776460], 5.49)
+      } else if (mainscreen[0].substr(1) == "afsouth") {
+        mapsPlaceholder[0].setView([-18.458768, 29.004463], 5.49)
+      } else if (mainscreen[0].substr(1) == "mecenter") {
+        mapsPlaceholder[0].setView([34.687428, 57.763462], 5.49)
+      } else if (mainscreen[0].substr(1) == "asiacenter") {
+        mapsPlaceholder[0].setView([33.596319, 122.932938], 5.49)
+      } else if (mainscreen[0].substr(1) == "asiasouth") {
+        mapsPlaceholder[0].setView([-9.579084, 125.735125], 4)
+      }
+      setTimeout("nextMainView()", 20000);
+      break;
+    case 'n':
+      document.getElementById("bumper").style.display = "none"
+      document.getElementById("wmap").style.display = "none"
+      document.getElementById("textmain").style.display = "block"
+      if (mainscreen[0].substr(1).charAt(0) == "h") {
+        var hln = parseInt(mainscreen[0].substr(2))
+        console.log("checking headline #" + hln)
+        document.getElementById("tmheader").innerHTML = headlines[hln]
+        document.getElementById("tmtext").innerHTML = "A summary for the article will appear here in the future"
+        //document.getElementById("textmain").style += "animation: slide 20s linear 1;"
+      }
+      setTimeout("nextMainView()", 20000);
+      break;
+    case 'i':
+      document.getElementById("bumper").style.display = "none"
+      document.getElementById("wmap").style.display = "none"
+      document.getElementById("textmain").style.display = "block"
+      if (mainscreen[0].substr(1).charAt(0) == "s") {
+        var hln = parseInt(mainscreen[0].substr(2))
+        console.log("checking status #" + hln)
+        document.getElementById("tmheader").innerHTML = inetSym[hln].name
+        document.getElementById("tmtext").innerHTML = inetSym[hln].status
+        //document.getElementById("textmain").style += "animation: slide 20s linear 1;"
+      } else if (mainscreen[0].substr(1).charAt(0) == "a") {
+        console.log("checking inetstatus")
+        document.getElementById("tmheader").innerHTML = "Internet Service Status"
+        document.getElementById("tmtext").innerHTML += "<br /><br />";
+        for (x in inetSym) {
+          document.getElementById("tmtext").innerHTML += inetSym[x].name + " : " + inetSym[x].status + "<br /><br />"
+        }
+        //document.getElementById("textmain").style += ""
+      }
+      setTimeout("nextMainView()", 20000);
+      break;
+    case 's':
+      document.getElementById("bumper").style.display = "none"
+      document.getElementById("wmap").style.display = "none"
+      document.getElementById("textmain").style.display = "block"
+      if (mainscreen[0].substr(1) == "all") {
+        document.getElementById("tmheader").innerHTML = "stonks"
+      } else if (mainscreen[0].substr(1) == "x") {
+        //fx
+        document.getElementById("tmheader").innerHTML = "Currency Exchange"
+        document.getElementById("tmtext").innerHTML += "<br /><br />";
+        for (x in finFxSym) {
+          document.getElementById("tmtext").innerHTML += finFxSym[x].name + ": " + finFxSym[x].value + "<br /><br />"
+        }
+      } else if (mainscreen[0].charAt(1) == "c") {
+      /*else if (mainscreen[0].substr(1) == "c") {
+        //crypto
+        document.getElementById("tmheader").innerHTML = "Cryptocurrency"
+        document.getElementById("tmtext").innerHTML += "<br /><br />";
+        for (x in finCrypto) {
+          document.getElementById("tmtext").innerHTML += finCrypto[x].name + ": " + finCrypto[x].value + "<br /><br />"
+        }
+      }*/
+        //var temp = finCrypto.findIndex((obj => obj.name == host))
+        var temp = parseInt(mainscreen[0].charAt(2))
+        document.getElementById("tmheader").innerHTML = finCrypto[temp].name
+        console.log("looking up ", temp ," is:", finCrypto[temp].name)
+        var temp2 = parseFloat(parseFloat(finCrypto[temp].changePercent*100).toFixed(2))
+        try {
+          var temp3 = finCrypto[temp].chartdata.length - 1
+          var enddate = new Date(finCrypto[temp].chartdata[temp3][0])
+          if (temp2 > 0) {
+            var color = "#008000"
+            var symbol = "\u2191"
+          } else if (temp2 < 0) {
+            var color = "#FF0000"
+            var symbol = "\u2193"
+          } else {
+            var color = "#808080"
+            var symbol = /*"\u8211"*/ "="
+          }
+          console.log("color is ", color ," symbol is:", symbol)
+          var options = {
+            series: [{
+              data: finCrypto[temp].chartdata
+            }],
+            chart: {
+              type: 'candlestick',
+              toolbar: {
+                show: false
+              },
+            },
+            xaxis: {
+              type: 'datetime',
+              labels: {
+                style: {
+                  fontSize: '20px',
+                  fontFamily: 'Avant Garde',
+                  fontWeight: 'bold',
+                  colors: ['#EEEEEE']
+                }
+              }
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  fontSize: '20px',
+                  fontFamily: 'Avant Garde',
+                  fontWeight: 'bold',
+                  colors: ['#EEEEEE']
+                }
+              }
+            },
+            annotations: {
+              xaxis: [{
+                  x: enddate.getTime(),
+                  borderColor: color,
+                  label: {
+                    borderColor: color,
+                    textAnchor: 'end',
+                    orientation: 'horizontal',
+                    text: finCrypto[temp].value + " " + symbol + temp2 + "%",
+                    style: {
+                      fontSize: '20px',
+                      fontFamily: 'Avant Garde',
+                      fontWeight: 'bold',
+                      color: '#111111',
+                      background: color,
+                    }
+                  }
+              }]
+            }
+          }
+          var chart = new ApexCharts(document.querySelector("#tmtext"), options);
+          chart.render()
+          console.log("rendering for", finCrypto[temp].name ," chart:  ", finCrypto[temp].chartdata)
+        } catch (err) {
+          if (err instanceof TypeError) {
+
+          } else {
+            console.log("when parsing chart: ", err)
+          }
+        }
+      }
+      else if (mainscreen[0].charAt(1) == "s") {
+        //stock chart
+        var temp = parseInt(mainscreen[0].charAt(2))
+        document.getElementById("tmheader").innerHTML = finStock[temp].name
+        console.log("header at ", temp ," is:", finStock[temp].name)
+        var temp2 = parseFloat(parseFloat(finStock[temp].changePercent*100).toFixed(2))
+        try {
+          var temp3 = finStock[temp].chartdata.length - 1
+          var enddate = new Date(finStock[temp].chartdata[temp3][0])
+          if (temp2 > 0) {
+            var color = "#008000"
+            var symbol = "\u2191"
+          } else if (temp2 < 0) {
+            var color = "#FF0000"
+            var symbol = "\u2193"
+          } else {
+            var color = "#808080"
+            var symbol = /*"\u8211"*/ "="
+          }
+          console.log("color is ", color ," symbol is:", symbol)
+          var options = {
+            series: [{
+              data: finStock[temp].chartdata
+            }],
+            chart: {
+              type: 'candlestick',
+              toolbar: {
+                show: false
+              },
+            },
+            xaxis: {
+              type: 'datetime',
+              labels: {
+                style: {
+                  fontSize: '20px',
+                  fontFamily: 'Avant Garde',
+                  fontWeight: 'bold',
+                  colors: ['#EEEEEE']
+                }
+              }
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  fontSize: '20px',
+                  fontFamily: 'Avant Garde',
+                  fontWeight: 'bold',
+                  colors: ['#EEEEEE']
+                }
+              }
+            },
+            annotations: {
+              xaxis: [{
+                  x: enddate.getTime(),
+                  borderColor: color,
+                  label: {
+                    borderColor: color,
+                    textAnchor: 'end',
+                    orientation: 'horizontal',
+                    text: finStock[temp].value + " " + symbol + temp2 + "%",
+                    style: {
+                      fontSize: '20px',
+                      fontFamily: 'Avant Garde',
+                      fontWeight: 'bold',
+                      color: '#111111',
+                      background: color,
+                    }
+                  }
+              }]
+            }
+          }
+          var chart = new ApexCharts(document.querySelector("#tmtext"), options);
+          chart.render()
+          console.log("rendering for: ", finStock[temp].name ,"temp value:", temp, " name: ", finStock[temp].chartdata)
+        } catch (err) {
+          console.log("when parsing chart: ", err)
+        }
+      }
+      //stockdisplay(mainscreen.substr(1))
+      setTimeout("nextMainView()", 20000);
+      break;
+    default:
+      setTimeout("nextMainView()", 5000);
+      break;
+  }
+  next(mainscreen)
+}
+function playMusic() {
+  console.log("playing music")
+  document.getElementById('audiocontainer').innerHTML = ""
+  var audio = new Audio();
+  audio.id = "audio"
+  document.getElementById('audiocontainer').appendChild(audio);
+  audio.innerHTML = ""
+  var req = new XMLHttpRequest();
+  audioNum = 0
+  req.onload = function(e) {
+    var arraybuffer = req.response; // not responseText
+    var newarray = arraybuffer.split('\n');
+    newarray.pop()
+    playlist = shuffleArray(newarray)
+    console.log("playlist:" + playlist)
+    audio.loop = false;
+    audio.volume = 1;
+    audio.addEventListener('ended', function () {
+      nextAudioTrack(playlist)
+    }, true);
+    nextAudioTrack(playlist)
+  }
+  var url = "http://127.0.0.1/lofi/playlist"
+  req.open("GET", url);
+  req.responseType = "text";
+  req.send();
+}
+function nextAudioTrack(playlist) {
+  console.log("music number: ", audioNum)
+  audioNum = ++audioNum < playlist.length ? audioNum : 0;
+  //item = "http://127.0.0.1/lofi/" + playlist[audioNum]
+  audio.src = "http://127.0.0.1/lofi/" + playlist[audioNum];
+  //try {
+  audio.play()
+    .then (function (){
+      console.log("playing: " + playlist[audioNum] + " audionum: " + audioNum)
+    })
+    .catch(function (e) {
+      console.log("music number: ", audioNum, " failed, trying again")
+      nextAudioTrack(playlist)
+    })
+    .finally(function () {
+      return
+    })
+  /*} catch {
+    console.log("music number: ", audioNum, " didn't work, trying next")
+  }*/
+}
+function redditOAuth() {
+  var req = new XMLHttpRequest();
+  var url = "https://www.reddit.com/api/v1/access_token"
+  req.onload = function(e) {
+    var temp = JSON.parse(this.responseText)
+    var expiry = new Date()
+    //console.log("access token is: ", temp.access_token, ", expires in: ", temp.expires_in)
+    reddit_access_token = temp.access_token
+    expiry.setSeconds(expiry.getSeconds() + parseInt(temp.expires_in))
+    reddit_access_token_expiry = expiry
+    getNewsHeadlines();
+  }
+  req.open("POST", url, true);
+  var username = "vhIMcPFb0A2OHA"
+  var password = "lCLwLSPVOKsDFQhIYgVvQy-7Ta4"
+  /*
+  var uuid = "61197b1c-438d-49c0-818a-0768fc9bf4a4"
+  var real_username = "newsweather"
+  var real_password = "u8uNcbQWtzmeWhDgRK8v"*/
+  req.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password))
+  req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+  req.responseType = "text";
+  //var output = "grant_type=" + grant_type + "&code=lCLwLSPVOKsDFQhIYgVvQy-7Ta4&redirect_uri=$http://127.0.0.1/page.html"
+  var output = "grant_type=password&username=newsweather&password=u8uNcbQWtzmeWhDgRK8v"
+  req.send(output);
+}
+/* init */
+var mapsPlaceholder = [];
+window.onload = init;
+function init() {
+  var element = document.getElementById('debug');
+  L.Map.addInitHook(function () {
+    mapsPlaceholder.push(this); // Use whatever global scope variable you like.
+  });
+  playMusic()
+  datetime();
+  getWeatherData();
+  getFinanceData();
+  redditOAuth();
+  nextInetUptime();
+  pollAllSites();
+  getWeatherData6hr();
+  getWeatherDataQ()
+  nextMainView();
+  setInterval("getWeatherData6hr();",21600000)
+  setInterval("getWeatherData()", 900000);
+  setInterval("getFinanceData()", 900000);
+  //setInterval("getFinanceData()", 300000);
+  setInterval("nextWeatherTab()", 15000);
+  setInterval("nextInetUptime()", 30000);
+  setInterval("nextFinanceTab()", 15000);
+  setInterval("updateMap()", 30000);
+  setInterval("datetime()", 1000);
+  /*
+  var audio = new Audio();
+  audio.id = "audio"
+  document.getElementById('wrapper').appendChild(audio);
+  var req = new XMLHttpRequest();
+  var i = 0;
+  req.onload = function(e) {
+    var arraybuffer = req.response; // not responseText
+    var newarray = arraybuffer.split('\n');
+    playlist = shuffleArray(newarray)
+    audio.addEventListener('ended', function () {
+      i = ++i < playlist.length ? i : 0;
+      item = "http://127.0.0.1/lofi/" + playlist[i]
+      audio.src = "http://127.0.0.1/lofi/" + playlist[i];
+      audio.play();
+    }, true);
+    audio.loop = false;
+    audio.volume = 1;
+    item = "http://127.0.0.1/lofi/" + playlist[0]
+    audio.src = "http://127.0.0.1/lofi/" + playlist[0];
+    audio.play();
+  }
+  var url = "http://127.0.0.1/lofi/playlist"
+  req.open("GET", url);
+  req.responseType = "text";
+  req.send();
+  */
+  L.map('wmap', {attributionControl: false, zoomControl: false}).setView([0, -0], 0); //lat:"39.09973", lon:"-94.57857"
+  L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
+    attribution: '',
+    subdomains: 'abcd',
+    minZoom: 0,
+    maxZoom: 20,
+    ext: 'png'
+  }).addTo(mapsPlaceholder[0]);
+  mapsPlaceholder[0].on('moveend', function() {
+    mapsPlaceholder[0].invalidateSize()
+  })
+}
+</script>
+</head>
+<body>
+  <div class="wrapper" id="wrapper">
+    <div class="wrapper" id="audiocontainer"></div>
+    <div id="debug"></div>
+    <div class="top" id="top"></div>
+    <div class="logo" id="logo">INW</div>
+    <div class="time" id="time"></div>
+    <div class="date" id="date"></div>
+    <div class="main" id="main">
+      <div class="bumper" id="bumper"></div>
+      <div class="wmap" id="wmap"></div>
+      <div class="textmain" id="textmain">
+        <div class="tmheader" id="tmheader"></div>
+        <div class="tmtext" id="tmtext"></div>
+      </div>
+    </div>
+    <div class="stock" id="stock"></div>
+    <div class="weather" id="weather"></div>
+    <div class="inet" id="inet"></div>
+    <div class="ticker" id="ticker"></div>
+  </div>
+</body>
+</html>

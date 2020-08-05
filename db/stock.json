@@ -1,0 +1,6 @@
+[
+    {"name":"S&P 500/SPY", "ticker":"SPY", "value":0, "open":0, "changePercent":0, "chartdata":[]},
+    {"name": "Russell 2000/IWM", "ticker":"IWM", "value":0, "open":0, "changePercent":0, "chartdata":[]},
+    {"name": "Dow Jones/DIA", "ticker":"DIA", "value":0, "open":0, "changePercent":0, "chartdata":[]},
+    {"name": "Nasdaq/QQQ", "ticker":"QQQ", "value":0, "open":0, "changePercent":0, "chartdata":[]}
+]

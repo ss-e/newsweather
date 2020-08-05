@@ -1,0 +1,271 @@
+package finance
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	//"strconv"
+	//"strings"
+	"time"
+)
+
+//Item db, chartdata is [timestamp, open, high, low, close]
+type Item struct {
+	Name          string
+	Ticker        string
+	Value         float64
+	Open          float64
+	ChangePercent float64
+	Chartdata     [][]float64
+}
+
+//StockDB contains all stock info
+var StockDB []Item
+
+//FxDB contains all foreign currency info
+var FxDB []Item
+
+//CryptoDB contains all crypto info
+var CryptoDB []Item
+
+var iexapikey = "pk_e536792fe9314ac4bf94d49a2893af3c"
+var iexsite = "https://cloud.iexapis.com/"
+var cryptoapi = "https://api.cryptowat.ch/markets/binance/"
+
+//ReadStockDB return weatherdb
+func ReadStockDB() []Item {
+	//return []string{"test","2222"}
+	//fmt.Println("stockdb: ", StockDB)
+	return StockDB
+}
+
+//ReadFxDB return weatherdb
+func ReadFxDB() []Item {
+	//return []string{"test","2222"}
+	return FxDB
+}
+
+//ReadCryptoDB return weatherdb
+func ReadCryptoDB() []Item {
+	//return []string{"test","2222"}
+	//fmt.Println("cryptodb: ", CryptoDB)
+	return CryptoDB
+}
+
+func getStockInfo() {
+	for i := range StockDB {
+		//thisTime := time.Now()
+		var netClient = &http.Client{
+			Timeout: time.Second * 10,
+		}
+		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/book?token="+iexapikey, nil)
+		req.Header.Set("user-agent", "newsweather/0.1")
+		response, err := netClient.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer response.Body.Close()
+		var jsonResponse map[string]interface{}
+		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+		if err != nil {
+			fmt.Println("error:", err)
+			fmt.Println("dump:", response)
+		} else {
+			//fmt.Println("response:", jsonResponse)
+			tdb1 := jsonResponse["quote"].(map[string]interface{})
+			StockDB[i].Value = tdb1["latestPrice"].(float64)
+			StockDB[i].Open = tdb1["open"].(float64)
+			StockDB[i].ChangePercent = tdb1["changePercent"].(float64) * 100
+			fmt.Println("for: ", StockDB[i].Ticker, " got value: ", StockDB[i].Value, " open: ", StockDB[i].Open, " changepercent: ", StockDB[i].ChangePercent)
+		}
+	}
+}
+
+func getStockChartData() {
+	for i := range StockDB {
+		fmt.Println("trying: ", StockDB[i].Ticker)
+		//thisTime := time.Now()
+		var netClient = &http.Client{
+			Timeout: time.Second * 10,
+		}
+		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/intraday-prices?chartInterval=5&token="+iexapikey, nil)
+		req.Header.Set("user-agent", "newsweather/0.1")
+		response, err := netClient.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer response.Body.Close()
+		var jsonResponse []interface{}
+		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+		if err != nil {
+			fmt.Println("error:", err)
+			fmt.Println("dump:", response)
+		} else {
+			//fmt.Println("dump:", jsonResponse)
+			StockDB[i].Chartdata = nil
+			for j := range jsonResponse {
+				//fmt.Println("trying ", j, " attempt")
+				//var tempdata Chartdata
+				tdb1 := jsonResponse[j].(map[string]interface{})
+				fmt.Println("tdb1 declared: ", tdb1)
+				temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
+				if err != nil {
+					fmt.Println("error parsing stock chart data, date ", err)
+				}
+				date := temp.Unix()
+				open, err3 := tdb1["open"].(float64)
+				if !err3 {
+					fmt.Println("error parsing stock chart data, open ", err3)
+				}
+				high, err4 := tdb1["high"].(float64)
+				if !err4 {
+					fmt.Println("error parsing stock chart data, high ", err4)
+				}
+				low, err5 := tdb1["low"].(float64)
+				if !err5 {
+					fmt.Println("error parsing stock chart data, low ", err5)
+				}
+				close, err6 := tdb1["close"].(float64)
+				if !err6 {
+					fmt.Println("error parsing stock chart data, close ", err6)
+				}
+				if err == nil && err3 && err4 && err5 && err6 {
+					fmt.Println("inputting entry")
+					entry := []float64{float64(date), open, high, low, close}
+					StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
+				}
+			}
+		}
+	}
+}
+
+func getCryptoInfo() {
+	for i := range CryptoDB {
+		//thisTime := time.Now()
+		var netClient = &http.Client{
+			Timeout: time.Second * 10,
+		}
+		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary", nil)
+		req.Header.Set("user-agent", "newsweather/0.1")
+		response, err := netClient.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer response.Body.Close()
+		var jsonResponse map[string]interface{}
+		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+		if err != nil {
+			fmt.Println("error:", err)
+			fmt.Println("dump:", response)
+		} else {
+			//fmt.Println("response:", jsonResponse)
+			tdb1 := jsonResponse["result"].(map[string]interface{})
+			tdb2 := tdb1["price"].(map[string]interface{})
+			tdb3 := tdb2["change"].(map[string]interface{})
+			CryptoDB[i].Value = tdb2["last"].(float64)
+			CryptoDB[i].ChangePercent = tdb3["percentage"].(float64) * 100
+			fmt.Println("for: ", CryptoDB[i].Ticker, " got value: ", CryptoDB[i].Value, " changepercent: ", CryptoDB[i].ChangePercent)
+		}
+	}
+}
+
+func getCryptoChartData() {
+	for i := range CryptoDB {
+		t1 := time.Now()
+		t2 := t1.Add(-24 * time.Hour)
+		var netClient = &http.Client{
+			Timeout: time.Second * 10,
+		}
+		thisTime := fmt.Sprintf("%v", t2.Unix())
+		//fmt.Printf("%v,\n", thisTime)
+		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime)
+		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime, nil)
+		req.Header.Set("user-agent", "newsweather/0.1")
+		response, err := netClient.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer response.Body.Close()
+		var jsonResponse map[string]interface{}
+		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+		if err != nil {
+			fmt.Println("error:", err)
+			fmt.Println("dump:", response)
+		} else {
+			//fmt.Println("resultdump:", jsonResponse)
+			CryptoDB[i].Chartdata = nil
+			tdb1 := jsonResponse["result"].(map[string]interface{})
+			tdb2 := tdb1["1800"].([]interface{})
+			//fmt.Println("found tdb2:", tdb2)
+			for j := range tdb2 {
+				//fmt.Println("tdb2[", j, "] is:", tdb2[j])
+				tdb3, ok := tdb2[j].([]interface{})
+				if ok {
+					fmt.Println("tdb3 is:", tdb3)
+					date, ok2 := tdb3[0].(float64)
+					open, ok3 := tdb3[1].(float64)
+					high, ok4 := tdb3[2].(float64)
+					low, ok5 := tdb3[3].(float64)
+					close, ok6 := tdb3[4].(float64)
+					if ok2 && ok3 && ok4 && ok5 && ok6 {
+						fmt.Println("inputting entry:")
+						entry := []float64{float64(date), open, high, low, close}
+						CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
+					} else {
+						fmt.Println("error 2 parsing crypto chart data:")
+					}
+				} else {
+					fmt.Println("error 1 parsing crypto chart data:")
+				}
+			}
+		}
+	}
+}
+
+func schedule(f func(), interval time.Duration) *time.Ticker {
+	ticker := time.NewTicker(interval)
+	go func() {
+		for range ticker.C {
+			f()
+		}
+	}()
+	return ticker
+}
+
+//ReadToDB read cities in database
+func readToDB(dbname string, database *[]Item) {
+	// open json file
+	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = json.Unmarshal(jsonFile, &database)
+	if err != nil {
+		fmt.Println("error reading stock db: ", err)
+		//fmt.Println("dump:", jsonFile)
+	}
+	//fmt.Println("read dump:", &database)
+}
+
+//Startup starts authentication and headline scheduling
+func Startup() error {
+	readToDB("stock", &StockDB)
+	//fmt.Println("access dump:", StockDB)
+	//readToDB("fx", FxDB)
+	readToDB("crypto", &CryptoDB)
+	//fmt.Println("access dump:", CryptoDB)
+	getStockInfo()
+	getStockChartData()
+	getCryptoInfo()
+	getCryptoChartData()
+	t1 := schedule(getStockInfo, 3*time.Minute)
+	_ = t1
+	t2 := schedule(getStockChartData, 15*time.Minute)
+	_ = t2
+	t3 := schedule(getCryptoInfo, 3*time.Minute)
+	_ = t3
+	t4 := schedule(getCryptoChartData, 5*time.Minute)
+	_ = t4
+	return nil
+}

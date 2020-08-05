@@ -1,0 +1,368 @@
+[
+    {
+        "created_at": "Thu Jul 02 03:10:02 +0000 2020",
+        "id": 1278526314983677952,
+        "id_str": "1278526314983677952",
+        "full_text": "Australia sets up suburban checkpoints to contain Melbourne virus hotspots https:\/\/t.co\/wYrF51mOHz https:\/\/t.co\/7i24uA2uCO",
+        "truncated": false,
+        "display_text_range": [
+            0,
+            98
+        ],
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [],
+            "urls": [
+                {
+                    "url": "https:\/\/t.co\/wYrF51mOHz",
+                    "expanded_url": "https:\/\/reut.rs\/3eSUPxc",
+                    "display_url": "reut.rs\/3eSUPxc",
+                    "indices": [
+                        75,
+                        98
+                    ]
+                }
+            ],
+            "media": [
+                {
+                    "id": 1278526313171730433,
+                    "id_str": "1278526313171730433",
+                    "indices": [
+                        99,
+                        122
+                    ],
+                    "media_url": "http:\/\/pbs.twimg.com\/media\/Eb486GyXQAEnPXE.jpg",
+                    "media_url_https": "https:\/\/pbs.twimg.com\/media\/Eb486GyXQAEnPXE.jpg",
+                    "url": "https:\/\/t.co\/7i24uA2uCO",
+                    "display_url": "pic.twitter.com\/7i24uA2uCO",
+                    "expanded_url": "https:\/\/twitter.com\/Reuters\/status\/1278526314983677952\/photo\/1",
+                    "type": "photo",
+                    "sizes": {
+                        "thumb": {
+                            "w": 150,
+                            "h": 150,
+                            "resize": "crop"
+                        },
+                        "small": {
+                            "w": 680,
+                            "h": 454,
+                            "resize": "fit"
+                        },
+                        "large": {
+                            "w": 1024,
+                            "h": 683,
+                            "resize": "fit"
+                        },
+                        "medium": {
+                            "w": 1024,
+                            "h": 683,
+                            "resize": "fit"
+                        }
+                    }
+                }
+            ]
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "id": 1278526313171730433,
+                    "id_str": "1278526313171730433",
+                    "indices": [
+                        99,
+                        122
+                    ],
+                    "media_url": "http:\/\/pbs.twimg.com\/media\/Eb486GyXQAEnPXE.jpg",
+                    "media_url_https": "https:\/\/pbs.twimg.com\/media\/Eb486GyXQAEnPXE.jpg",
+                    "url": "https:\/\/t.co\/7i24uA2uCO",
+                    "display_url": "pic.twitter.com\/7i24uA2uCO",
+                    "expanded_url": "https:\/\/twitter.com\/Reuters\/status\/1278526314983677952\/photo\/1",
+                    "type": "photo",
+                    "sizes": {
+                        "thumb": {
+                            "w": 150,
+                            "h": 150,
+                            "resize": "crop"
+                        },
+                        "small": {
+                            "w": 680,
+                            "h": 454,
+                            "resize": "fit"
+                        },
+                        "large": {
+                            "w": 1024,
+                            "h": 683,
+                            "resize": "fit"
+                        },
+                        "medium": {
+                            "w": 1024,
+                            "h": 683,
+                            "resize": "fit"
+                        }
+                    }
+                }
+            ]
+        },
+        "source": "\u003ca href=\"https:\/\/trueanthem.com\/\" rel=\"nofollow\"\u003eTrue Anthem\u003c\/a\u003e",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1652541,
+            "id_str": "1652541",
+            "name": "Reuters",
+            "screen_name": "Reuters",
+            "location": "Around the world",
+            "description": "Top and breaking news, pictures and videos from Reuters. For more breaking business news, follow @ReutersBiz.",
+            "url": "http:\/\/t.co\/BmHxhkm3Mh",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http:\/\/t.co\/BmHxhkm3Mh",
+                            "expanded_url": "http:\/\/www.reuters.com",
+                            "display_url": "reuters.com",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 22077122,
+            "friends_count": 1118,
+            "listed_count": 119992,
+            "created_at": "Tue Mar 20 17:46:05 +0000 2007",
+            "favourites_count": 744,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": false,
+            "verified": true,
+            "statuses_count": 551043,
+            "lang": null,
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": true,
+            "profile_background_color": "444444",
+            "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+            "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1194751949821939712\/3VBu4_Sa_normal.jpg",
+            "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1194751949821939712\/3VBu4_Sa_normal.jpg",
+            "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1652541\/1573687397",
+            "profile_link_color": "006F97",
+            "profile_sidebar_border_color": "000000",
+            "profile_sidebar_fill_color": "F5F5F5",
+            "profile_text_color": "000000",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": false,
+            "default_profile_image": false,
+            "following": false,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "regular"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 5,
+        "favorite_count": 6,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+    },
+    {
+        "created_at": "Thu Jul 02 03:05:02 +0000 2020",
+        "id": 1278525058634387456,
+        "id_str": "1278525058634387456",
+        "full_text": "Novartis pays $729 million to settle U.S. kickback charges https:\/\/t.co\/bh1QNeDF9X https:\/\/t.co\/wBtVoYKmlz",
+        "truncated": false,
+        "display_text_range": [
+            0,
+            82
+        ],
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [],
+            "urls": [
+                {
+                    "url": "https:\/\/t.co\/bh1QNeDF9X",
+                    "expanded_url": "https:\/\/reut.rs\/3f3xWHa",
+                    "display_url": "reut.rs\/3f3xWHa",
+                    "indices": [
+                        59,
+                        82
+                    ]
+                }
+            ],
+            "media": [
+                {
+                    "id": 1278525056986079233,
+                    "id_str": "1278525056986079233",
+                    "indices": [
+                        83,
+                        106
+                    ],
+                    "media_url": "http:\/\/pbs.twimg.com\/media\/Eb47w_IXYAEqHy1.jpg",
+                    "media_url_https": "https:\/\/pbs.twimg.com\/media\/Eb47w_IXYAEqHy1.jpg",
+                    "url": "https:\/\/t.co\/wBtVoYKmlz",
+                    "display_url": "pic.twitter.com\/wBtVoYKmlz",
+                    "expanded_url": "https:\/\/twitter.com\/Reuters\/status\/1278525058634387456\/photo\/1",
+                    "type": "photo",
+                    "sizes": {
+                        "medium": {
+                            "w": 1024,
+                            "h": 679,
+                            "resize": "fit"
+                        },
+                        "large": {
+                            "w": 1024,
+                            "h": 679,
+                            "resize": "fit"
+                        },
+                        "thumb": {
+                            "w": 150,
+                            "h": 150,
+                            "resize": "crop"
+                        },
+                        "small": {
+                            "w": 680,
+                            "h": 451,
+                            "resize": "fit"
+                        }
+                    }
+                }
+            ]
+        },
+        "extended_entities": {
+            "media": [
+                {
+                    "id": 1278525056986079233,
+                    "id_str": "1278525056986079233",
+                    "indices": [
+                        83,
+                        106
+                    ],
+                    "media_url": "http:\/\/pbs.twimg.com\/media\/Eb47w_IXYAEqHy1.jpg",
+                    "media_url_https": "https:\/\/pbs.twimg.com\/media\/Eb47w_IXYAEqHy1.jpg",
+                    "url": "https:\/\/t.co\/wBtVoYKmlz",
+                    "display_url": "pic.twitter.com\/wBtVoYKmlz",
+                    "expanded_url": "https:\/\/twitter.com\/Reuters\/status\/1278525058634387456\/photo\/1",
+                    "type": "photo",
+                    "sizes": {
+                        "medium": {
+                            "w": 1024,
+                            "h": 679,
+                            "resize": "fit"
+                        },
+                        "large": {
+                            "w": 1024,
+                            "h": 679,
+                            "resize": "fit"
+                        },
+                        "thumb": {
+                            "w": 150,
+                            "h": 150,
+                            "resize": "crop"
+                        },
+                        "small": {
+                            "w": 680,
+                            "h": 451,
+                            "resize": "fit"
+                        }
+                    }
+                }
+            ]
+        },
+        "source": "\u003ca href=\"https:\/\/trueanthem.com\/\" rel=\"nofollow\"\u003eTrue Anthem\u003c\/a\u003e",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1652541,
+            "id_str": "1652541",
+            "name": "Reuters",
+            "screen_name": "Reuters",
+            "location": "Around the world",
+            "description": "Top and breaking news, pictures and videos from Reuters. For more breaking business news, follow @ReutersBiz.",
+            "url": "http:\/\/t.co\/BmHxhkm3Mh",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "url": "http:\/\/t.co\/BmHxhkm3Mh",
+                            "expanded_url": "http:\/\/www.reuters.com",
+                            "display_url": "reuters.com",
+                            "indices": [
+                                0,
+                                22
+                            ]
+                        }
+                    ]
+                },
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 22077122,
+            "friends_count": 1118,
+            "listed_count": 119992,
+            "created_at": "Tue Mar 20 17:46:05 +0000 2007",
+            "favourites_count": 744,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": false,
+            "verified": true,
+            "statuses_count": 551043,
+            "lang": null,
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": true,
+            "profile_background_color": "444444",
+            "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+            "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+            "profile_background_tile": false,
+            "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1194751949821939712\/3VBu4_Sa_normal.jpg",
+            "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1194751949821939712\/3VBu4_Sa_normal.jpg",
+            "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1652541\/1573687397",
+            "profile_link_color": "006F97",
+            "profile_sidebar_border_color": "000000",
+            "profile_sidebar_fill_color": "F5F5F5",
+            "profile_text_color": "000000",
+            "profile_use_background_image": true,
+            "has_extended_profile": false,
+            "default_profile": false,
+            "default_profile_image": false,
+            "following": false,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "regular"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 14,
+        "favorite_count": 20,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+    }
+]
