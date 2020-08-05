@@ -333,23 +333,11 @@ var weatheri = 0;
 //var mainscreen = ["bstock","ss0","ss1","ss2","ss3","ss4","ss5","sc","sx","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
 //var mainscreen = ["bstock","ss0","ss1","ss2","ss3","sc0","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
 var mainscreen = ["bstock","sc0","sc1","ss0","ss1","ss2","ss3","binet"]
-//var weatherapikey = "de13a6c0963d7352292091b6f234070b"
-//var iexapikey = "Tsk_c25ce14d9c324a0597b81e3a2d804eec"
-//var iexsite = "https://sandbox.iexapis.com/"
-//var iexapikey = "pk_e536792fe9314ac4bf94d49a2893af3c"
-//var iexsite = "https://cloud.iexapis.com/"
-//var cryptokey = ""
-//var cryptoapi = "https://api.cryptowat.ch/markets/binance/"
 var stocki = 0;
 var stockj = "";
 var charti = 0;
 var finStock, finCrypto
-//var finStock = [{name:"S&P 500/SPY", ticker:"SPY", value:"", open:"", changePercent:"", chartdata:[]}, {name: "Russell 2000/IWM", ticker:"IWM", value:"", open:"", changePercent:"", chartdata:[]}, {name: "Dow Jones/DIA", ticker:"DIA", value:"", open:"", changePercent:"", chartdata:[]}, {name: "Nasdaq/QQQ", ticker:"QQQ", value:"", open:"", changePercent:"", chartdata:[]}]
-//var finStock = [{name:"S&P 500 - SPY", ticker:"SPY", value:"", open:"", changePercent:""}]
-//var finCrypto = [{name:"BTCUSDT", value:"", changepercent:"", chartdata:[]}, {name:"ETHUSDT", value:"", changepercent:"", chartdata:[]}]
 //var finFxSym = [{name:"USDEUR", value:""}, {name:"USDJPY", value:""}, {name:"USDGBP", value:""}, {name:"USDAUD", value:""}, {name:"USDCAD", value:""}, {name:"USDCNY", value:""}]
-//var finComSym = [{name:"Gold", ticker:"GLD", value:""}, {name:"Silver", ticker:"SLV", value:""}, {name:"Oil - WTI", ticker:"WTI", value:""}, {name:"Oil - Brent", ticker:"BRENT", value:""}]
-//var inetSym = [{name:"Facebook", status:""}, {name:"Microsoft Azure", status:""}, {name:"AWS", status:""}, {name:"Google Cloud", status:""}, {name:"Twitter", status:""}, {name:"Cloudflare", status:""}, {name:"Discord", status:""}]
 var inetSym
 var ineti = 0
 var headlines = []
@@ -481,74 +469,6 @@ function nextWeatherTab() {
 
 /* stock ticker */
 /*
-function getStockData() {
-  //every 2 minutes get stock data, every 14 get chart data, lol jk
-  /*for (w in finStock) {
-    getStockDataHlp(w)
-    getChartData(w);
-  }
-}
-function getStockDataHlp(x) {
-  var timeout = Math.floor(Math.random() * 5000);
-  var req = new XMLHttpRequest();
-  var url = iexsite + "stable/stock/" + finStock[x].ticker + "/book?token=" + iexapikey
-  req.onload = function(e) {
-    var temp = JSON.parse(this.responseText)
-    finStock[x].value = temp.quote.latestPrice
-    finStock[x].open = temp.quote.open
-    finStock[x].changePercent = temp.quote.changePercent
-  }
-  req.open("GET", url);
-  req.responseType = "text";
-  setTimeout(function() {
-    req.send();
-  },timeout)
-}
-function getChartData(x) {
-  var timeout = Math.floor(Math.random() * 5000);
-  var req = new XMLHttpRequest();
-  var url = iexsite + "stable/stock/" + finStock[x].ticker + "/intraday-prices?chartInterval=5&token=" + iexapikey
-  req.onload = function(e) {
-    finStock[x].chartdata = []
-    var temp = JSON.parse(this.responseText)
-    for (y in temp) {
-      var date = new Date(temp[y].date + " " + temp[y].minute)
-      //console.log("date is:" + date)
-      finStock[x].chartdata.push([date, temp[y].open, temp[y].high, temp[y].low, temp[y].close])
-      //console.log("for ", x," pushed: ",y," entry ", finChart[x].chartdata)
-    }
-  }
-  req.open("GET", url);
-  req.responseType = "text";
-  setTimeout(function() {
-    req.send();
-  },timeout)
-}
-function getChartDataCrypto(x) {
-  var timeout = Math.floor(Math.random() * 5000);
-  var req = new XMLHttpRequest();
-  ///btcusd/ohlc?periods=900
-  //var now = new Date()
-  var tempdate = new Date()
-  tempdate.setHours(tempdate.getHours() - 24);
-  var url = cryptoapi + finCrypto[x].name + "/ohlc?periods=1800&after=" + Math.round(tempdate.getTime() / 1000)
-  req.onload = function(e) {
-    finCrypto[x].chartdata = []
-    var temp = JSON.parse(this.responseText)
-    temp = temp.result[1800]
-    for (y in temp) {
-      var date = new Date(temp[y][0]*1000)
-      //console.log(temp[y])
-      finCrypto[x].chartdata.push([date, temp[y][1], temp[y][2], temp[y][3], temp[y][4]])
-      //console.log("for ", x," pushed: ",y," entry ", finCryptoChart[x].chartdata)
-    }
-  }
-  req.open("GET", url);
-  req.responseType = "text";
-  setTimeout(function() {
-    req.send();
-  },timeout)
-}
 function getCurrencyData() {
   var req = new XMLHttpRequest();
   var fxString = []
@@ -571,26 +491,6 @@ function getCurrencyData() {
   req.responseType = "text";
   req.send();
 }
-function getCryptoData() {
-  for (z in finCrypto) {
-    getCryptoDataHlp(z)
-    getChartDataCrypto(z)
-  }
-}
-function getCryptoDataHlp(x) {
-  var req = new XMLHttpRequest();
-  //var url = iexsite + "stable/crypto/" + finCrypto[x].name + "/price?token=" + iexapikey
-  var url = cryptoapi + finCrypto[x].name + "/summary"
-  req.onload = function(e) {
-    finCrypto[x].value = JSON.parse(this.responseText).result.price.last
-    finCrypto[x].changePercent = JSON.parse(this.responseText).result.price.change.percentage
-  }
-  req.open("GET", url);
-  req.responseType = "text";
-  var timeout = Math.floor(Math.random() * 5000);
-  setTimeout(function(){
-    req.send();
-  },timeout)
 }*/
 function getFinanceData() {
   //getCurrencyData();
@@ -1121,31 +1021,16 @@ function init() {
   playMusic()
   datetime();
   getWeatherData();
-  //setInterval("getWeatherData()", 900000);
-  setInterval("getWeatherData()", 15000);
   getNewsHeadlines();
-  //nextWeatherTab();
-  /*
   getFinanceData();
-
-  pollAllSites();
-  getWeatherData6hr();
-  getWeatherDataQ()
-  */
-  getFinanceData();
-  nextMainView();
   getInetData();
-  //nextInetUptime();
-  setInterval("nextInetUptime()", 30000);
+  nextMainView();
   setInterval("getInetData()", 30000);
+  setInterval("getWeatherData()", 15000);
   setInterval("getFinanceData()", 30000);
-  setInterval("nextFinanceTab()", 15000);
-  /*
-  setInterval("getWeatherData6hr();",21600000)
-  setInterval("getWeatherData()", 900000);
-  setInterval("getFinanceData()", 900000);
   setInterval("nextInetUptime()", 30000);
-  */
+  setInterval("nextFinanceTab()", 15000);
+  //nextWeatherTab();
   //setInterval("nextWeatherTab()", 15000);
   setInterval("updateMap()", 30000);
   setInterval("datetime()", 1000);
