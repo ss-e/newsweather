@@ -341,7 +341,6 @@ var finStock, finCrypto
 var inetSym
 var ineti = 0
 var headlines = []
-var Q6hr = []
 var audioNum = 0
 var weatherdb = []
 //helper functions
@@ -402,8 +401,8 @@ function getWeatherData () {
     weatherdb = temp
     nextWeatherTab()
   })
-
 }
+
 function nextWeatherTab() {
   //getWeatherData()
   if (weatheri == weatherdb.length) {
