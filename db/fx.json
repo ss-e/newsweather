@@ -1,8 +1,8 @@
 [
-    {"name":"USDEUR", "value":""},
-    {"name":"USDJPY", "value":""},
-    {"name":"USDGBP", "value":""},
-    {"name":"USDAUD", "value":""},
-    {"name":"USDCAD", "value":""},
-    {"name":"USDCNY", "value":""}
+    {"Name":"USD/Euro", "Ticker":"USDEUR", "Value":0},
+    {"Name":"USD/Yen", "Ticker":"USDJPY", "Value":0},
+    {"Name":"USD/Pound", "Ticker":"USDGBP", "Value":0},
+    {"Name":"USD/AUD", "Ticker":"USDAUD", "Value":0},
+    {"Name":"USD/CAD", "Ticker":"USDCAD", "Value":0},
+    {"Name":"USD/Yuan", "Ticker":"USDCNY", "Value":0}
 ]

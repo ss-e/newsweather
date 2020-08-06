@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	//"strconv"
-	//"strings"
+	"strings"
 	"time"
 )
 
@@ -51,6 +51,51 @@ func ReadCryptoDB() []Item {
 	//return []string{"test","2222"}
 	//fmt.Println("cryptodb: ", CryptoDB)
 	return CryptoDB
+}
+
+func getFxInfo() {
+	//thisTime := time.Now()
+	var netClient = &http.Client{
+		Timeout: time.Second * 10,
+	}
+	ta := []string{}
+	for i := range FxDB {
+		ta = append(ta, FxDB[i].Ticker)
+	}
+	temp := strings.Join(ta, ",")
+	//var url = iexsite +  + fxString.join(",") + "&token=" + iexapikey
+	req, err := http.NewRequest("GET", iexsite+"stable/fx/latest?symbols="+temp+"&token="+iexapikey, nil)
+	req.Header.Set("user-agent", "newsweather/0.1")
+	response, err := netClient.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer response.Body.Close()
+	var jsonResponse []map[string]interface{}
+	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+	if err != nil {
+		fmt.Println("error:", err)
+		fmt.Println("dump:", response)
+	} else {
+		//fmt.Println("response:", jsonResponse)
+		for i := range jsonResponse {
+			ticker, ok := jsonResponse[i]["symbol"].(string)
+			if ok {
+				for j := range FxDB {
+					if ticker == FxDB[j].Ticker {
+						value, ok := jsonResponse[i]["rate"].(float64)
+						fmt.Println("for: ", ticker, " got value: ", value)
+						if ok {
+							FxDB[j].Value = value
+						} else {
+							fmt.Println("error copying response")
+						}
+						break
+					}
+				}
+			}
+		}
+	}
 }
 
 func getStockInfo() {
