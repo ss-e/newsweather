@@ -48,11 +48,11 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 func Startup() error {
 	readToDB("weather")
 	getCurrentTemp()
-	//go get6hrTemp()
+	go get6hrTemp()
 	t1 := schedule(getCurrentTemp, 5*time.Minute)
 	_ = t1
-	//t2 := schedule(get6hrTemp, 6*time.Hour)
-	//_ = t2
+	t2 := schedule(get6hrTemp, 6*time.Hour)
+	_ = t2
 	return nil
 }
 

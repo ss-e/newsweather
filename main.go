@@ -21,8 +21,8 @@ func readShell() string {
 }
 
 func startup() {
-	//weather.Startup()
-	//news.Startup()
+	weather.Startup()
+	news.Startup()
 	inet.Startup()
 	finance.Startup()
 }
@@ -33,8 +33,8 @@ func main() {
 	w := webview.New(true)
 	defer w.Destroy()
 	w.SetTitle("newsweather")
-	w.SetSize(1280, 720, webview.HintFixed)
-	//w.SetSize(1920, 1080, webview.HintFixed)
+	//w.SetSize(1280, 720, webview.HintFixed)
+	w.SetSize(1920, 1080, webview.HintFixed)
 	//shell := "data:text/html,<html><body><p style=\"width:10%;\">Test</p></body></html>"
 	//shell := "data:text/html,<html><body>Test</body></html>"
 	//w.Navigate(shell)

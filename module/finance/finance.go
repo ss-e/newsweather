@@ -74,10 +74,17 @@ func getStockInfo() {
 		} else {
 			//fmt.Println("response:", jsonResponse)
 			tdb1 := jsonResponse["quote"].(map[string]interface{})
-			StockDB[i].Value = tdb1["latestPrice"].(float64)
-			StockDB[i].Open = tdb1["open"].(float64)
-			StockDB[i].ChangePercent = tdb1["changePercent"].(float64) * 100
-			fmt.Println("for: ", StockDB[i].Ticker, " got value: ", StockDB[i].Value, " open: ", StockDB[i].Open, " changepercent: ", StockDB[i].ChangePercent)
+			value, ok := tdb1["latestPrice"].(float64)
+			open, ok := tdb1["open"].(float64)
+			changepercent, ok := tdb1["changePercent"].(float64)
+			fmt.Println("for: ", StockDB[i].Ticker, " got value: ", value, " open: ", open, " changepercent: ", changepercent)
+			if ok {
+				StockDB[i].Value = value
+				StockDB[i].Open = open
+				StockDB[i].ChangePercent = changepercent * 100
+			} else {
+				fmt.Println("error copying response")
+			}
 		}
 	}
 }
@@ -131,7 +138,7 @@ func getStockChartData() {
 					fmt.Println("error parsing stock chart data, close ", err6)
 				}
 				if err == nil && err3 && err4 && err5 && err6 {
-					fmt.Println("inputting entry")
+					//fmt.Println("inputting entry")
 					entry := []float64{float64(date), open, high, low, close}
 					StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
 				}
@@ -163,9 +170,15 @@ func getCryptoInfo() {
 			tdb1 := jsonResponse["result"].(map[string]interface{})
 			tdb2 := tdb1["price"].(map[string]interface{})
 			tdb3 := tdb2["change"].(map[string]interface{})
-			CryptoDB[i].Value = tdb2["last"].(float64)
-			CryptoDB[i].ChangePercent = tdb3["percentage"].(float64) * 100
-			fmt.Println("for: ", CryptoDB[i].Ticker, " got value: ", CryptoDB[i].Value, " changepercent: ", CryptoDB[i].ChangePercent)
+			value, ok := tdb2["last"].(float64)
+			changepercent, ok := tdb3["percentage"].(float64)
+			if ok {
+				CryptoDB[i].Value = value
+				CryptoDB[i].ChangePercent = changepercent * 100
+				fmt.Println("for: ", CryptoDB[i].Ticker, " got value: ", CryptoDB[i].Value, " changepercent: ", CryptoDB[i].ChangePercent)
+			} else {
+				fmt.Println("error copying response")
+			}
 		}
 	}
 }
@@ -202,14 +215,14 @@ func getCryptoChartData() {
 				//fmt.Println("tdb2[", j, "] is:", tdb2[j])
 				tdb3, ok := tdb2[j].([]interface{})
 				if ok {
-					fmt.Println("tdb3 is:", tdb3)
+					//fmt.Println("tdb3 is:", tdb3)
 					date, ok2 := tdb3[0].(float64)
 					open, ok3 := tdb3[1].(float64)
 					high, ok4 := tdb3[2].(float64)
 					low, ok5 := tdb3[3].(float64)
 					close, ok6 := tdb3[4].(float64)
 					if ok2 && ok3 && ok4 && ok5 && ok6 {
-						fmt.Println("inputting entry:")
+						//fmt.Println("inputting entry:")
 						entry := []float64{float64(date), open, high, low, close}
 						CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
 					} else {
@@ -251,10 +264,10 @@ func readToDB(dbname string, database *[]Item) {
 //Startup starts authentication and headline scheduling
 func Startup() error {
 	readToDB("stock", &StockDB)
-	//fmt.Println("access dump:", StockDB)
+	//fmt.Println("stock access dump:", StockDB)
 	//readToDB("fx", FxDB)
 	readToDB("crypto", &CryptoDB)
-	//fmt.Println("access dump:", CryptoDB)
+	//fmt.Println("crypto access dump:", CryptoDB)
 	getStockInfo()
 	getStockChartData()
 	getCryptoInfo()
