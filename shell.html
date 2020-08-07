@@ -965,54 +965,6 @@ function nextMainView() {
   }
   next(mainscreen)
 }
-function playMusic() {
-  console.log("playing music")
-  document.getElementById('audiocontainer').innerHTML = ""
-  var audio = new Audio();
-  audio.id = "audio"
-  document.getElementById('audiocontainer').appendChild(audio);
-  audio.innerHTML = ""
-  var req = new XMLHttpRequest();
-  audioNum = 0
-  req.onload = function(e) {
-    var arraybuffer = req.response; // not responseText
-    var newarray = arraybuffer.split('\n');
-    newarray.pop()
-    playlist = shuffleArray(newarray)
-    console.log("playlist:" + playlist)
-    audio.loop = false;
-    audio.volume = 1;
-    audio.addEventListener('ended', function () {
-      nextAudioTrack(playlist)
-    }, true);
-    nextAudioTrack(playlist)
-  }
-  var url = "http://127.0.0.1/lofi/playlist"
-  req.open("GET", url);
-  req.responseType = "text";
-  req.send();
-}
-function nextAudioTrack(playlist) {
-  console.log("music number: ", audioNum)
-  audioNum = ++audioNum < playlist.length ? audioNum : 0;
-  //item = "http://127.0.0.1/lofi/" + playlist[audioNum]
-  audio.src = "http://127.0.0.1/lofi/" + playlist[audioNum];
-  //try {
-  audio.play()
-    .then (function (){
-      console.log("playing: " + playlist[audioNum] + " audionum: " + audioNum)
-    })
-    .catch(function (e) {
-      console.log("music number: ", audioNum, " failed, trying again")
-      nextAudioTrack(playlist)
-    })
-    .finally(function () {
-      return
-    })
-  /*} catch {
-    console.log("music number: ", audioNum, " didn't work, trying next")
-  }*/
-}
 /* init */
 var mapsPlaceholder = [];
 window.onload = init;
@@ -1021,7 +973,6 @@ function init() {
   L.Map.addInitHook(function () {
     mapsPlaceholder.push(this); // Use whatever global scope variable you like.
   });
-  playMusic()
   datetime();
   getWeatherData();
   getNewsHeadlines();
