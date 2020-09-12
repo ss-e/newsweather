@@ -15,6 +15,7 @@ import (
 	"math/rand"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 )
@@ -127,26 +128,48 @@ func startup() {
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
-	loadPlaylist()
+}
+
+func newCmd() *exec.Cmd {
+	return exec.Command("ffmpeg",
+		"-r", "1",
+		"-loop", "1",
+		"-i", "",
+		"-i", "",
+		"-acodec", "copy",
+		"-r", "1",
+		"-shortest", "-vf",
+		"scale=1280:720",
+		"",
+	)
 }
 
 func main() {
 	fmt.Println("starting up")
 	startup()
-	w := webview.New(true)
-	defer w.Destroy()
-	w.SetTitle("newsweather")
-	//w.SetSize(1280, 720, webview.HintFixed)
-	w.SetSize(1920, 1080, webview.HintFixed)
-	//shell := "data:text/html,<html><body><p style=\"width:10%;\">Test</p></body></html>"
-	//shell := "data:text/html,<html><body>Test</body></html>"
-	//w.Navigate(shell)
-	//w.Navigate("https://en.m.wikipedia.org/wiki/Main_Page")
-	w.Bind("readWeatherDB", weather.ReadWeatherDB)
-	w.Bind("readHeadlineDB", news.ReadHeadlineDB)
-	w.Bind("readInetDB", inet.ReadInetDB)
-	w.Bind("readStockDB", finance.ReadStockDB)
-	w.Bind("readCryptoDB", finance.ReadCryptoDB)
-	w.Navigate(readShell())
-	w.Run()
+	for {
+		loadPlaylist()
+		w := webview.New(true)
+		defer w.Destroy()
+		w.SetTitle("newsweather")
+		//w.SetSize(1280, 720, webview.HintFixed)
+		w.SetSize(1920, 1080, webview.HintFixed)
+		//shell := "data:text/html,<html><body><p style=\"width:10%;\">Test</p></body></html>"
+		//shell := "data:text/html,<html><body>Test</body></html>"
+		//w.Navigate(shell)
+		//w.Navigate("https://en.m.wikipedia.org/wiki/Main_Page")
+		w.Bind("readWeatherDB", weather.ReadWeatherDB)
+		w.Bind("readHeadlineDB", news.ReadHeadlineDB)
+		w.Bind("readInetDB", inet.ReadInetDB)
+		w.Bind("readStockDB", finance.ReadStockDB)
+		w.Bind("readCryptoDB", finance.ReadCryptoDB)
+		w.Navigate(readShell())
+		w.Run()
+		cmd := newCmd()
+		if err := cmd.Run(); err != nil {
+			fmt.Printf("Error: %v\n", err)
+		}
+		w.Destroy()
+		speaker.Close()
+	}
 }
