@@ -134,11 +134,11 @@ func startup() {
 
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
-		"-thread_queue_size", "1024", "-f", "x11grab", "-s", "1920x1080", "-r", "24", "-i", ":99.0",
-		"-f", "alsa", "-i", "pulse", "-thread_queue_size", "1024", "-f", "alsa", "-i", "pulse",
-		"-f", "flv", "-filter_complex", "amix=inputs=2", "-ac", "2", "-b:a", "96k", "-ar", "44100",
+		"-thread_queue_size", "36", "-f", "x11grab", "-s", "1920x1080", "-r", "24", "-i", ":99.0",
+		"-thread_queue_size", "36", "-f", "pulse", "-i", "1",
+		"-f", "flv", "-ac", "2", "-ar", "44100",
 		"-vcodec", "libx264", "-g", "48", "-keyint_min", "24", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p",
-		"-preset", "ultrafast", "-acodec", "libmp3lame", "-threads", "1", "-strict", "normal",
+		"-preset", "ultrafast", "-acodec", "aac", "-threads", "2", "-strict", "normal",
 		"-bufsize", bitrate, "rtmp://live-yto.twitch.tv/app/live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74",
 	)
 }
