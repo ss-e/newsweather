@@ -21,6 +21,7 @@ import (
 )
 
 var audioDB []string
+var bitrate string = "3000k"
 
 func readShell() string {
 	content, err := ioutil.ReadFile("./shell.html")
@@ -132,10 +133,9 @@ func startup() {
 }
 
 func newCmd() *exec.Cmd {
-	bitrate := "3000k"
 	return exec.Command("ffmpeg",
-		"-f", "x11grab", "-s", "1920x1080", "-r", "24", "-i", ":0.0",
-		"-f", "alsa", "-i", "pulse",
+		"-thread_queue_size", "1024", "-f", "x11grab", "-s", "1920x1080", "-r", "24", "-i", ":99.0",
+		"-f", "alsa", "-i", "hw:0", "-thread_queue_size", "1024", "-f", "alsa", "-i", "hw:0",
 		"-f", "flv", "-filter_complex", "amix=inputs=2", "-ac", "2", "-b:a", "96k", "-ar", "44100",
 		"-vcodec", "libx264", "-g", "48", "-keyint_min", "24", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p",
 		"-preset", "ultrafast", "-acodec", "libmp3lame", "-threads", "1", "-strict", "normal",
@@ -148,7 +148,7 @@ func main() {
 	startup()
 	for {
 		loadPlaylist()
-		w := webview.New(true)
+		w := webview.New(false)
 		defer w.Destroy()
 		w.SetTitle("newsweather")
 		//w.SetSize(1280, 720, webview.HintFixed)
@@ -163,11 +163,12 @@ func main() {
 		w.Bind("readStockDB", finance.ReadStockDB)
 		w.Bind("readCryptoDB", finance.ReadCryptoDB)
 		w.Navigate(readShell())
-		w.Run()
 		cmd := newCmd()
-		if err := cmd.Run(); err != nil {
+		cmd.Start()
+		/*if err := cmd.Run(); err != nil {
 			fmt.Printf("Error: %v\n", err)
-		}
+		}*/
+		w.Run()
 		w.Destroy()
 		speaker.Close()
 	}
