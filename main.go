@@ -116,7 +116,7 @@ func loadPlaylist() {
 
 		// The speaker's sample rate is fixed at 44100. Therefore, we need to
 		// resample the file in case it's in a different sample rate.
-		resampled := beep.Resample(4, format.SampleRate, sr, streamer)
+		resampled := beep.Resample(3, format.SampleRate, sr, streamer)
 
 		// And finally, we add the song to the queue.
 		speaker.Lock()
@@ -135,7 +135,7 @@ func startup() {
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
-		"-thread_queue_size", "16", "-f", "pulse", "-i", "0",
+		"-thread_queue_size", "16", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
 		"-vcodec", "libx264", "-g", "60", "-keyint_min", "30", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p",
 		"-preset", "ultrafast", "-acodec", "aac", "-threads", "1", "-strict", "normal",
