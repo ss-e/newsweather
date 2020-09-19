@@ -21,7 +21,7 @@ import (
 )
 
 var audioDB []string
-var bitrate string = "3000k"
+var bitrate string = "4500k"
 
 func readShell() string {
 	content, err := ioutil.ReadFile("./shell.html")
@@ -134,12 +134,12 @@ func startup() {
 
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
-		"-thread_queue_size", "36", "-f", "x11grab", "-s", "1920x1080", "-r", "24", "-i", ":99.0",
-		"-thread_queue_size", "36", "-f", "pulse", "-i", "0",
+		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
+		"-thread_queue_size", "16", "-f", "pulse", "-i", "0",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
-		"-vcodec", "libx264", "-g", "48", "-keyint_min", "24", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p",
-		"-preset", "ultrafast", "-acodec", "aac", "-threads", "2", "-strict", "normal",
-		"-draw_mouse", "0", "-bufsize", bitrate, "rtmp://live-yto.twitch.tv/app/live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74",
+		"-vcodec", "libx264", "-g", "60", "-keyint_min", "30", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p",
+		"-preset", "ultrafast", "-acodec", "aac", "-threads", "1", "-strict", "normal",
+		"-bufsize", bitrate, "rtmp://live-yto.twitch.tv/app/live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74",
 	)
 }
 
