@@ -151,7 +151,16 @@ func newCmd() *exec.Cmd {
 func main() {
 	fmt.Println("starting up")
 	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(":8888", nil))
+	go func() {
+		for {
+			fmt.Println("starting up http")
+			err := http.ListenAndServe(":8888", nil)
+			if err != nil {
+				fmt.Println("http server error: " + err.Error())
+			}
+		}
+	}()
+
 	startup()
 	for {
 		loadPlaylist()
