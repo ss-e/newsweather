@@ -93,6 +93,7 @@ func getCurrentTemp() {
 	t2 = nil
 	//fmt.Println("temp length is:", len(temp))
 	for i := 0; i < len(temp); i++ {
+		fmt.Println("loading temp batch ", i)
 		time.Sleep(5 * time.Second)
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
 		//fmt.Println("url is: ", url)
@@ -145,7 +146,7 @@ func get6hrTemp() {
 		}
 		time.Sleep(5 * time.Second)
 		var url = weatherSite + "onecall?lat=" + weatherDB[i].Lat + "&lon=" + weatherDB[i].Lon + "&exclude=minutely,current&units=metric&appid=" + weatherAPIKey
-		fmt.Println("url is: ", url)
+		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
 			fmt.Println(err)
