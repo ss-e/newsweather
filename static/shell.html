@@ -495,12 +495,12 @@ function getCurrencyData() {
 function getFinanceData() {
   console.log("getting finance data")
   readStockDB().then((temp) => {
-    console.log("STOCKDB: " + JSON.stringify(temp))
+    //console.log("STOCKDB: " + JSON.stringify(temp))
     //console.log("item 0 now temp: ",temp[0].Now[0], " id:", temp[0].Now[1])
     finStock = temp
   })
   readCryptoDB().then((temp) => {
-    console.log("CRYPTODB: " + JSON.stringify(temp))
+    //console.log("CRYPTODB: " + JSON.stringify(temp))
     //console.log("item 0 now temp: ",temp[0].Now[0], " id:", temp[0].Now[1])
     finCrypto = temp
   })

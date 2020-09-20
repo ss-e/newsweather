@@ -177,14 +177,13 @@ func main() {
 		w.Bind("readStockDB", finance.ReadStockDB)
 		w.Bind("readCryptoDB", finance.ReadCryptoDB)
 		//w.Navigate(readShell())
-		w.Navigate("http://127.0.0.1:8888/")
+		w.Navigate("http://127.0.0.1:8888/shell.html")
 		cmd := newCmd()
 		cmd.Start()
 		/*if err := cmd.Run(); err != nil {
 			fmt.Printf("Error: %v\n", err)
 		}*/
 		w.Run()
-		w.Destroy()
 		speaker.Close()
 	}
 }

@@ -160,7 +160,7 @@ func getStockChartData() {
 				//fmt.Println("trying ", j, " attempt")
 				//var tempdata Chartdata
 				tdb1 := jsonResponse[j].(map[string]interface{})
-				fmt.Println("tdb1 declared: ", tdb1)
+				//fmt.Println("tdb1 declared: ", tdb1)
 				temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
 				if err != nil {
 					fmt.Println("error parsing stock chart data, date ", err)

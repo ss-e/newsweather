@@ -95,7 +95,7 @@ func getCurrentTemp() {
 	for i := 0; i < len(temp); i++ {
 		time.Sleep(5 * time.Second)
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
-		fmt.Println("url is: ", url)
+		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
 			fmt.Println(err)
