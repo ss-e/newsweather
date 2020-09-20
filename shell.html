@@ -427,12 +427,12 @@ function nextWeatherTab() {
   t.innerHTML = weatherdb[weatheri].Name
   n.innerHTML = emojiParse(weatherdb[weatheri].Now[1]) + " " + Math.round(weatherdb[weatheri].Now[0]).toString() + String.fromCharCode(176) + "c"
   var now = new Date()
-  console.log("tz: ", weatherdb[weatheri].Tz)
+  //console.log("tz: ", weatherdb[weatheri].Tz)
   var now2 = new Date(now.toLocaleString('en-us', {timeZone:weatherdb[weatheri].Tz}))
   //now.setHours(now.getUTCHours() + parseInt(weatherdb[weatheri].tz));
   //var hour = now2.getUTCHours()
   var hour = now2.getHours()
-  console.log("current hour is: " + hour)
+  //console.log("current hour is: " + hour)
   if (hour < 6) { //overnight
     w1.innerHTML = "MOR<br />" + Math.round(weatherdb[weatheri].W1[0]).toString() + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].W1[1])
     //w1.innerHTML = "MOR<br />" + weatherdb[weatheri].w1.temp + String.fromCharCode(176) + "c<br />" + emojiParse(weatherdb[weatheri].w1.id)

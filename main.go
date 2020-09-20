@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
@@ -29,6 +30,10 @@ func readShell() string {
 		log.Fatal(err)
 	}
 	return "data:text/html," + url.QueryEscape(string(content))
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, readShell())
 }
 
 //Queue struct
@@ -145,10 +150,11 @@ func newCmd() *exec.Cmd {
 
 func main() {
 	fmt.Println("starting up")
+	http.HandleFunc("/", handler)
 	startup()
 	for {
 		loadPlaylist()
-		w := webview.New(false)
+		w := webview.New(true)
 		defer w.Destroy()
 		w.SetTitle("newsweather")
 		//w.SetSize(1280, 720, webview.HintFixed)
@@ -162,7 +168,8 @@ func main() {
 		w.Bind("readInetDB", inet.ReadInetDB)
 		w.Bind("readStockDB", finance.ReadStockDB)
 		w.Bind("readCryptoDB", finance.ReadCryptoDB)
-		w.Navigate(readShell())
+		//w.Navigate(readShell())
+		w.Navigate("http://127.0.0.1:8888/")
 		cmd := newCmd()
 		cmd.Start()
 		/*if err := cmd.Run(); err != nil {
