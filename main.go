@@ -145,6 +145,49 @@ func newCmd() *exec.Cmd {
 	)
 }
 
+func audioHelper() {
+	loadPlaylist()
+	fmt.Println("playlist loaded")
+}
+
+func ffmpegHelper() {
+	cmd := newCmd()
+	cmd.Start()
+	fmt.Println("started ffmpeg")
+	/*if err := cmd.Run(); err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}*/
+}
+
+func webViewHelper() {
+	w := webview.New(true)
+	defer w.Destroy()
+	w.SetTitle("newsweather")
+	//w.SetSize(1280, 720, webview.HintFixed)
+	w.SetSize(1920, 1080, webview.HintFixed)
+	w.Bind("readWeatherDB", weather.ReadWeatherDB)
+	w.Bind("readHeadlineDB", news.ReadHeadlineDB)
+	w.Bind("readInetDB", inet.ReadInetDB)
+	w.Bind("readStockDB", finance.ReadStockDB)
+	w.Bind("readCryptoDB", finance.ReadCryptoDB)
+	//w.Navigate("https://en.m.wikipedia.org/wiki/Main_Page")
+	w.Navigate("http://127.0.0.1:8888/shell.html")
+	fmt.Println("window loading")
+	w.Run()
+	fmt.Println("window closed")
+}
+
+func NeverExit(name string, f func()) {
+	defer func() {
+		if v := recover(); v != nil {
+			// A panic is detected.
+			fmt.Println(name, "is crashed. Restart it now.")
+			go NeverExit(name, f) // restart
+		}
+	}()
+	f()
+}
+
 func main() {
 	fmt.Println("starting up")
 	fs := http.FileServer(http.Dir("./static"))
@@ -158,32 +201,9 @@ func main() {
 			}
 		}
 	}()
-
 	startup()
-	for {
-		loadPlaylist()
-		w := webview.New(true)
-		defer w.Destroy()
-		w.SetTitle("newsweather")
-		//w.SetSize(1280, 720, webview.HintFixed)
-		w.SetSize(1920, 1080, webview.HintFixed)
-		//shell := "data:text/html,<html><body><p style=\"width:10%;\">Test</p></body></html>"
-		//shell := "data:text/html,<html><body>Test</body></html>"
-		//w.Navigate(shell)
-		//w.Navigate("https://en.m.wikipedia.org/wiki/Main_Page")
-		w.Bind("readWeatherDB", weather.ReadWeatherDB)
-		w.Bind("readHeadlineDB", news.ReadHeadlineDB)
-		w.Bind("readInetDB", inet.ReadInetDB)
-		w.Bind("readStockDB", finance.ReadStockDB)
-		w.Bind("readCryptoDB", finance.ReadCryptoDB)
-		//w.Navigate(readShell())
-		w.Navigate("http://127.0.0.1:8888/shell.html")
-		cmd := newCmd()
-		cmd.Start()
-		/*if err := cmd.Run(); err != nil {
-			fmt.Printf("Error: %v\n", err)
-		}*/
-		w.Run()
-		speaker.Close()
-	}
+	go NeverExit("audioHelper", audioHelper)
+	go NeverExit("ffmpegHelper", ffmpegHelper)
+	go NeverExit("webViewHelper", webViewHelper)
+	select {}
 }
