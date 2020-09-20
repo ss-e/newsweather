@@ -10,11 +10,11 @@ import (
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/vorbis"
 	"github.com/webview/webview"
-	"io/ioutil"
-	"log"
+	//"io/ioutil"
+	//"log"
 	"math/rand"
 	"net/http"
-	"net/url"
+	//"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -24,18 +24,15 @@ import (
 var audioDB []string
 var bitrate string = "4500k"
 
+/*
 func readShell() string {
-	content, err := ioutil.ReadFile("./shell.html")
+	content, err := ioutil.ReadFile("./static/shell.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 	return "data:text/html," + url.QueryEscape(string(content))
 }
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, readShell())
-}
-
+*/
 //Queue struct
 type Queue struct {
 	streamers []beep.Streamer
@@ -150,7 +147,8 @@ func newCmd() *exec.Cmd {
 
 func main() {
 	fmt.Println("starting up")
-	http.HandleFunc("/", handler)
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/", fs)
 	go func() {
 		for {
 			fmt.Println("starting up http")
