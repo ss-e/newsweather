@@ -128,10 +128,11 @@ func loadPlaylist() {
 }
 
 func startup() {
-	weather.Startup()
+	//weather.Startup()
 	news.Startup()
-	inet.Startup()
-	finance.Startup()
+	//inet.Startup()
+	//finance.Startup()
+	fmt.Println("startup complete")
 }
 
 func newCmd() *exec.Cmd {
