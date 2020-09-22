@@ -128,7 +128,7 @@ func loadPlaylist() {
 }
 
 func startup() {
-	//weather.Startup()
+	weather.Startup()
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
