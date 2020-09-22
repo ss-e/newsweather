@@ -694,7 +694,8 @@ function nextMainView() {
     console.log("attempt to destroy chart failed with: ", err)
     }
   }
-  console.log("from:", mainscreen, "displaying: ", mainscreen[0])
+  //console.log("from:", mainscreen, "displaying: ", mainscreen[0])
+  console.log("displaying: ", mainscreen[0])
   switch (mainscreen[0].charAt(0)) {
     case 'b':
       document.getElementById("bumper").style.display = "flex"
