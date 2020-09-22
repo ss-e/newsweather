@@ -17,6 +17,7 @@ import (
 	//"net/url"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"time"
 )
@@ -178,6 +179,8 @@ func webViewHelper() {
 }
 
 func NeverExit(name string, f func()) {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c)
 	defer func() {
 		if v := recover(); v != nil {
 			// A panic is detected.
