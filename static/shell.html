@@ -4,11 +4,11 @@
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style>
-  :root {
+  /*:root {
     --mawe: 575.6px;
     --mw: 250px;
     --mwb: 680px;
-  }
+  }*/
 @keyframes marquee {
   0%   { transform: translate(0, 0); }
   100% { transform: translate(-100%, 0); }
@@ -16,22 +16,32 @@
 @keyframes wmarq {
   0%   { transform: translateX(0); }
   20% { transform: translateX(0); }
-  70% { transform: translateX(calc(-100% + var(--mawe))); }
-  100% { transform: translateX(calc(-100% + var(--mawe))); }
+  70% { transform: translateX(calc(-100% + 575.6px)); }
+  100% { transform: translateX(calc(-100% + 575.6px)); }
+  /*70% { transform: translateX(calc(-100% + var(--mawe))); }
+  100% { transform: translateX(calc(-100% + var(--mawe))); }*/
   /*80% { transform: translateX(calc(-100% + 500px)); }
   100% { transform: translateX(calc(-100% + 500px)); }*/
 }
 @keyframes slide {
   0% { transform: translateY(0); }
   10% { transform: translateY(0); }
+  80% { transform: translateY(calc(-100% + 250px)); }
+  100% { transform: translateY(calc(-100% + 250px)); }
+  /*
   80% { transform: translateY(calc(-100% + var(--mw))); }
   100% { transform: translateY(calc(-100% + var(--mw))); }
+  */
 }
 @keyframes bigslide {
   0% { transform: translateY(0); }
   10% { transform: translateY(0); }
+  80% { transform: translateY(calc(-100% + 680px)); }
+  100% { transform: translateY(calc(-100% + 680px)); }
+  /*
   80% { transform: translateY(calc(-100% + var(--mwb))); }
   100% { transform: translateY(calc(-100% + var(--mwb))); }
+  */
 }
 .body {
   padding:0;

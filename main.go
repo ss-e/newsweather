@@ -162,7 +162,7 @@ func ffmpegHelper() {
 func webViewHelper() {
 	w := webview.New(true)
 	defer w.Destroy()
-	w.SetTitle("newsweather")
+	//w.SetTitle("newsweather")
 	//w.SetSize(1280, 720, webview.HintFixed)
 	w.SetSize(1920, 1080, webview.HintFixed)
 	w.Bind("readWeatherDB", weather.ReadWeatherDB)

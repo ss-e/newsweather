@@ -93,7 +93,7 @@ func getCurrentTemp() {
 	t2 = nil
 	//fmt.Println("temp length is:", len(temp))
 	for i := 0; i < len(temp); i++ {
-		fmt.Println("loading temp batch ", i)
+		fmt.Println("loading temperature batch:", i+1, "/", len(temp))
 		time.Sleep(5 * time.Second)
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
 		//fmt.Println("url is: ", url)
