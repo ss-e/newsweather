@@ -127,13 +127,14 @@ func loadPlaylist() {
 	}
 }
 
+/*
 func startup() {
 	weather.Startup()
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
-}
+}*/
 
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
@@ -204,7 +205,12 @@ func main() {
 			}
 		}
 	}()
-	startup()
+	//startup()
+	weather.Startup()
+	news.Startup()
+	inet.Startup()
+	finance.Startup()
+	fmt.Println("startup complete")
 	go NeverExit("audioHelper", audioHelper)
 	//go NeverExit("ffmpegHelper", ffmpegHelper)
 	go NeverExit("webViewHelper", webViewHelper)
