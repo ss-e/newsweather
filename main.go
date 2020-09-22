@@ -206,7 +206,7 @@ func main() {
 	}()
 	startup()
 	go NeverExit("audioHelper", audioHelper)
-	go NeverExit("ffmpegHelper", ffmpegHelper)
+	//go NeverExit("ffmpegHelper", ffmpegHelper)
 	go NeverExit("webViewHelper", webViewHelper)
 	select {}
 }
