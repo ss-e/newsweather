@@ -30,7 +30,7 @@ var weatherSite string = "https://api.openweathermap.org/data/2.5/"
 
 //ReadWeatherDB return weatherdb
 func ReadWeatherDB() []Data {
-	//fmt.Println("dump: ", weatherDB)
+	fmt.Println("weatherdb dump: ", weatherDB)
 	return weatherDB
 }
 
