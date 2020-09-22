@@ -130,8 +130,8 @@ func loadPlaylist() {
 func startup() {
 	//weather.Startup()
 	news.Startup()
-	//inet.Startup()
-	//finance.Startup()
+	inet.Startup()
+	finance.Startup()
 	fmt.Println("startup complete")
 }
 
@@ -142,7 +142,7 @@ func newCmd() *exec.Cmd {
 		"-f", "flv", "-ac", "2", "-ar", "44100",
 		"-vcodec", "libx264", "-g", "60", "-keyint_min", "30", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p",
 		"-preset", "ultrafast", "-acodec", "aac", "-threads", "1", "-strict", "normal",
-		"-bufsize", bitrate, "rtmp://live-yto.twitch.tv/app/live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74",
+		"-bufsize", bitrate, "rtmp://live-dfw.twitch.tv/app/live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74",
 	)
 }
 
@@ -204,7 +204,7 @@ func main() {
 	}()
 	startup()
 	go NeverExit("audioHelper", audioHelper)
-	//go NeverExit("ffmpegHelper", ffmpegHelper)
+	go NeverExit("ffmpegHelper", ffmpegHelper)
 	go NeverExit("webViewHelper", webViewHelper)
 	select {}
 }
