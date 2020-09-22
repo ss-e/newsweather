@@ -161,6 +161,7 @@ func ffmpegHelper() {
 }
 
 func webViewHelper() {
+	fmt.Println("starting webview")
 	w := webview.New(true)
 	defer w.Destroy()
 	//w.SetTitle("newsweather")
@@ -172,6 +173,7 @@ func webViewHelper() {
 	w.Bind("readStockDB", finance.ReadStockDB)
 	w.Bind("readCryptoDB", finance.ReadCryptoDB)
 	//w.Navigate("https://en.m.wikipedia.org/wiki/Main_Page")
+	fmt.Println("navigating")
 	w.Navigate("http://127.0.0.1:8888/shell.html")
 	fmt.Println("window loading")
 	w.Run()
