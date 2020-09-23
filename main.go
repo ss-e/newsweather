@@ -180,6 +180,12 @@ func webViewHelper() {
 	w.Run()
 	fmt.Println("window closed")
 }
+func NErecover(name string, f func()) {
+	v := recover()
+	// A panic is detected.
+	fmt.Println(v, name, "has paniced. Restarting.")
+	go NeverExit(name, f) // restart
+}
 
 func NeverExit(name string, f func()) {
 	/*
@@ -191,12 +197,7 @@ func NeverExit(name string, f func()) {
 			}
 		}()
 	*/
-	defer func() {
-		v := recover()
-		// A panic is detected.
-		fmt.Println(v, "has paniced. Restarting.")
-		go NeverExit(name, f) // restart
-	}()
+	defer NErecover(name, f)
 	fmt.Println("Calling ", name)
 	f()
 	fmt.Println("Returned normally.")
