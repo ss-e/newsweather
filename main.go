@@ -17,7 +17,9 @@ import (
 	//"net/url"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"time"
 )
 
@@ -209,6 +211,17 @@ func NeverExit(name string, f func()) {
 }
 
 func main() {
+	signalChannel := make(chan os.Signal, 2)
+	signal.Notify(signalChannel)
+	go func() {
+		sig := <-signalChannel
+		switch sig {
+		case os.Interrupt:
+			fmt.Println("OS interrupt was called!")
+		case syscall.SIGABRT:
+			fmt.Println("SIGABRT was called!")
+		}
+	}()
 	fmt.Println("starting up")
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
