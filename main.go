@@ -212,7 +212,7 @@ func NeverExit(name string, f func()) {
 
 func main() {
 	signalChannel := make(chan os.Signal, 2)
-	signal.Notify(signalChannel)
+	signal.Notify(signalChannel, syscall.SIGABRT)
 	go func() {
 		sig := <-signalChannel
 		switch sig {
