@@ -182,14 +182,24 @@ func webViewHelper() {
 }
 
 func NeverExit(name string, f func()) {
+	/*
+		defer func() {
+			if v := recover(); v != nil {
+				// A panic is detected.
+				fmt.Println(name, "is crashed. Restart it now.")
+				go NeverExit(name, f) // restart
+			}
+		}()
+	*/
 	defer func() {
-		if v := recover(); v != nil {
-			// A panic is detected.
-			fmt.Println(name, "is crashed. Restart it now.")
-			go NeverExit(name, f) // restart
-		}
+		v := recover()
+		// A panic is detected.
+		fmt.Println(v, "has paniced. Restarting.")
+		go NeverExit(name, f) // restart
 	}()
+	fmt.Println("Calling ", name)
 	f()
+	fmt.Println("Returned normally.")
 }
 
 func main() {
