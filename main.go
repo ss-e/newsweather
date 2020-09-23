@@ -211,8 +211,8 @@ func NeverExit(name string, f func()) {
 }
 
 func main() {
-	signalChannel := make(chan os.Signal, 2)
-	signal.Notify(signalChannel, syscall.SIGABRT)
+	signalChannel := make(chan os.Signal, 1)
+	signal.Notify(signalChannel)
 	go func() {
 		sig := <-signalChannel
 		switch sig {
@@ -220,6 +220,8 @@ func main() {
 			fmt.Println("OS interrupt was called!")
 		case syscall.SIGABRT:
 			fmt.Println("SIGABRT was called!")
+		default:
+			fmt.Println("Got signal:", sig)
 		}
 	}()
 	fmt.Println("starting up")
