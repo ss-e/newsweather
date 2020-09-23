@@ -147,10 +147,11 @@ func newCmd() *exec.Cmd {
 	)
 }
 
+/*
 func audioHelper() {
 	loadPlaylist()
 	fmt.Println("playlist loaded")
-}
+}*/
 
 func ffmpegHelper() {
 	cmd := newCmd()
@@ -184,8 +185,11 @@ func webViewHelper() {
 func NErecover(name string, f func()) {
 	v := recover()
 	// A panic is detected.
-	fmt.Println(v, name, "has paniced. Restarting.")
-	go NeverExit(name, f) // restart
+	if v != nil {
+		fmt.Println(v, name, "has paniced. Restarting.")
+		go NeverExit(name, f) // restart
+	}
+	fmt.Println(v, name, "is exiting normally")
 }
 
 func NeverExit(name string, f func()) {
@@ -223,7 +227,7 @@ func main() {
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
-	go NeverExit("audioHelper", audioHelper)
+	go NeverExit("loadPlaylist", loadPlaylist)
 	go NeverExit("ffmpegHelper", ffmpegHelper)
 	go NeverExit("webViewHelper", webViewHelper)
 	select {}
