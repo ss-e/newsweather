@@ -156,6 +156,7 @@ func ffmpegHelper() {
 	cmd := newCmd()
 	cmd.Start()
 	fmt.Println("started ffmpeg")
+	cmd.Wait()
 	/*if err := cmd.Run(); err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}*/
