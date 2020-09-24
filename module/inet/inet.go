@@ -47,9 +47,10 @@ func readToDB(dbname string) {
 		fmt.Println(err)
 	}
 	fmt.Println("read, unmarshalling")
-	err = json.Unmarshal(jsonFile, &InetDB)
-	if err != nil {
-		fmt.Println("error reading inet db: ", err)
+	err2 := json.Unmarshal(jsonFile, &InetDB)
+	if err2 != nil {
+		fmt.Println("experienced error")
+		fmt.Println("error reading inet db: ", err2)
 		//fmt.Println("dump:", jsonFile)
 	}
 }
