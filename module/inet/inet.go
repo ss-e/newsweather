@@ -53,6 +53,7 @@ func readToDB(dbname string) {
 		fmt.Println("error reading inet db: ", err2)
 		//fmt.Println("dump:", jsonFile)
 	}
+	fmt.Println("readToDB completed successfully")
 }
 
 func schedule(f func(), interval time.Duration) *time.Ticker {
@@ -80,7 +81,7 @@ func getCurrentInetStatus() {
 		defer response.Body.Close()
 		if InetDB[i].Name == "Facebook" {
 			var jsonResponse map[string]interface{}
-			err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+			err := json.NewDecoder(response.Body).Decode(&jsonResponse)
 			if err != nil {
 				fmt.Println("error:", err)
 				fmt.Println("dump:", response)
