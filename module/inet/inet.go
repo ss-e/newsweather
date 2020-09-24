@@ -41,6 +41,7 @@ func Startup() error {
 //ReadToDB read cities in database
 func readToDB(dbname string) {
 	// open json file
+	fmt.Println("attempting to read: ", dbname)
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
 		fmt.Println(err)
