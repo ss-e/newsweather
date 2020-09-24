@@ -96,7 +96,11 @@ func getCurrentInetStatus() {
 			InetDB[i].Status = []string{}
 			fp := gofeed.NewParser()
 			feed, err := fp.Parse(response.Body)
-			//fmt.Println("parsed")
+			if err != nil {
+				fmt.Println("parse error:", err)
+				InetDB[i].Status = []string{"OK"}
+			}
+			fmt.Println("parsed")
 			for y := range feed.Items {
 				//fmt.Println("checking item ", y, " with values: ", feed.Items[y])
 				now := time.Now()
@@ -118,10 +122,7 @@ func getCurrentInetStatus() {
 					InetDB[i].Status = append(InetDB[i].Status, "OK")
 				}
 			}
-			if err != nil {
-				fmt.Println("error:", err)
-				InetDB[i].Status = []string{"OK"}
-			}
+
 		}
 	}
 }
