@@ -97,7 +97,7 @@ func getCurrentInetStatus() {
 			fp := gofeed.NewParser()
 			feed, err := fp.Parse(response.Body)
 			if err != nil {
-				fmt.Println("Error parsing:"+InetDB[i].Name+":", err)
+				fmt.Println("Error parsing: "+InetDB[i].Name+" : ", err)
 				InetDB[i].Status = []string{"OK"}
 				break
 			}
