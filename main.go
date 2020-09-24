@@ -55,6 +55,11 @@ func (q *Queue) Add(streamers ...beep.Streamer) {
 func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	// We use the filled variable to track how many samples we've
 	// successfully filled already. We loop until all samples are filled.
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("Panic!: ", err)
+		}
+	}()
 	filled := 0
 	for filled < len(samples) {
 		// There are no streamers in the queue, so we stream silence.
@@ -94,6 +99,7 @@ func loadPlaylist() {
 	})
 	audioDB = audioDB[1:]
 	if err != nil {
+		fmt.Println("Unable to walk filepath! Panicing")
 		panic(err)
 	}
 	rand.Shuffle(len(audioDB), func(i, j int) {
