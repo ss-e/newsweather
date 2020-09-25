@@ -50,21 +50,32 @@ func redditOAuth() {
 	response, err := netClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	defer response.Body.Close()
 	//var temp2 []weatherData
 	var jsonResponse map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
-		fmt.Println("error:", err)
+		fmt.Println("Error decoding reddit access token resonse:", err)
 		fmt.Println("dump:", response)
 	} else {
 		//fmt.Println("dump:", jsonResponse)
 		//fmt.Println("key is: ", jsonResponse["access_token"], " expires in: ", jsonResponse["expires_in"])
-		redditAccessToken = jsonResponse["access_token"].(string)
-		thisTime := time.Now()
-		redditAccessTokenExpiry = thisTime.Unix() + int64(jsonResponse["expires_in"].(float64))
-		//fmt.Println("key is: ", redditAccessToken, " expires at: ", redditAccessTokenExpiry)
+		redditAccessTokenTemp, ok := jsonResponse["access_token"].(string)
+		if !ok {
+			fmt.Println("Error with reddit access token")
+		} else {
+			redditAccessToken = redditAccessTokenTemp
+			thisTime := time.Now()
+			redditAccessTokenExpiryTemp, ok := jsonResponse["expires_in"].(float64)
+			if !ok {
+				fmt.Println("Error with reddit access token expiry time")
+			} else {
+				redditAccessTokenExpiry = thisTime.Unix() + int64(redditAccessTokenExpiryTemp)
+				//fmt.Println("key is: ", redditAccessToken, " expires at: ", redditAccessTokenExpiry)
+			}
+		}
 	}
 }
 
@@ -84,31 +95,54 @@ func getCurrentHeadlines() {
 		Timeout: time.Second * 10,
 	}
 	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Println("Error creating news request:", err)
+	}
 	req.Header.Add("Authorization", "bearer "+redditAccessToken)
 	req.Header.Set("user-agent", "newsweather/0.1")
 	response, err := netClient.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error executing news request:", err)
 	}
 	defer response.Body.Close()
 	var jsonResponse map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
-		fmt.Println("error:", err)
+		fmt.Println("Error decoding news response:", err)
 		fmt.Println("dump:", response)
 	} else {
 		//fmt.Println("response:", jsonResponse)
-		tdb1 := jsonResponse["data"].(map[string]interface{})
-		//fmt.Println("tdb1 success")
-		tdb2 := tdb1["children"].([]interface{})
-		//fmt.Println("tdb2 success, len:", len(tdb2))
-		for i := 0; i < 25; i++ {
-			tdb3 := tdb2[i].(map[string]interface{})
-			tdb4 := tdb3["data"].(map[string]interface{})
-			if tdb4["stickied"] == false {
-				HeadlineDB = append(HeadlineDB, tdb4["title"].(string))
+		tdb1, ok := jsonResponse["data"].(map[string]interface{})
+		if !ok {
+			fmt.Println("Error with news response data:", err)
+			fmt.Println("dump:", jsonResponse["data"])
+		} else {
+			tdb2, ok := tdb1["children"].([]interface{})
+			if !ok {
+				fmt.Println("Error with news response data children:", err)
+				fmt.Println("dump:", tdb1["children"])
+			} else {
+				for i := 0; i < 25; i++ {
+					tdb3, ok := tdb2[i].(map[string]interface{})
+					if !ok {
+						fmt.Println("Error with news response data tdb3:", err)
+						fmt.Println("dump:", tdb1)
+					} else {
+						tdb4, ok := tdb3["data"].(map[string]interface{})
+						if !ok {
+							fmt.Println("Error with news response data tdb4:", err)
+							fmt.Println("dump:", tdb1)
+						} else {
+							if tdb4["stickied"] == false {
+								HeadlineDB = append(HeadlineDB, tdb4["title"].(string))
+							}
+						}
+					}
+				}
+				HeadlineDB = HeadlineDB[:25]
 			}
 		}
-		HeadlineDB = HeadlineDB[:25]
+		//fmt.Println("tdb1 success")
+		//fmt.Println("tdb2 success, len:", len(tdb2))
 	}
 }

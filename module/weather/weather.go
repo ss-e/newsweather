@@ -61,11 +61,11 @@ func readToDB(dbname string) {
 	// open json file
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("error reading weather db: ", err)
 	}
 	err = json.Unmarshal(jsonFile, &weatherDB)
 	if err != nil {
-		fmt.Println("error reading weather db: ", err)
+		fmt.Println("error unmarshalling weather db: ", err)
 		//fmt.Println("dump:", jsonFile)
 	}
 }
@@ -99,14 +99,14 @@ func getCurrentTemp() {
 		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error getcurrenttemp()", err)
 		}
 		defer response.Body.Close()
 		//var temp2 []weatherData
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
-			fmt.Println("error:", err)
+			fmt.Println("error decoding getcurrenttemp:", err)
 			fmt.Println("dump:", response)
 		} else {
 			//fmt.Println("we made it this far:", jsonResponse)

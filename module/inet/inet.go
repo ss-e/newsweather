@@ -83,14 +83,23 @@ func getCurrentInetStatus() {
 			var jsonResponse map[string]interface{}
 			err := json.NewDecoder(response.Body).Decode(&jsonResponse)
 			if err != nil {
-				fmt.Println("error:", err)
+				fmt.Println("Error decoding response from Facebook:", err)
 				fmt.Println("dump:", response)
 			} else {
 				//fmt.Println("response:", jsonResponse)
-				tdb1 := jsonResponse["current"].(map[string]interface{})
-				//fmt.Println("tdb1 success - inet", tdb1)
-				InetDB[i].Status[0] = tdb1["subject"].(string)
-				//fmt.Println("tdb1 input", InetDB[i].Status[0])
+				tdb1, ok := jsonResponse["current"].(map[string]interface{})
+				if !ok {
+					fmt.Println("Error decoding current response from Facebook")
+				} else {
+					//fmt.Println("tdb1 success - inet", tdb1)
+					fbookTemp, ok := tdb1["subject"].(string)
+					if !ok {
+						fmt.Println("Error decoding subject response from Facebook")
+					} else {
+						//fmt.Println("tdb1 input", InetDB[i].Status[0])
+						InetDB[i].Status[0] = fbookTemp
+					}
+				}
 			}
 		} else {
 			InetDB[i].Status = []string{}
