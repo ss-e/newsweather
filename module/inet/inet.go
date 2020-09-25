@@ -101,6 +101,7 @@ func getCurrentInetStatus() {
 				InetDB[i].Status = []string{"OK"}
 				break
 			}
+			fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
 			for y := range feed.Items {
 				fmt.Println("checking item ", y, " with values: ", feed.Items[y])
 				now := time.Now()
