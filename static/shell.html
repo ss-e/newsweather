@@ -613,27 +613,36 @@ function nextFinanceTab() {
 }
 /* news headline ticker */
 function getNewsHeadlines () {
-  readHeadlineDB().then((temp) => {
-    document.getElementById('ticker').innerHTML = "";
-    var m = document.createElement("p");
-    m.id = "tickerchild"
-    m.textContent = temp.join(" \u2022 ")
-    m.addEventListener('animationend', () => {
-      getNewsHeadlines()
-    });
-    document.getElementById('ticker').appendChild(m)
-  })
+  try {
+    readHeadlineDB().then((temp) => {
+      document.getElementById('ticker').innerHTML = "";
+      var m = document.createElement("p");
+      m.id = "tickerchild"
+      m.textContent = temp.join(" \u2022 ")
+      m.addEventListener('animationend', () => {
+        getNewsHeadlines()
+      });
+      document.getElementById('ticker').appendChild(m)
+    })
+  }
+  catch {
+    console.log("Error reading news db! Called from getNewsHeadlines")
+  }
 }
 
 /* internet site uptime */
 function getInetData () {
-  readInetDB().then((temp) => {
-    //console.log(JSON.stringify(temp))
-    //console.log("item 0 now temp: ",temp[0].Now[0], " id:", temp[0].Now[1])
-    inetSym = temp
-    //nextWeatherTab()
-  })
-
+  try {
+    readInetDB().then((temp) => {
+      //console.log(JSON.stringify(temp))
+      //console.log("item 0 now temp: ",temp[0].Now[0], " id:", temp[0].Now[1])
+      inetSym = temp
+      //nextWeatherTab()
+    })
+  }
+  catch {
+    console.log("Error reading inet db! Called from getInetData")
+  }
 }
 function nextInetUptime() {
   console.log("inetsym len:",inetSym.length)
@@ -998,6 +1007,7 @@ function nextMainView() {
 var mapsPlaceholder = [];
 window.onload = init;
 function init() {
+  console.log("init")
   var element = document.getElementById('debug');
   L.Map.addInitHook(function () {
     mapsPlaceholder.push(this); // Use whatever global scope variable you like.
