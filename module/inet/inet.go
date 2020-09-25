@@ -41,12 +41,12 @@ func Startup() error {
 //ReadToDB read cities in database
 func readToDB(dbname string) {
 	// open json file
-	fmt.Println("attempting to read: ", dbname)
+	//fmt.Println("attempting to read: ", dbname)
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("read, unmarshalling")
+	//fmt.Println("read inet db, unmarshalling")
 	err2 := json.Unmarshal(jsonFile, &InetDB)
 	if err2 != nil {
 		fmt.Println("experienced error")
@@ -122,7 +122,7 @@ func getCurrentInetStatus() {
 						InetDB[i].Status = append(InetDB[i].Status, "OK")
 					}
 				}
-				fmt.Println(InetDB[i].Name + "parsed successfully")
+				fmt.Println("inet: " + InetDB[i].Name + " parsed successfully")
 			}
 		}
 	}

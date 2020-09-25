@@ -93,7 +93,7 @@ func getCurrentTemp() {
 	t2 = nil
 	//fmt.Println("temp length is:", len(temp))
 	for i := 0; i < len(temp); i++ {
-		fmt.Println("loading temperature batch:", i+1, "/", len(temp))
+		fmt.Println("loading map temperature batch:", i+1, "/", len(temp))
 		time.Sleep(5 * time.Second)
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
 		//fmt.Println("url is: ", url)
@@ -177,7 +177,7 @@ func get6hrTemp() {
 			ttt3 := ttt1["weather"].([]interface{})
 			ttt4 := ttt3[0].(map[string]interface{})
 			weatherDB[i].W3[1] = int(ttt4["id"].(float64))
-			fmt.Println("index:", i, "w1:", weatherDB[i].W1[0], ",", weatherDB[i].W1[1], "w2:", weatherDB[i].W2[0], ",", weatherDB[i].W2[1], "w3:", weatherDB[i].W3[0], ",", weatherDB[i].W3[1])
+			fmt.Println("weather onecall index:", i, "w1:", weatherDB[i].W1[0], ",", weatherDB[i].W1[1], "w2:", weatherDB[i].W2[0], ",", weatherDB[i].W2[1], "w3:", weatherDB[i].W3[0], ",", weatherDB[i].W3[1])
 		}
 	}
 }
