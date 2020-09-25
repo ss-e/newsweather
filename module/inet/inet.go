@@ -76,7 +76,7 @@ func getCurrentInetStatus() {
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("inet netclient error")
 		}
 		defer response.Body.Close()
 		if InetDB[i].Name == "Facebook" {
