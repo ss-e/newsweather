@@ -244,13 +244,13 @@ func main() {
 		}
 	}()
 	//startup()
-	weather.Startup()
-	news.Startup()
-	inet.Startup()
-	finance.Startup()
+	//weather.Startup()
+	//news.Startup()
+	//inet.Startup()
+	//finance.Startup()
 	fmt.Println("startup complete")
 	go NeverExit("loadPlaylist", loadPlaylist)
-	go NeverExit("ffmpegHelper", ffmpegHelper)
+	//go NeverExit("ffmpegHelper", ffmpegHelper)
 	go NeverExit("webViewHelper", webViewHelper)
 	select {}
 }
