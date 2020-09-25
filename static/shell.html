@@ -656,9 +656,15 @@ function nextInetUptime() {
   catch(err) {
     console.log("error defining inetSym status!")
   }
-  //console.log("inet name ", inetSym[ineti].Name ," status:", inetSym[ineti].Status)
+  try {
+    console.log("inet name ", inetSym[ineti].Name ," status:", inetSym[ineti].Status)
+  }
+  catch(err) {
+    console.log("error outputting name/status:", err)
+  }
   var result = ""
   try {
+    console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
         result += "\u2022 " + currentValue + " <br />"
