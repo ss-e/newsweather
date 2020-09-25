@@ -636,11 +636,17 @@ function getInetData () {
 
 }
 function nextInetUptime() {
+  console.log("inetsym len:",inetSym.length)
   if (ineti == inetSym.length) {
     ineti = 0
   }
   var s = document.getElementById('inet')
-  var list = inetSym[ineti].Status
+  try {
+    var list = inetSym[ineti].Status
+  }
+  catch(err) {
+    console.log("error defining inetSym status!")
+  }
   //console.log("inet name ", inetSym[ineti].Name ," status:", inetSym[ineti].Status)
   var result = ""
   try {

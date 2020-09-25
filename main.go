@@ -224,6 +224,7 @@ func main() {
 		switch sig {
 		case os.Interrupt:
 			fmt.Println("OS interrupt was called!")
+			os.Exit(3)
 		case syscall.SIGABRT:
 			fmt.Println("SIGABRT was called!")
 		default:
