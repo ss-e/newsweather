@@ -250,7 +250,7 @@ func main() {
 	finance.Startup()
 	fmt.Println("startup complete")
 	go NeverExit("webViewHelper", webViewHelper)
-	go NeverExit("loadPlaylist", loadPlaylist)
+	//go NeverExit("loadPlaylist", loadPlaylist)
 	//go NeverExit("ffmpegHelper", ffmpegHelper)
 	select {}
 }
