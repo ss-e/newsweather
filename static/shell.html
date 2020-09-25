@@ -667,7 +667,7 @@ function nextInetUptime() {
   }*/
   var result = ""
   try {
-    console.log("list length: ", list.length)
+    //console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
         result += "\u2022 " + currentValue + " <br />"
@@ -678,13 +678,13 @@ function nextInetUptime() {
   } catch (e) {
       if (e instanceof ReferenceError) {
         result = "OK"
-        console.log("unable to parse entry with error:", e)
+        console.log("unable to parse list entries")
       }
   }
   try {
     s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
   } catch (e) {
-    console.log("unable to output entry for error:", e)
+    console.log("unable to output entry")
   }
   ineti++
 }
