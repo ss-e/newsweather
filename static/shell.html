@@ -640,8 +640,8 @@ function nextInetUptime() {
     ineti = 0
   }
   var s = document.getElementById('inet')
-  var list = inetSym[ineti].status
-  console.log("inet name ", inetSym[ineti].name ," status:", inetSym[ineti].status)
+  var list = inetSym[ineti].Status
+  console.log("inet name ", inetSym[ineti] ," status:", inetSym[ineti].Status)
   var result = ""
   try {
     if (list.length > 0) {
@@ -657,7 +657,7 @@ function nextInetUptime() {
         console.log("unable to parse entry for ", host ," error:", e)
       }
     }
-  s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
+  s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
   ineti++
 }
 /* date */
