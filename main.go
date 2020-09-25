@@ -251,6 +251,6 @@ func main() {
 	fmt.Println("startup complete")
 	go NeverExit("webViewHelper", webViewHelper)
 	go NeverExit("loadPlaylist", loadPlaylist)
-	go NeverExit("ffmpegHelper", ffmpegHelper)
+	//go NeverExit("ffmpegHelper", ffmpegHelper)
 	select {}
 }
