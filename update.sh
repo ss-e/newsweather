@@ -1,8 +1,8 @@
 #!/bin/bash
-killall ffmpeg
+export DISPLAY=:99
 git pull && go build
 rm -rf ~/.cache/newsweather/WebKitCache/
 Xvfb :99 -screen 0 1920x1080x24 &
-DISPLAY=:99 ./newsweather
+./newsweather
 killall ffmpeg
 killall Xvfb
