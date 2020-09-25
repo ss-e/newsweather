@@ -645,15 +645,18 @@ function getInetData () {
   }
 }
 function nextInetUptime() {
-  console.log("inetsym len:",inetSym.length)
-  if (ineti == inetSym.length) {
-    ineti = 0
+  try {
+    console.log("inetsym len:",inetSym.length)
+    if (ineti == inetSym.length) {
+      ineti = 0
+    }
+  } catch(err) {
+    console.log("error finding length!")
   }
   var s = document.getElementById('inet')
   try {
     var list = inetSym[ineti].Status
-  }
-  catch(err) {
+  } catch(err) {
     console.log("error defining inetSym status!")
   }
   /*try {
@@ -675,10 +678,14 @@ function nextInetUptime() {
   } catch (e) {
       if (e instanceof ReferenceError) {
         result = "OK"
-        console.log("unable to parse entry for ", host ," error:", e)
+        console.log("unable to parse entry with error:", e)
       }
-    }
-  s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
+  }
+  try {
+    s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
+  } catch (e) {
+    console.log("unable to output entry for error:", e)
+  }
   ineti++
 }
 /* date */
