@@ -249,8 +249,8 @@ func main() {
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
+	go NeverExit("webViewHelper", webViewHelper)
 	go NeverExit("loadPlaylist", loadPlaylist)
 	go NeverExit("ffmpegHelper", ffmpegHelper)
-	go NeverExit("webViewHelper", webViewHelper)
 	select {}
 }
