@@ -222,8 +222,8 @@ func main() {
 	go func() {
 		sig := <-signalChannel
 		switch sig {
-		case os.Interrupt:
-			fmt.Println("OS interrupt was called!")
+		case os.Interrupt, syscall.SIGTERM:
+			fmt.Println("OS interrupt/SIGTERM was called!")
 			os.Exit(3)
 		case syscall.SIGABRT:
 			fmt.Println("SIGABRT was called!")
