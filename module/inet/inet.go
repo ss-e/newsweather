@@ -99,31 +99,31 @@ func getCurrentInetStatus() {
 			if err != nil {
 				fmt.Println("Error parsing: "+InetDB[i].Name+" : ", err)
 				InetDB[i].Status = []string{"OK"}
-				break
+			} else {
+				fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
+				for y := range feed.Items {
+					fmt.Println("checking item ", y, " with values: ", feed.Items[y])
+					now := time.Now()
+					checktime := time.Now()
+					if feed.Items[y].UpdatedParsed != nil {
+						checktime = *feed.Items[y].UpdatedParsed
+					} else {
+						checktime = *feed.Items[y].PublishedParsed
+					}
+					//fmt.Println("checking time value ", checktime)
+					if checktime.After(now.Add(time.Duration(12) * time.Hour)) {
+						//fmt.Println("item is after")
+						InetDB[i].Status = append(InetDB[i].Status, feed.Items[y].Title)
+						fmt.Println("appended")
+					} else {
+						//fmt.Println("item is not after")
+					}
+					if InetDB[i].Status == nil {
+						InetDB[i].Status = append(InetDB[i].Status, "OK")
+					}
+				}
+				fmt.Println(InetDB[i].Name + "parsed successfully")
 			}
-			fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
-			for y := range feed.Items {
-				fmt.Println("checking item ", y, " with values: ", feed.Items[y])
-				now := time.Now()
-				checktime := time.Now()
-				if feed.Items[y].UpdatedParsed != nil {
-					checktime = *feed.Items[y].UpdatedParsed
-				} else {
-					checktime = *feed.Items[y].PublishedParsed
-				}
-				//fmt.Println("checking time value ", checktime)
-				if checktime.After(now.Add(time.Duration(12) * time.Hour)) {
-					//fmt.Println("item is after")
-					InetDB[i].Status = append(InetDB[i].Status, feed.Items[y].Title)
-					fmt.Println("appended")
-				} else {
-					//fmt.Println("item is not after")
-				}
-				if InetDB[i].Status == nil {
-					InetDB[i].Status = append(InetDB[i].Status, "OK")
-				}
-			}
-			fmt.Println(InetDB[i].Name + "parsed successfully")
 		}
 	}
 }
