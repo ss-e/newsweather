@@ -251,8 +251,8 @@ func getCryptoChartData() {
 		}
 		thisTime := fmt.Sprintf("%v", t2.Unix())
 		//fmt.Printf("%v,\n", thisTime)
-		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"?apikey="+cryptoapikey)
-		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"?apikey="+cryptoapikey, nil)
+		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"&apikey="+cryptoapikey)
+		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"&apikey="+cryptoapikey, nil)
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
