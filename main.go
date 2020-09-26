@@ -57,7 +57,8 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	// successfully filled already. We loop until all samples are filled.
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println("Panic!: ", err)
+			fmt.Println("Audio stream panic!: ", err)
+			loadPlaylist()
 		}
 	}()
 	filled := 0
@@ -86,6 +87,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 
 //Err playlist error
 func (q *Queue) Err() error {
+	fmt.Println("Audio queue playlist error!")
 	return nil
 }
 
