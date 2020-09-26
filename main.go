@@ -146,7 +146,7 @@ func startup() {
 
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
-		"-loglevel fatal", "-hide_banner", "-nostats",
+		"-hide_banner", "-nostats", "-loglevel", "fatal",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
