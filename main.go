@@ -93,6 +93,7 @@ func (q *Queue) Err() error {
 }
 
 func loadPlaylist() {
+	fmt.Println("loading playlist")
 	audioDB = nil
 	rand.Seed(time.Now().UnixNano())
 	root := "/root/newsweather/playlist/"
