@@ -118,17 +118,21 @@ func getStockInfo() {
 			fmt.Println("dump:", response)
 		} else {
 			//fmt.Println("response:", jsonResponse)
-			tdb1 := jsonResponse["quote"].(map[string]interface{})
-			value, ok := tdb1["latestPrice"].(float64)
-			open, ok := tdb1["open"].(float64)
-			changepercent, ok := tdb1["changePercent"].(float64)
-			fmt.Println("for: ", StockDB[i].Ticker, " got value: ", value, " open: ", open, " changepercent: ", changepercent)
-			if ok {
-				StockDB[i].Value = value
-				StockDB[i].Open = open
-				StockDB[i].ChangePercent = changepercent * 100
+			tdb1, ok := jsonResponse["quote"].(map[string]interface{})
+			if !ok {
+				fmt.Println("Finance error response to getstockinfo for ticker item ", StockDB[i].Ticker)
 			} else {
-				fmt.Println("error copying response")
+				value, ok := tdb1["latestPrice"].(float64)
+				open, ok := tdb1["open"].(float64)
+				changepercent, ok := tdb1["changePercent"].(float64)
+				fmt.Println("for: ", StockDB[i].Ticker, " got value: ", value, " open: ", open, " changepercent: ", changepercent)
+				if ok {
+					StockDB[i].Value = value
+					StockDB[i].Open = open
+					StockDB[i].ChangePercent = changepercent * 100
+				} else {
+					fmt.Println("Finance error copying response in getstockinfo for item ", StockDB[i].Ticker)
+				}
 			}
 		}
 	}
@@ -159,33 +163,37 @@ func getStockChartData() {
 			for j := range jsonResponse {
 				//fmt.Println("trying ", j, " attempt")
 				//var tempdata Chartdata
-				tdb1 := jsonResponse[j].(map[string]interface{})
-				//fmt.Println("tdb1 declared: ", tdb1)
-				temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
-				if err != nil {
-					fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, date ", err)
-				}
-				date := temp.Unix()
-				open, err3 := tdb1["open"].(float64)
-				if !err3 {
-					fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, open ", err3)
-				}
-				high, err4 := tdb1["high"].(float64)
-				if !err4 {
-					fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, high ", err4)
-				}
-				low, err5 := tdb1["low"].(float64)
-				if !err5 {
-					fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, low ", err5)
-				}
-				close, err6 := tdb1["close"].(float64)
-				if !err6 {
-					fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, close ", err6)
-				}
-				if err == nil && err3 && err4 && err5 && err6 {
-					//fmt.Println("inputting entry")
-					entry := []float64{float64(date), open, high, low, close}
-					StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
+				tdb1, ok := jsonResponse[j].(map[string]interface{})
+				if !ok {
+					fmt.Println("Finance error response to chartdatainfo for ticker item ", StockDB[i].Ticker)
+				} else {
+					//fmt.Println("tdb1 declared: ", tdb1)
+					temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
+					if err != nil {
+						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, date ", err)
+					}
+					date := temp.Unix()
+					open, err3 := tdb1["open"].(float64)
+					if !err3 {
+						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, open ", err3)
+					}
+					high, err4 := tdb1["high"].(float64)
+					if !err4 {
+						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, high ", err4)
+					}
+					low, err5 := tdb1["low"].(float64)
+					if !err5 {
+						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, low ", err5)
+					}
+					close, err6 := tdb1["close"].(float64)
+					if !err6 {
+						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, close ", err6)
+					}
+					if err == nil && err3 && err4 && err5 && err6 {
+						//fmt.Println("inputting entry")
+						entry := []float64{float64(date), open, high, low, close}
+						StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
+					}
 				}
 			}
 		}
@@ -212,17 +220,21 @@ func getCryptoInfo() {
 			fmt.Println("dump:", response)
 		} else {
 			//fmt.Println("response:", jsonResponse)
-			tdb1 := jsonResponse["result"].(map[string]interface{})
-			tdb2 := tdb1["price"].(map[string]interface{})
-			tdb3 := tdb2["change"].(map[string]interface{})
-			value, ok := tdb2["last"].(float64)
-			changepercent, ok := tdb3["percentage"].(float64)
-			if ok {
-				CryptoDB[i].Value = value
-				CryptoDB[i].ChangePercent = changepercent * 100
-				fmt.Println("for: ", CryptoDB[i].Ticker, " got value: ", CryptoDB[i].Value, " changepercent: ", CryptoDB[i].ChangePercent)
+			tdb1, ok := jsonResponse["result"].(map[string]interface{})
+			if !ok {
+				fmt.Println("Finance error response to getCryptoInfo for ticker item ", CryptoDB[i].Ticker)
 			} else {
-				fmt.Println("error copying response")
+				tdb2 := tdb1["price"].(map[string]interface{})
+				tdb3 := tdb2["change"].(map[string]interface{})
+				value, ok := tdb2["last"].(float64)
+				changepercent, ok := tdb3["percentage"].(float64)
+				if ok {
+					CryptoDB[i].Value = value
+					CryptoDB[i].ChangePercent = changepercent * 100
+					fmt.Println("for: ", CryptoDB[i].Ticker, " got value: ", CryptoDB[i].Value, " changepercent: ", CryptoDB[i].ChangePercent)
+				} else {
+					fmt.Println("error copying response")
+				}
 			}
 		}
 	}
@@ -253,28 +265,36 @@ func getCryptoChartData() {
 		} else {
 			//fmt.Println("resultdump:", jsonResponse)
 			CryptoDB[i].Chartdata = nil
-			tdb1 := jsonResponse["result"].(map[string]interface{})
-			tdb2 := tdb1["1800"].([]interface{})
-			//fmt.Println("found tdb2:", tdb2)
-			for j := range tdb2 {
-				//fmt.Println("tdb2[", j, "] is:", tdb2[j])
-				tdb3, ok := tdb2[j].([]interface{})
-				if ok {
-					//fmt.Println("tdb3 is:", tdb3)
-					date, ok2 := tdb3[0].(float64)
-					open, ok3 := tdb3[1].(float64)
-					high, ok4 := tdb3[2].(float64)
-					low, ok5 := tdb3[3].(float64)
-					close, ok6 := tdb3[4].(float64)
-					if ok2 && ok3 && ok4 && ok5 && ok6 {
-						//fmt.Println("inputting entry:")
-						entry := []float64{float64(date), open, high, low, close}
-						CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
-					} else {
-						fmt.Println("error 2 parsing crypto chart data:")
-					}
+			tdb1, ok := jsonResponse["result"].(map[string]interface{})
+			if !ok {
+				fmt.Println("Finance error response to chartdata for ticker item ", CryptoDB[i].Ticker)
+			} else {
+				tdb2, ok := tdb1["1800"].([]interface{})
+				if !ok {
+					fmt.Println("Finance error response to 1800 for ticker item ", CryptoDB[i].Ticker)
 				} else {
-					fmt.Println("error 1 parsing crypto chart data:")
+					//fmt.Println("found tdb2:", tdb2)
+					for j := range tdb2 {
+						//fmt.Println("tdb2[", j, "] is:", tdb2[j])
+						tdb3, ok := tdb2[j].([]interface{})
+						if ok {
+							//fmt.Println("tdb3 is:", tdb3)
+							date, ok2 := tdb3[0].(float64)
+							open, ok3 := tdb3[1].(float64)
+							high, ok4 := tdb3[2].(float64)
+							low, ok5 := tdb3[3].(float64)
+							close, ok6 := tdb3[4].(float64)
+							if ok2 && ok3 && ok4 && ok5 && ok6 {
+								//fmt.Println("inputting entry:")
+								entry := []float64{float64(date), open, high, low, close}
+								CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
+							} else {
+								fmt.Println("Finance error 2 parsing crypto chart data for ticker item ", CryptoDB[i].Ticker)
+							}
+						} else {
+							fmt.Println("Finance error 1 parsing crypto chart data for ticker item ", CryptoDB[i].Ticker)
+						}
+					}
 				}
 			}
 		}
