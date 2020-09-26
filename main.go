@@ -5,6 +5,7 @@ import (
 	"./module/inet"
 	"./module/news"
 	"./module/weather"
+	"bytes"
 	"fmt"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
@@ -166,13 +167,14 @@ func audioHelper() {
 
 func ffmpegHelper() {
 	for {
+		var stderr bytes.Buffer
 		cmd := newCmd()
 		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+		cmd.Stderr = &stderr
 		fmt.Println("starting ffmpeg")
 		//cmd.Start()
 		if err := cmd.Run(); err != nil {
-			fmt.Printf("Fatal ffmpeg Error: %v\n", err)
+			fmt.Printf("Fatal ffmpeg Error: %v\n", stderr.String())
 		}
 		fmt.Println("ffmpeg exited")
 	}
