@@ -146,6 +146,7 @@ func startup() {
 
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
+		"-loglevel fatal", "-hide_banner", "-nostats",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
@@ -164,13 +165,14 @@ func audioHelper() {
 func ffmpegHelper() {
 	for {
 		cmd := newCmd()
-		cmd.Start()
-		fmt.Println("started ffmpeg")
-		cmd.Wait()
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		fmt.Println("starting ffmpeg")
+		//cmd.Start()
+		if err := cmd.Run(); err != nil {
+			fmt.Printf("Fatal ffmpeg Error: %v\n", err)
+		}
 		fmt.Println("ffmpeg exited")
-		/*if err := cmd.Run(); err != nil {
-			fmt.Printf("Error: %v\n", err)
-		}*/
 	}
 }
 
