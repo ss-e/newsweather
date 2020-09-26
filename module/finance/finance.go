@@ -267,7 +267,7 @@ func getCryptoChartData() {
 			CryptoDB[i].Chartdata = nil
 			tdb1, ok := jsonResponse["result"].(map[string]interface{})
 			if !ok {
-				fmt.Println("Finance error response to crypto chartdata for ticker item ", CryptoDB[i].Ticker, " error: ", ok)
+				fmt.Println("Finance error response to crypto chartdata for ticker item ", CryptoDB[i].Ticker, ". error: ", ok)
 				fmt.Println("resultdump:", jsonResponse)
 			} else {
 				tdb2, ok := tdb1["1800"].([]interface{})
