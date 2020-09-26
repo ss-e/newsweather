@@ -32,6 +32,8 @@ var CryptoDB []Item
 var iexapikey = "pk_e536792fe9314ac4bf94d49a2893af3c"
 var iexsite = "https://cloud.iexapis.com/"
 var cryptoapi = "https://api.cryptowat.ch/markets/binance/"
+var cryptoapikey = "HZHYTYA1E0K18WDDEZQP"
+var cryptoapiprivkey = "v+6BkA4H2Rlg8sRW9U1jDgx7fYA2Y+xOM+I637VW"
 
 //ReadStockDB return weatherdb
 func ReadStockDB() []Item {
@@ -206,7 +208,7 @@ func getCryptoInfo() {
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
 		}
-		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary", nil)
+		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary"+"?apikey="+cryptoapikey, nil)
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
@@ -249,8 +251,8 @@ func getCryptoChartData() {
 		}
 		thisTime := fmt.Sprintf("%v", t2.Unix())
 		//fmt.Printf("%v,\n", thisTime)
-		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime)
-		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime, nil)
+		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"?apikey="+cryptoapikey)
+		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"?apikey="+cryptoapikey, nil)
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
