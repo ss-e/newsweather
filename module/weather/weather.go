@@ -111,25 +111,29 @@ func getCurrentTemp() {
 		} else {
 			//fmt.Println("we made it this far:", jsonResponse)
 			//fmt.Println("count is", jsonResponse["cnt"].(string)
-			responseArr := jsonResponse["list"].([]interface{})
-			for j := 0; j < int(jsonResponse["cnt"].(float64)); j++ {
-				temp2 := responseArr[j].(map[string]interface{})
-				t3 := temp2["main"].(map[string]interface{})
-				t4 := temp2["weather"].([]interface{})
-				t5 := t4[0].(map[string]interface{})
-				id := int(temp2["id"].(float64))
-				nowtemp := int(math.Round(t3["temp"].(float64)))
-				nowid := int(t5["id"].(float64))
-				//fmt.Println("name: ", temp2["name"], "now: ", nowtemp, "weatherid:", nowid)
-				for index := range weatherDB {
-					t0, _ := strconv.Atoi(weatherDB[index].ID)
-					//fmt.Println("comparing ", t0, " & ", id)
-					//if strings.Compare(weatherDB[index].ID, id) == 0 {
-					if t0 == id {
-						//fmt.Println("found at index: ", index)
-						weatherDB[index].Now[0] = nowtemp
-						weatherDB[index].Now[1] = nowid
-						break
+			responseArr, ok := jsonResponse["list"].([]interface{})
+			if !ok {
+				fmt.Println("error decoding response from getcurrenttemp")
+			} else {
+				for j := 0; j < int(jsonResponse["cnt"].(float64)); j++ {
+					temp2 := responseArr[j].(map[string]interface{})
+					t3 := temp2["main"].(map[string]interface{})
+					t4 := temp2["weather"].([]interface{})
+					t5 := t4[0].(map[string]interface{})
+					id := int(temp2["id"].(float64))
+					nowtemp := int(math.Round(t3["temp"].(float64)))
+					nowid := int(t5["id"].(float64))
+					//fmt.Println("name: ", temp2["name"], "now: ", nowtemp, "weatherid:", nowid)
+					for index := range weatherDB {
+						t0, _ := strconv.Atoi(weatherDB[index].ID)
+						//fmt.Println("comparing ", t0, " & ", id)
+						//if strings.Compare(weatherDB[index].ID, id) == 0 {
+						if t0 == id {
+							//fmt.Println("found at index: ", index)
+							weatherDB[index].Now[0] = nowtemp
+							weatherDB[index].Now[1] = nowid
+							break
+						}
 					}
 				}
 			}
@@ -159,25 +163,29 @@ func get6hrTemp() {
 			fmt.Println("error:", err)
 			fmt.Println("dump:", response)
 		} else {
-			responseArr := jsonResponse["hourly"].([]interface{})
-			nowHour := time.Now().Hour()
-			h := 6 - (nowHour % 6)
-			t1 := responseArr[h].(map[string]interface{})
-			weatherDB[i].W1[0] = int(t1["temp"].(float64))
-			tt1 := responseArr[6+h].(map[string]interface{})
-			weatherDB[i].W2[0] = int(tt1["temp"].(float64))
-			ttt1 := responseArr[12+h].(map[string]interface{})
-			weatherDB[i].W3[0] = int(ttt1["temp"].(float64))
-			t3 := t1["weather"].([]interface{})
-			t4 := t3[0].(map[string]interface{})
-			weatherDB[i].W1[1] = int(t4["id"].(float64))
-			tt3 := tt1["weather"].([]interface{})
-			tt4 := tt3[0].(map[string]interface{})
-			weatherDB[i].W2[1] = int(tt4["id"].(float64))
-			ttt3 := ttt1["weather"].([]interface{})
-			ttt4 := ttt3[0].(map[string]interface{})
-			weatherDB[i].W3[1] = int(ttt4["id"].(float64))
-			fmt.Println("weather onecall index:", i, "w1:", weatherDB[i].W1[0], ",", weatherDB[i].W1[1], "w2:", weatherDB[i].W2[0], ",", weatherDB[i].W2[1], "w3:", weatherDB[i].W3[0], ",", weatherDB[i].W3[1])
+			responseArr, ok := jsonResponse["hourly"].([]interface{})
+			if !ok {
+				fmt.Println("error decoding response for 6 hour temp for index: ", i)
+			} else {
+				nowHour := time.Now().Hour()
+				h := 6 - (nowHour % 6)
+				t1 := responseArr[h].(map[string]interface{})
+				weatherDB[i].W1[0] = int(t1["temp"].(float64))
+				tt1 := responseArr[6+h].(map[string]interface{})
+				weatherDB[i].W2[0] = int(tt1["temp"].(float64))
+				ttt1 := responseArr[12+h].(map[string]interface{})
+				weatherDB[i].W3[0] = int(ttt1["temp"].(float64))
+				t3 := t1["weather"].([]interface{})
+				t4 := t3[0].(map[string]interface{})
+				weatherDB[i].W1[1] = int(t4["id"].(float64))
+				tt3 := tt1["weather"].([]interface{})
+				tt4 := tt3[0].(map[string]interface{})
+				weatherDB[i].W2[1] = int(tt4["id"].(float64))
+				ttt3 := ttt1["weather"].([]interface{})
+				ttt4 := ttt3[0].(map[string]interface{})
+				weatherDB[i].W3[1] = int(ttt4["id"].(float64))
+				fmt.Println("weather onecall index:", i, "w1:", weatherDB[i].W1[0], ",", weatherDB[i].W1[1], "w2:", weatherDB[i].W2[0], ",", weatherDB[i].W2[1], "w3:", weatherDB[i].W3[0], ",", weatherDB[i].W3[1])
+			}
 		}
 	}
 }
