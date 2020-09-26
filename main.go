@@ -162,13 +162,16 @@ func audioHelper() {
 }*/
 
 func ffmpegHelper() {
-	cmd := newCmd()
-	cmd.Start()
-	fmt.Println("started ffmpeg")
-	//cmd.Wait()
-	/*if err := cmd.Run(); err != nil {
-		fmt.Printf("Error: %v\n", err)
-	}*/
+	for {
+		cmd := newCmd()
+		cmd.Start()
+		fmt.Println("started ffmpeg")
+		cmd.Wait()
+		fmt.Println("ffmpeg exited")
+		/*if err := cmd.Run(); err != nil {
+			fmt.Printf("Error: %v\n", err)
+		}*/
+	}
 }
 
 func webViewHelper() {
@@ -250,7 +253,7 @@ func main() {
 	finance.Startup()
 	fmt.Println("startup complete")
 	loadPlaylist()
-	ffmpegHelper()
+	go ffmpegHelper()
 	go NeverExit("webViewHelper", webViewHelper)
 	//go NeverExit("loadPlaylist", loadPlaylist)
 	//go NeverExit("ffmpegHelper", ffmpegHelper)
