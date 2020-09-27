@@ -46,9 +46,19 @@
 }
 -->
 <style>
-  @keyframes marquee {
+@keyframes marquee {
   0%   { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-100%, 0, 0); }
+}
+@keyframes wmarq {
+  0%   { transform: translate3d(0); }
+  20% { transform: translate3d(0); }
+  70% { transform: translate3d(calc(-100% + 575px)); }
+  100% { transform: translate3d(calc(-100% + 575px)); }
+  /*70% { transform: translateX(calc(-100% + var(--mawe))); }
+  100% { transform: translateX(calc(-100% + var(--mawe))); }*/
+  /*80% { transform: translateX(calc(-100% + 500px)); }
+  100% { transform: translateX(calc(-100% + 500px)); }*/
 }
 .body {
   padding:0;
