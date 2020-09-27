@@ -150,7 +150,7 @@ func startup() {
 
 //"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
 func newCmd() *exec.Cmd {
-	return exec.Command("ffmpeg",
+	return exec.Command("/usr/local/bin/ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "xcbgrab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
