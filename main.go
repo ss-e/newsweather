@@ -82,6 +82,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 		}
 		// We update the number of filled samples.
 		filled += n
+		fmt.Println("filled is: ", filled)
 	}
 	return len(samples), true
 }
