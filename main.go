@@ -59,7 +59,6 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
-			speaker.Close()
 			loadPlaylist()
 		}
 	}()
@@ -94,6 +93,9 @@ func (q *Queue) Err() error {
 }
 
 func loadPlaylist() {
+	fmt.Println("closing any open playlists")
+	speaker.Close()
+	var queue Queue
 	fmt.Println("loading playlist")
 	audioDB = nil
 	rand.Seed(time.Now().UnixNano())
@@ -105,14 +107,13 @@ func loadPlaylist() {
 	audioDB = audioDB[1:]
 	if err != nil {
 		fmt.Println("Unable to walk filepath! Panicing")
-		panic(err)
+		return
 	}
 	rand.Shuffle(len(audioDB), func(i, j int) {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
 	sr := beep.SampleRate(44100)
 	speaker.Init(sr, sr.N(time.Second/10))
-	var queue Queue
 	speaker.Play(&queue)
 	for i := range audioDB {
 		name := audioDB[i]
