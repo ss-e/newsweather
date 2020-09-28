@@ -588,9 +588,11 @@ function nextFinanceTab() {
     } else {
         var changepercent = parseFloat(parseFloat(finCrypto[stocki].ChangePercent).toFixed(2));
         if (changepercent > 0) {
-          var temp2 = "<p style='color:green;font-size:200%;'> \u2191</p>" + changepercent + "%"
+          //var temp2 = "<p style='color:green;font-size:200%;'> \u2191</p>" + changepercent + "%"
+          var temp2 = "<p style='color:green;font-size:200%;'>\u25B2</p>" + changepercent + "%"
         } else if (changepercent < 0) {
-          var temp2 = "<p style='color:red;font-size:200%;'> \u2193</p>" + changepercent + "%"
+          //var temp2 = "<p style='color:red;font-size:200%;'> \u2193</p>" + changepercent + "%"
+          var temp2 = "<p style='color:red;font-size:200%;'> \u25BC</p>" + changepercent + "%"
         } else if (changepercent == 0) {
           var temp2 = /*"\u8211"*/ "<p style='font-size:200%;> = </p>" + changepercent + "%"
         } else {
@@ -608,9 +610,11 @@ function nextFinanceTab() {
       var temp = parseFloat(finStock[stocki].Value).toFixed(2)
       var changepercent = parseFloat(parseFloat(finStock[stocki].ChangePercent).toFixed(2));
       if (changepercent > 0) {
-        var temp2 = "<p style='color:green;font-size:200%;'>\u2191</p>" + changepercent + "%"
+        //var temp2 = "<p style='color:green;font-size:200%;'>\u2191</p>" + changepercent + "%"
+        var temp2 = "<p style='color:green;font-size:200%;'>\u25B2</p>" + changepercent + "%"
       } else if (changepercent < 0) {
-        var temp2 = "<p style='color:red;font-size:200%;'>\u2193</p>" + changepercent + "%"
+        //var temp2 = "<p style='color:red;font-size:200%;'>\u2193</p>" + changepercent + "%"
+        var temp2 = "<p style='color:red;font-size:200%;'>\u25BC</p>" + changepercent + "%"
       } else if (changepercent == 0) {
         var temp2 = /*"\u8211"*/ "<p style='font-size:200%;> = </p>" + changepercent + "%"
       } else {
@@ -869,10 +873,12 @@ function nextMainView() {
           var enddate = new Date(finCrypto[temp].Chartdata[temp3][0])
           if (temp2 > 0) {
             var color = "#008000"
-            var symbol = "\u2191"
+            //var symbol = "\u2191"
+            var symbol = "\u25B2"
           } else if (temp2 < 0) {
             var color = "#FF0000"
-            var symbol = "\u2193"
+            //var symbol = "\u2193"
+            var symbol = "\u25BC"
           } else {
             var color = "#808080"
             var symbol = /*"\u8211"*/ "="
@@ -951,10 +957,12 @@ function nextMainView() {
           var enddate = new Date(finStock[temp].Chartdata[temp3][0])
           if (temp2 > 0) {
             var color = "#008000"
-            var symbol = "\u2191"
+            //var symbol = "\u2191"
+            var symbol = "\u25B2"
           } else if (temp2 < 0) {
             var color = "#FF0000"
-            var symbol = "\u2193"
+            //var symbol = "\u2193"
+            var symbol = "\u25BC"
           } else {
             var color = "#808080"
             var symbol = /*"\u8211"*/ "="
