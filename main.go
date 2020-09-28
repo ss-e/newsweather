@@ -59,6 +59,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
+			speaker.Close()
 			loadPlaylist()
 		}
 	}()
