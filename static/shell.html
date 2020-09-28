@@ -588,11 +588,11 @@ function nextFinanceTab() {
     } else {
         var changepercent = parseFloat(parseFloat(finCrypto[stocki].ChangePercent).toFixed(2));
         if (changepercent > 0) {
-          var temp2 = "<p style='color:green'> \u2191</p>" + changepercent + "%"
+          var temp2 = "<p style='color:green;font-size:200%;'> \u2191</p>" + changepercent + "%"
         } else if (changepercent < 0) {
-          var temp2 = "<p style='color:red'> \u2193</p>" + changepercent + "%"
+          var temp2 = "<p style='color:red;font-size:200%;'> \u2193</p>" + changepercent + "%"
         } else if (changepercent == 0) {
-          var temp2 = /*"\u8211"*/ '=' + changepercent + "%"
+          var temp2 = /*"\u8211"*/ "<p style='font-size:200%;> = </p>" + changepercent + "%"
         } else {
           var temp2 = "err"
         }
@@ -608,11 +608,11 @@ function nextFinanceTab() {
       var temp = parseFloat(finStock[stocki].Value).toFixed(2)
       var changepercent = parseFloat(parseFloat(finStock[stocki].ChangePercent).toFixed(2));
       if (changepercent > 0) {
-        var temp2 = "<p style='color:green'>\u2191</p>" + changepercent + "%"
+        var temp2 = "<p style='color:green;font-size:200%;'>\u2191</p>" + changepercent + "%"
       } else if (changepercent < 0) {
-        var temp2 = "<p style='color:red'>\u2193</p>" + changepercent + "%"
+        var temp2 = "<p style='color:red;font-size:200%;'>\u2193</p>" + changepercent + "%"
       } else if (changepercent == 0) {
-        var temp2 = /*"\u8211"*/ '=' + changepercent + "%"
+        var temp2 = /*"\u8211"*/ "<p style='font-size:200%;> = </p>" + changepercent + "%"
       } else {
         var temp2 = "err"
       }
