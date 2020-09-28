@@ -63,6 +63,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 		}
 	}()*/
 	filled := 0
+	//fmt.Println("samples len is: ", len(samples))
 	for filled < len(samples) {
 		// There are no streamers in the queue, so we stream silence.
 		if len(q.streamers) == 0 {
@@ -82,7 +83,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 		}
 		// We update the number of filled samples.
 		filled += n
-		fmt.Println("filled is: ", filled, "samples len is: ", len(samples))
+		//fmt.Println("filled is: ", filled, "samples len is: ", len(samples))
 	}
 	return len(samples), true
 }
