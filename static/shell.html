@@ -636,7 +636,7 @@ function getNewsHeadlines () {
         getNewsHeadlines()
       });*/
       m.onbounce = getNewsHeadlines()
-      console.log("appending:",m)
+      console.log("read headline, now appending")
       document.getElementById('ticker').appendChild(m)
     })
   }
@@ -1113,7 +1113,7 @@ mapsPlaceholder[0].on('tileerror', (e) => {
     <div class="stock" id="stock"></div>
     <div class="weather" id="weather"></div>
     <div class="inet" id="inet"></div>
-    <div class="ticker" id="ticker"></div>
+    <div class="ticker" id="ticker">test</div>
   </div>
 </body>
 </html>
