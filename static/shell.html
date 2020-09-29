@@ -634,11 +634,12 @@ function getNewsHeadlines () {
       document.getElementById('ticker').innerHTML = "";
       //var m = document.createElement("p");
       var m = document.createElement("marquee");
-      m.id = "tickerchild"
-      m.class = "tickermarquee"
-      m.behavior = "alternate"
-      m.width = "100%"
-      m.scrollamount = 100
+      m.setAttribute('id', "tickerchild")
+      m.setAttribute('class', "tickermarquee")
+      m.setAttribute('behavior', "alternate")
+      m.setAttribute('width', "100%")
+      m.setAttribute('scrollamount', 100)
+      //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
