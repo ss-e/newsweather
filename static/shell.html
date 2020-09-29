@@ -640,16 +640,14 @@ function getNewsHeadlines () {
       m.setAttribute('width', "100%")
       //m.setAttribute('loop', "1")
       m.setAttribute('scrollamount', 100)
-      m.addEventListener("onfinish", function (event) {
-        console.log("event called, restarting function")
-        getNewsHeadlines()
-      })
+      m.addEventListener("onfinish", getNewsHeadlines())
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       });*/
       //m.onbounce = getNewsHeadlines()
+      console.log("newsheadline appending child")
       document.getElementById('ticker').appendChild(m)
     })
   }
