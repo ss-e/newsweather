@@ -1060,9 +1060,9 @@ function init() {
     ext: 'png'
   }).addTo(mapsPlaceholder[0]);
   mapsPlaceholder[0].on('moveend', function() {
-    console.log("triggering map invalidatesize")
     //temp = mapsPlaceholder[0].invalidateSize
     setTimeout(function () {
+      console.log("triggering map invalidatesize")
       mapsPlaceholder[0].invalidateSize()
       }, 1000)
   })
