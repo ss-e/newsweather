@@ -649,13 +649,19 @@ function getNewsHeadlines() {
         console.log("onfinish called, finished news headlines, restarting")
         getNewsHeadlines()
       }, false)*/
-      m.addEventListener("finish", getNewsHeadlines, true)
-      m.addEventListener("bounce", getNewsHeadlines, true)
+      /*m.addEventListener("finish", getNewsHeadlines, true)
+      m.addEventListener("bounce", getNewsHeadlines, true)*/
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
-      /*m.addEventListener('animationend', () => {
+      m.addEventListener('animationend', () => {
         getNewsHeadlines()
-      });*/
+      })
+      m.addEventListener('finish', () => {
+        getNewsHeadlines()
+      })
+      m.addEventListener('bounce', () => {
+        getNewsHeadlines()
+      })
       //m.onbounce = getNewsHeadlines()
       document.getElementById('ticker').appendChild(m)
     })
