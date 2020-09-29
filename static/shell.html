@@ -640,7 +640,7 @@ function getNewsHeadlines () {
       m.setAttribute('width', "100%")
       m.setAttribute('loop', "1")
       m.setAttribute('scrollamount', 100)
-      m.addEventListener("finish", function (event) {
+      m.addEventListener("onfinish", function (event) {
         console.log("event called, restarting function")
         getNewsHeadlines()
       })
