@@ -645,6 +645,7 @@ function getNewsHeadlines() {
       var m = document.createElement("div");
       m.setAttribute('id', "tickerchild")
       m.setAttribute('class', "tickermarquee")
+      m.setAttribute('data-allowCss3Support', 'false')
       m.textContent = temp.join(" \u2022 ")
       document.getElementById('ticker').appendChild(m)
       /*m.addEventListener('animationend', () => {
@@ -652,14 +653,12 @@ function getNewsHeadlines() {
       })
       */
       $('.tickermarquee').marquee({
-        allowCss3Support : false,
+        //allowCss3Support: false,
         //duration in milliseconds of the marquee
         duration: 1000,
         //gap in pixels between the tickers
         gap: 50,
         delayBeforeStart: 0,
-        direction: 'left',
-        duplicated: false
       }).bind('finished', function(){
         getNewsHeadlines()
       })
