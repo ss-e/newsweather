@@ -639,6 +639,7 @@ function getNewsHeadlines () {
       m.setAttribute('behavior', "alternate")
       m.setAttribute('direction', "left")
       m.setAttribute('width', "100%")
+      m.setAttribute('loop', "0")
       m.setAttribute('scrollamount', 100)
       m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
