@@ -644,11 +644,11 @@ function getNewsHeadlines() {
       m.addEventListener("onbounce", function () {
         console.log("onbounce called, finished news headlines, restarting")
         getNewsHeadlines()
-      })
+      }, false)
       m.addEventListener("onfinish", function () {
         console.log("onfinish called, finished news headlines, restarting")
         getNewsHeadlines()
-      })
+      }, false)
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
