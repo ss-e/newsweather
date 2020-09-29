@@ -628,7 +628,8 @@ function nextFinanceTab() {
   }
 }
 /* news headline ticker */
-function getNewsHeadlines () {
+function getNewsHeadlines() {
+  console.log("getting news headlines")
   try {
     readHeadlineDB().then((temp) => {
       document.getElementById('ticker').innerHTML = "";
@@ -640,14 +641,16 @@ function getNewsHeadlines () {
       m.setAttribute('width', "100%")
       //m.setAttribute('loop', "1")
       m.setAttribute('scrollamount', 100)
-      m.addEventListener("onfinish", getNewsHeadlines())
+      m.addEventListener("onbounce", function (event) {
+        console.log("finished news headlines, restarting")
+        getNewsHeadlines()
+      })
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       });*/
       //m.onbounce = getNewsHeadlines()
-      console.log("newsheadline appending child")
       document.getElementById('ticker').appendChild(m)
     })
   }
