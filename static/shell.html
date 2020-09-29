@@ -649,7 +649,7 @@ function getNewsHeadlines() {
         console.log("onfinish called, finished news headlines, restarting")
         getNewsHeadlines()
       }, false)*/
-      m.addEventListener("onfinish", getNewsHeadlines, false)
+      m.addEventListener("finish", getNewsHeadlines, false)
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
