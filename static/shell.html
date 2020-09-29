@@ -637,6 +637,8 @@ function getNewsHeadlines () {
       m.id = "tickerchild"
       m.class = "tickermarquee"
       m.behavior = "alternate"
+      m.width = "100%"
+      m.scrollamount = 24
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
