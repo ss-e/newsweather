@@ -3,6 +3,12 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script
+			  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			  integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+			  crossorigin="anonymous"></script>
+<script src="https//cdn.jsdelivr.net/npm/jquery.marquee@1.5.0/jquery.marquee.min.js" type="text/javascript"></script>
+
 <!--
   /*:root {
     --mawe: 575.6px;
@@ -290,12 +296,12 @@
   padding-left: 100%;
   margin-top: 0px;
   margin-bottom: 0px;
-  overflow-x: -webkit-marquee;
+  /*overflow-x: -webkit-marquee;
   -webkit-marquee-direction: backwards;
   -webkit-marquee-increment: 100px;
   -webkit-marquee-repetition: 1;
   -webkit-marquee-speed: fast;
-  -webkit-marquee-style: scroll;
+  -webkit-marquee-style: scroll;*/
 }
 .bumper {
   background: #111111;
@@ -634,13 +640,11 @@ function getNewsHeadlines() {
     readHeadlineDB().then((temp) => {
       document.getElementById('ticker').innerHTML = "";
       //var m = document.createElement("p");
-      var m = document.createElement("marquee");
+      var m = document.createElement("div");
       m.setAttribute('id', "tickerchild")
       m.setAttribute('class', "tickermarquee")
-      m.setAttribute('behavior', "alternate")
-      m.setAttribute('width', "100%")
-      //m.setAttribute('loop', "1")
-      //m.setAttribute('scrollamount', 100)
+      //m.setAttribute('behavior', "alternate")
+      //m.setAttribute('width', "100%")
       /*m.addEventListener("onbounce", function () {
         console.log("onbounce called, finished news headlines, restarting")
         getNewsHeadlines()
@@ -653,7 +657,7 @@ function getNewsHeadlines() {
       m.addEventListener("bounce", getNewsHeadlines, true)*/
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
-      m.addEventListener('animationend', () => {
+      /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       })
       m.addEventListener('finish', () => {
@@ -661,8 +665,30 @@ function getNewsHeadlines() {
       })
       m.addEventListener('bounce', () => {
         getNewsHeadlines()
-      })
+      })*/
       //m.onbounce = getNewsHeadlines()
+      $('.tickermarquee').marquee({
+        //duration in milliseconds of the marquee
+        duration: 30000,
+        //gap in pixels between the tickers
+        gap: 50,
+        //time in milliseconds before the marquee will start animating
+        delayBeforeStart: 0,
+        //'left' or 'right'
+        direction: 'left',
+        //true or false - should the marquee be duplicated to show an effect of continues flow
+        duplicated: false
+      });
+      $('.tickermarquee')
+        .bind('finished', function(){
+          //Change text to something else after first loop finishes
+          $(this).marquee('destroy');
+          //Load new content using Ajax and update the marquee container
+          getNewsHeadlines()
+            //Apply marquee plugin again
+            .marquee()
+        })
+        .marquee();
       document.getElementById('ticker').appendChild(m)
     })
   }
