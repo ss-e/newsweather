@@ -640,12 +640,13 @@ function getNewsHeadlines () {
       m.setAttribute('width', "100%")
       m.setAttribute('loop', "1")
       m.setAttribute('scrollamount', 100)
+      m.attachEvent("onfinish", getNewsHeadlines())
       //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       });*/
-      m.onfinish = getNewsHeadlines()
+      //m.onbounce = getNewsHeadlines()
       console.log("read headline, now appending")
       document.getElementById('ticker').appendChild(m)
     })
