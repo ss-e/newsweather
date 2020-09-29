@@ -1061,7 +1061,10 @@ function init() {
   }).addTo(mapsPlaceholder[0]);
   mapsPlaceholder[0].on('moveend', function() {
     console.log("triggering map invalidatesize")
-    setTimeout(mapsPlaceholder[0].invalidateSize(), 1000)
+    //temp = mapsPlaceholder[0].invalidateSize
+    setTimeout(function () {
+      mapsPlaceholder[0].invalidateSize()
+      }, 1000)
   })
 }
 </script>
