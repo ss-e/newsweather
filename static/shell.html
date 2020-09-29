@@ -292,7 +292,7 @@
   margin-bottom: 0px;
   overflow-x: -webkit-marquee;
   -webkit-marquee-direction: forwards;
-  -webkit-marquee-increment: 10px;
+  -webkit-marquee-increment: 100px;
   -webkit-marquee-repetition: 0;
   -webkit-marquee-speed: fast;
   -webkit-marquee-style: scroll;
@@ -638,7 +638,7 @@ function getNewsHeadlines () {
       m.class = "tickermarquee"
       m.behavior = "alternate"
       m.width = "100%"
-      m.scrollamount = 24
+      m.scrollamount = 100
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
