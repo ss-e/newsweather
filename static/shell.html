@@ -643,30 +643,12 @@ function getNewsHeadlines() {
       var m = document.createElement("div");
       m.setAttribute('id', "tickerchild")
       m.setAttribute('class', "tickermarquee")
-      //m.setAttribute('behavior', "alternate")
-      //m.setAttribute('width', "100%")
-      /*m.addEventListener("onbounce", function () {
-        console.log("onbounce called, finished news headlines, restarting")
-        getNewsHeadlines()
-      }, false)
-      m.addEventListener("onfinish", function () {
-        console.log("onfinish called, finished news headlines, restarting")
-        getNewsHeadlines()
-      }, false)*/
-      /*m.addEventListener("finish", getNewsHeadlines, true)
-      m.addEventListener("bounce", getNewsHeadlines, true)*/
-      //m.setAttribute('onbounce', "getNewsHeadlines()")
       m.textContent = temp.join(" \u2022 ")
+      document.getElementById('ticker').appendChild(m)
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       })
-      m.addEventListener('finish', () => {
-        getNewsHeadlines()
-      })
-      m.addEventListener('bounce', () => {
-        getNewsHeadlines()
-      })*/
-      //m.onbounce = getNewsHeadlines()
+      */
       $('.tickermarquee').marquee({
         //duration in milliseconds of the marquee
         duration: 30000,
@@ -679,6 +661,7 @@ function getNewsHeadlines() {
         //true or false - should the marquee be duplicated to show an effect of continues flow
         duplicated: false
       });
+      /*
       $('.tickermarquee')
         .bind('finished', function(){
           //Change text to something else after first loop finishes
@@ -689,7 +672,7 @@ function getNewsHeadlines() {
             .marquee()
         })
         .marquee();
-      document.getElementById('ticker').appendChild(m)
+        */
     })
   }
   catch {
