@@ -653,7 +653,7 @@ function getNewsHeadlines() {
       */
       $('.tickermarquee').marquee({
         //duration in milliseconds of the marquee
-        duration: 30000,
+        duration: 3000,
         //gap in pixels between the tickers
         gap: 50,
         //time in milliseconds before the marquee will start animating
@@ -662,7 +662,10 @@ function getNewsHeadlines() {
         direction: 'left',
         //true or false - should the marquee be duplicated to show an effect of continues flow
         duplicated: false
-      });
+      }).bind('finished', function(){
+        getNewsHeadlines()
+      })
+      ;
       /*
       $('.tickermarquee')
         .bind('finished', function(){
@@ -673,8 +676,7 @@ function getNewsHeadlines() {
             //Apply marquee plugin again
             .marquee()
         })
-        .marquee();
-        */
+        .marquee();*/
     })
   }
   catch {
