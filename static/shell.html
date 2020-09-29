@@ -1061,13 +1061,14 @@ function init() {
   }).addTo(mapsPlaceholder[0]);
   mapsPlaceholder[0].on('moveend', function() {
     console.log("triggering map invalidatesize")
-    mapsPlaceholder[0].invalidateSize()
-    /*setTimeout(function () {
+    //mapsPlaceholder[0].invalidateSize()
+    this.invalidateSize()
+  }).addTo(mapsPlaceholder[0])
+      /*setTimeout(function () {
       console.log("triggering map invalidatesize")
       mapsPlaceholder[0].invalidateSize()
       }, 1000)
       */
-  }).addTo(mapsPlaceholder[0])
 }
 </script>
 </head>
