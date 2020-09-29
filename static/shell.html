@@ -1051,7 +1051,11 @@ function init() {
   //setInterval("nextWeatherTab()", 15000);
   setInterval("updateMap()", 30000);
   setInterval("datetime()", 1000);
-  L.map('wmap', {attributionControl: false, zoomControl: false}).setView([0, -0], 0); //lat:"39.09973", lon:"-94.57857"
+  L.map('wmap', {
+    attributionControl: false,
+    zoomControl: false,
+    debounceMoveend: true,
+    }).setView([0, -0], 0); //lat:"39.09973", lon:"-94.57857"
   L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
     attribution: '',
     subdomains: 'abcd',
@@ -1063,7 +1067,8 @@ function init() {
     console.log("triggering map invalidatesize")
     //mapsPlaceholder[0].invalidateSize()
     this.invalidateSize()
-  }).addTo(mapsPlaceholder[0]);
+  })
+  //.addTo(mapsPlaceholder[0]);
       /*setTimeout(function () {
       console.log("triggering map invalidatesize")
       mapsPlaceholder[0].invalidateSize()
