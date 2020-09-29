@@ -290,7 +290,8 @@
   padding-left: 100%;*/
   margin-top: 0px;
   margin-bottom: 0px;
-  -webkit-marquee: auto medium 0 normal scroll;
+  -webkit-marquee: auto medium 0 fast scroll;
+
 }
 .bumper {
   background: #111111;
@@ -631,11 +632,12 @@ function getNewsHeadlines () {
       var m = document.createElement("marquee");
       m.id = "tickerchild"
       m.class = "tickermarquee"
+      m.behavior = "alternate"
       m.textContent = temp.join(" \u2022 ")
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       });*/
-      //m.onbounce = getNewsHeadlines()
+      m.onbounce = getNewsHeadlines()
       console.log("read headline, now appending")
       document.getElementById('ticker').appendChild(m)
     })
