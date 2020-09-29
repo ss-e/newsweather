@@ -645,7 +645,7 @@ function getNewsHeadlines () {
       /*m.addEventListener('animationend', () => {
         getNewsHeadlines()
       });*/
-      m.onbounce = getNewsHeadlines()
+      m.onfinish = getNewsHeadlines()
       console.log("read headline, now appending")
       document.getElementById('ticker').appendChild(m)
     })
