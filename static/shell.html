@@ -52,10 +52,10 @@
 }
 -->
 <style>
-/*@keyframes marquee {
+@keyframes marquee {
   0%   { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-100%, 0, 0); }
-}*/
+}
 .body {
   padding:0;
   border-width:0;
@@ -276,12 +276,12 @@
   position: absolute;
   background: #EEEEEE;
   font-size: 3vw;
-  text-align: right;
-  font: 'Bitstream Vera';
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
-  /*box-sizing: border-box;*/
+  /*font: 'Bitstream Vera';
+  text-align: right;
+  box-sizing: border-box;*/
 }
 .ticker p {
   will-change: transform;
@@ -293,6 +293,8 @@
 }
 .tickermarquee {
   width: 100%;
+  display: inline-block;
+  padding-left: 100%;
   overflow: hidden;
   /*display: inline-block;
   padding-left: 100%;
@@ -641,39 +643,29 @@ function getNewsHeadlines() {
   try {
     readHeadlineDB().then((temp) => {
       document.getElementById('ticker').innerHTML = "";
-      var m = document.createElement("p");
-      //var m = document.createElement("div");
+      //var m = document.createElement("p");
+      var m = document.createElement("div");
       m.setAttribute('id', "tickerchild")
       m.setAttribute('class', "tickermarquee")
       m.textContent = temp.join(" \u2022 ")
       document.getElementById('ticker').appendChild(m)
+      /*
       m.addEventListener('animationend', () => {
         getNewsHeadlines()
       })
+      */
 
-      /*
       $('.tickermarquee').marquee({
-        allowCss3Support: false,
+        //allowCss3Support: false,
         //duration in milliseconds of the marquee
-        duration: 1000,
+        duration: 300000,
         //gap in pixels between the tickers
         gap: 50,
         delayBeforeStart: 0,
-      }).bind('finished', function(){
-        getNewsHeadlines()
       })
-      ;*/
-      /*
-      $('.tickermarquee')
-        .bind('finished', function(){
-          //Change text to something else after first loop finishes
-          $(this).marquee('destroy');
-          //Load new content using Ajax and update the marquee container
-          getNewsHeadlines()
-            //Apply marquee plugin again
-            .marquee()
-        })
-        .marquee();*/
+      /*.bind('finished', function(){
+        getNewsHeadlines()
+      });*/
     })
   }
   catch {
@@ -1082,6 +1074,43 @@ function init() {
     mapsPlaceholder.push(this); // Use whatever global scope variable you like.
   });
   datetime();
+  //are we in a debugging session
+  if(typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined") {
+    console.log("not coming from go file, using debug data")
+    readWeatherDB = function() {
+      temp = new Promise ((resolve, reject) => {
+        resolve ([{"Name":"Aberdeen", "Id": "2657832", "Tz":"Europe/London", "Lat":"57.14369", "Lon":"-2.09814", "Now":[20,2], "W1":[20,2], "W2":[20,2], "W3":[20,2]},
+              {"Name":"Amsterdam", "Id": "2759794", "Tz":"Europe/Amsterdam", "Lat":"52.37403", "Lon":"4.88969", "Now":[20,2], "W1":[20,2], "W2":[20,2], "W3":[20,2]}]);
+        });
+      return temp
+    }
+    readHeadlineDB = function() {
+      temp = new Promise ((resolve, reject) => {
+        resolve (["Test headline #1", "Test headline #2", "Test headline #3", "Test headline #4", "Test headline #5","Test headline #6", "Test headline #7", "Test headline #8", "Test headline #9", "Test headline #10","Test headline #11", "Test headline #12", "Test headline #13", "Test headline #14", "Test headline #15","Test headline #16", "Test headline #17", "Test headline #18", "Test headline #19", "Test headline #20","Test headline #21", "Test headline #22", "Test headline #23", "Test headline #24", "Test headline #25"])
+      });
+      return temp
+    }
+    readInetDB = function() {
+      temp = new Promise ((resolve, reject) => {
+        resolve ([{"Name":"Facebook", "Status":["test"], "url":"https://www.facebook.com/platform/api-status/"},
+              {"Name":"Microsoft Azure", "Status":["test"], "url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
+              {"Name":"AWS", "Status":["test"], "url":"https://status.aws.amazon.com/rss/all.rss"}])
+      });
+      return temp
+    }
+    readStockDB = function() {
+      temp = new Promise ((resolve, reject) => {
+        resolve ([{"Name": "S&P 500/SPY", "Ticker":"SPY", "Value":690.05, "Open":680.05, "ChangePercent":6.9, "Chartdata":[]}])
+      });
+      return temp
+    }
+    readCryptoDB = function() {
+      temp = new Promise ((resolve, reject) => {
+        resolve ([{"Name":"Bitcoin/US$", "Ticker":"BTCUSDT", "Value":6969,"Open":6880, "ChangePercent":13.37, "Chartdata":[]}])
+      });
+      return temp
+    }
+  }
   getWeatherData();
   getNewsHeadlines();
   getFinanceData();
