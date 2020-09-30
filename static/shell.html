@@ -271,7 +271,7 @@
 .ticker {
   height: 10%;
   width: 100%;
-  left: 0px;
+  /*left: 0px;
   bottom: 0;
   position: absolute;
   background: #EEEEEE;
@@ -280,7 +280,7 @@
   font: 'Bitstream Vera';
   font-weight: bold;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: hidden;*/
   /*box-sizing: border-box;*/
 }
 .ticker p {
@@ -645,7 +645,6 @@ function getNewsHeadlines() {
       var m = document.createElement("div");
       m.setAttribute('id', "tickerchild")
       m.setAttribute('class', "tickermarquee")
-      m.setAttribute('data-allowCss3Support', 'false')
       m.textContent = temp.join(" \u2022 ")
       document.getElementById('ticker').appendChild(m)
       /*m.addEventListener('animationend', () => {
@@ -653,7 +652,7 @@ function getNewsHeadlines() {
       })
       */
       $('.tickermarquee').marquee({
-        //allowCss3Support: false,
+        allowCss3Support: false,
         //duration in milliseconds of the marquee
         duration: 1000,
         //gap in pixels between the tickers
