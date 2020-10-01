@@ -88,6 +88,9 @@ func initSound() {
 	sr := beep.SampleRate(44100)
 	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
+	fmt.Println("sound initiated")
+	speaker.Play(&queue)
+	fmt.Println("playing from queue")
 }
 func loadPlaylist() {
 	fmt.Println("loading playlist")
@@ -106,7 +109,7 @@ func loadPlaylist() {
 	rand.Shuffle(len(audioDB), func(i, j int) {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
-	speaker.Play(&queue)
+	fmt.Println("shuffled files")
 	for i := range audioDB {
 		name := audioDB[i]
 		f, err := os.Open(name)
