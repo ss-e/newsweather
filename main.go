@@ -56,12 +56,14 @@ func (q *Queue) Add(streamers ...beep.Streamer) {
 func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	// We use the filled variable to track how many samples we've
 	// successfully filled already. We loop until all samples are filled.
-	/*defer func() {
+	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
-			loadPlaylist()
+			fmt.Println("samples len: ", len(samples))
+			panic("audio stream panic")
+			//loadPlaylist()
 		}
-	}()*/
+	}()
 	filled := 0
 	//fmt.Println("samples len is: ", len(samples))
 	for filled < len(samples) {
