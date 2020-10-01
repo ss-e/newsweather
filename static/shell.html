@@ -271,31 +271,6 @@
   justify-content: center;
   align-items: center;*/
 }
-.ticker {
-  /*
-  height: 10%;
-  left: 0px;
-  bottom: 0;
-  position: absolute;
-  background: #EEEEEE;
-  font-size: 3vw;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  */
-  /*width: 100%;*/
-  /*font: 'Bitstream Vera';
-  text-align: right;
-  box-sizing: border-box;*/
-}
-.ticker p {
-  will-change: transform;
-  display: inline-block;
-  padding-left: 100%;
-  animation: marquee 300s linear 1;
-  /*margin-top: 0px;
-  margin-bottom: 0px;*/
-}
 .tickermarquee {
   height: 10%;
   width: 100%;
@@ -308,16 +283,9 @@
   white-space: nowrap;
   overflow: hidden;
   display: inline-block;
-  /*display: inline-block;
-  padding-left: 100%;
+  /* padding-left: 100%;
   margin-top: 0px;
-  margin-bottom: 0px;
-  overflow-x: -webkit-marquee;
-  -webkit-marquee-direction: backwards;
-  -webkit-marquee-increment: 100px;
-  -webkit-marquee-repetition: 1;
-  -webkit-marquee-speed: fast;
-  -webkit-marquee-style: scroll;*/
+  margin-bottom: 0px;*/
 }
 .bumper {
   background: #111111;
@@ -659,29 +627,23 @@ function getNewsHeadlines() {
     } else {
       gettingHeadlines = true
       readHeadlineDB().then((temp) => {
-        document.getElementById('ticker').innerHTML = "";
-        //var m = document.createElement("p");
         var m = document.createElement("div");
         m.setAttribute('id', "tickerchild")
         m.setAttribute('class', "tickermarquee")
         m.textContent = temp.join(" \u2022 ")
-        /*
-        m.addEventListener('animationend', () => {
-          getNewsHeadlines()
-        })
-        */
+        document.getElementById('ticker').appendChild(m)
         $('.tickermarquee').marquee({
           allowCss3Support: false,
           //duration in milliseconds of the marquee
           duration: 7500,
           //gap in pixels between the tickers
           gap: 50,
-          delayBeforeStart: 500,
+          delayBeforeStart: 0,
         }).bind('finished', function(){
           setTimeout(getNewsHeadlines, 1000)
+          document.getElementById('ticker').innerHTML = "";
           $('.tickermarquee').marquee('destroy')
         });
-        document.getElementById('ticker').appendChild(m)
         gettingHeadlines = false
       })
     }
