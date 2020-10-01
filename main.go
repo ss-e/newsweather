@@ -61,10 +61,10 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	for filled < len(samples) {
 		// There are no streamers in the queue, so we load the playlist again
 		if len(q.streamers) == 0 {
-			for i := range samples[filled:] {
+			/*for i := range samples[filled:] {
 				samples[i][0] = 0
 				samples[i][1] = 0
-			}
+			}*/
 			loadPlaylist()
 			break
 		}
