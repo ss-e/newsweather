@@ -672,10 +672,9 @@ function getNewsHeadlines() {
         duration: 7500,
         //gap in pixels between the tickers
         gap: 50,
-        delayBeforeStart: 1000,
-      })
-      .bind('finished', function(){
-        getNewsHeadlines()
+        delayBeforeStart: 0,
+      }).bind('finished', function(){
+        setTimeout(getNewsHeadlines, 1000)
       });
     })
   }
