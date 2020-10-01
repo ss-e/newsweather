@@ -122,6 +122,7 @@ func loadPlaylist() {
 			fmt.Println("playlist os open error:", err)
 			continue
 		}
+		fmt.Println("opened audio file ", name)
 		// Decode it.
 		streamer, format, err := vorbis.Decode(f)
 		if err != nil {
@@ -133,7 +134,7 @@ func loadPlaylist() {
 		resampled := beep.Resample(3, format.SampleRate, beep.SampleRate(44100), streamer)
 		// And finally, we add the song to the queue.
 		speaker.Lock()
-		fmt.Println("added file to queue")
+		fmt.Println("adding ", name, " to queue")
 		queue.Add(resampled)
 		speaker.Unlock()
 	}
