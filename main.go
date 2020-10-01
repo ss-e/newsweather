@@ -60,7 +60,12 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	for filled < len(samples) {
 		// There are no streamers in the queue, so we load the playlist again
 		if len(q.streamers) == 0 {
+			for i := range samples[filled:] {
+				samples[i][0] = 0
+				samples[i][1] = 0
+			}
 			loadPlaylist()
+			break
 		}
 
 		// We stream from the first streamer in the queue.
@@ -128,6 +133,7 @@ func loadPlaylist() {
 		resampled := beep.Resample(3, format.SampleRate, beep.SampleRate(44100), streamer)
 		// And finally, we add the song to the queue.
 		speaker.Lock()
+		fmt.Println("added file to queue")
 		queue.Add(resampled)
 		speaker.Unlock()
 	}
