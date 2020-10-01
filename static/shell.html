@@ -665,7 +665,6 @@ function getNewsHeadlines() {
         m.setAttribute('id', "tickerchild")
         m.setAttribute('class', "tickermarquee")
         m.textContent = temp.join(" \u2022 ")
-        document.getElementById('ticker').appendChild(m)
         /*
         m.addEventListener('animationend', () => {
           getNewsHeadlines()
@@ -677,11 +676,12 @@ function getNewsHeadlines() {
           duration: 7500,
           //gap in pixels between the tickers
           gap: 50,
-          delayBeforeStart: 0,
+          delayBeforeStart: 500,
         }).bind('finished', function(){
           setTimeout(getNewsHeadlines, 1000)
           $('.tickermarquee').marquee('destroy')
         });
+        document.getElementById('ticker').appendChild(m)
         gettingHeadlines = false
       })
     }
