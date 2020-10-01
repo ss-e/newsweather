@@ -135,10 +135,10 @@ func loadPlaylist() {
 		resampled := beep.Resample(3, format.SampleRate, sr, streamer)
 		fmt.Println("resampled file ", name)
 		// And finally, we add the song to the queue.
-		speaker.Lock()
+		//speaker.Lock()
 		fmt.Println("adding ", name, " to queue")
 		queue.Add(resampled)
-		speaker.Unlock()
+		//speaker.Unlock()
 	}
 }
 
