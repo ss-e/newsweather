@@ -59,9 +59,8 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
-			fmt.Println("samples len: ", len(samples))
-			panic("audio stream panic")
-			//loadPlaylist()
+			//panic("audio stream panic")
+			loadPlaylist()
 		}
 	}()
 	filled := 0
@@ -110,27 +109,28 @@ func loadPlaylist() {
 	})
 	audioDB = audioDB[1:]
 	if err != nil {
-		fmt.Println("Unable to walk filepath! Panicing")
+		fmt.Println("Unable to walk filepath!")
 		return
 	}
 	rand.Shuffle(len(audioDB), func(i, j int) {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
 	sr := beep.SampleRate(44100)
+	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
 	speaker.Play(&queue)
 	for i := range audioDB {
 		name := audioDB[i]
 		f, err := os.Open(name)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("playlist os open error:", err)
 			continue
 		}
 
 		// Decode it.
 		streamer, format, err := vorbis.Decode(f)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("playlist vorbis decode error:", err)
 			continue
 		}
 
