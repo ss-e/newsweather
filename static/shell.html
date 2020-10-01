@@ -666,10 +666,10 @@ function getNewsHeadlines() {
       $('.tickermarquee').marquee({
         allowCss3Support: false,
         //duration in milliseconds of the marquee
-        duration: 5000,
+        duration: 7500,
         //gap in pixels between the tickers
         gap: 50,
-        delayBeforeStart: 0,
+        delayBeforeStart: 1000,
       })
       .bind('finished', function(){
         getNewsHeadlines()
