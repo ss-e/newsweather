@@ -52,7 +52,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
 			//panic("audio stream panic")
-			loadPlaylist()
+			initSound()
 		}
 	}()
 	filled := 0
