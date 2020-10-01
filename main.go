@@ -26,6 +26,7 @@ import (
 
 var audioDB []string
 var bitrate string = "4500k"
+var queue Queue
 
 //Queue struct yep
 type Queue struct {
@@ -57,13 +58,9 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 	filled := 0
 	//fmt.Println("samples len is: ", len(samples))
 	for filled < len(samples) {
-		// There are no streamers in the queue, so we stream silence.
+		// There are no streamers in the queue, so we load the playlist again
 		if len(q.streamers) == 0 {
-			for i := range samples[filled:] {
-				samples[i][0] = 0
-				samples[i][1] = 0
-			}
-			break
+			loadPlaylist()
 		}
 
 		// We stream from the first streamer in the queue.
@@ -85,12 +82,14 @@ func (q *Queue) Err() error {
 	fmt.Println("Audio queue playlist error!")
 	return nil
 }
-
-func loadPlaylist() {
-	fmt.Println("closing any open playlists")
+func initSound() {
+	fmt.Println("closing any open speakers")
 	speaker.Close()
-	fmt.Println("closed, declaring queue")
-	var queue Queue
+	sr := beep.SampleRate(44100)
+	fmt.Println("init speaker")
+	speaker.Init(sr, sr.N(time.Second/10))
+}
+func loadPlaylist() {
 	fmt.Println("loading playlist")
 	audioDB = nil
 	rand.Seed(time.Now().UnixNano())
@@ -107,9 +106,6 @@ func loadPlaylist() {
 	rand.Shuffle(len(audioDB), func(i, j int) {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
-	sr := beep.SampleRate(44100)
-	fmt.Println("init speaker")
-	speaker.Init(sr, sr.N(time.Second/10))
 	speaker.Play(&queue)
 	for i := range audioDB {
 		name := audioDB[i]
@@ -118,18 +114,15 @@ func loadPlaylist() {
 			fmt.Println("playlist os open error:", err)
 			continue
 		}
-
 		// Decode it.
 		streamer, format, err := vorbis.Decode(f)
 		if err != nil {
 			fmt.Println("playlist vorbis decode error:", err)
 			continue
 		}
-
 		// The speaker's sample rate is fixed at 44100. Therefore, we need to
 		// resample the file in case it's in a different sample rate.
-		resampled := beep.Resample(3, format.SampleRate, sr, streamer)
-
+		resampled := beep.Resample(3, format.SampleRate, beep.SampleRate(44100), streamer)
 		// And finally, we add the song to the queue.
 		speaker.Lock()
 		queue.Add(resampled)
@@ -255,7 +248,7 @@ func main() {
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
-	loadPlaylist()
+	initSound()
 	go ffmpegHelper()
 	go NeverExit("webViewHelper", webViewHelper)
 	//go NeverExit("loadPlaylist", loadPlaylist)
