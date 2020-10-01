@@ -680,6 +680,7 @@ function getNewsHeadlines() {
           delayBeforeStart: 0,
         }).bind('finished', function(){
           setTimeout(getNewsHeadlines, 1000)
+          $('.tickermarquee').marquee('destroy')
         });
         gettingHeadlines = false
       })
