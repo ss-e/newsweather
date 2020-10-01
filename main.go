@@ -114,7 +114,7 @@ func loadPlaylist() {
 	rand.Shuffle(len(audioDB), func(i, j int) {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
-	fmt.Println("shuffled files")
+	fmt.Println("shuffled files, found ", len(audioDB))
 	for i := range audioDB {
 		name := audioDB[i]
 		f, err := os.Open(name)
