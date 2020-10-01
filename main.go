@@ -27,16 +27,7 @@ import (
 var audioDB []string
 var bitrate string = "4500k"
 
-/*
-func readShell() string {
-	content, err := ioutil.ReadFile("./static/shell.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return "data:text/html," + url.QueryEscape(string(content))
-}
-*/
-//Queue struct
+//Queue struct yep
 type Queue struct {
 	streamers []beep.Streamer
 }
@@ -98,6 +89,7 @@ func (q *Queue) Err() error {
 func loadPlaylist() {
 	fmt.Println("closing any open playlists")
 	speaker.Close()
+	fmt.Println("closed, declaring queue")
 	var queue Queue
 	fmt.Println("loading playlist")
 	audioDB = nil
@@ -167,12 +159,6 @@ func newCmd() *exec.Cmd {
 	)
 }
 
-/*
-func audioHelper() {
-	loadPlaylist()
-	fmt.Println("playlist loaded")
-}*/
-
 func ffmpegHelper() {
 	for {
 		var stderr bytes.Buffer
@@ -207,6 +193,8 @@ func webViewHelper() {
 	w.Run()
 	fmt.Println("window closed")
 }
+
+// NErecover soon to be removed
 func NErecover(name string, f func()) {
 	v := recover()
 	// A panic is detected.
@@ -217,6 +205,7 @@ func NErecover(name string, f func()) {
 	fmt.Println(v, name, "is exiting normally")
 }
 
+// NeverExit soon to be removed
 func NeverExit(name string, f func()) {
 	/*
 		defer func() {
