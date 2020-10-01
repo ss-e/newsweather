@@ -27,6 +27,7 @@ import (
 var audioDB []string
 var bitrate string = "4500k"
 var queue Queue
+var sr = beep.SampleRate(44100)
 
 //Queue struct yep
 type Queue struct {
@@ -90,7 +91,6 @@ func (q *Queue) Err() error {
 func initSound() {
 	fmt.Println("closing any open speakers")
 	speaker.Close()
-	sr := beep.SampleRate(44100)
 	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
 	fmt.Println("sound initiated")
@@ -129,9 +129,11 @@ func loadPlaylist() {
 			fmt.Println("playlist vorbis decode error:", err)
 			continue
 		}
+		fmt.Println("decoded file ", name)
 		// The speaker's sample rate is fixed at 44100. Therefore, we need to
 		// resample the file in case it's in a different sample rate.
-		resampled := beep.Resample(3, format.SampleRate, beep.SampleRate(44100), streamer)
+		resampled := beep.Resample(3, format.SampleRate, sr, streamer)
+		fmt.Println("resampled file ", name)
 		// And finally, we add the song to the queue.
 		speaker.Lock()
 		fmt.Println("adding ", name, " to queue")
