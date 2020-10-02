@@ -892,7 +892,7 @@ function nextMainView() {
             var color = "#808080"
             var symbol = /*"\u8211"*/ "="
           }
-          console.log("color is ", color ," symbol is:", symbol)
+          //console.log("color is ", color ," symbol is:", symbol)
           var options = {
             series: [{
               data: finCrypto[temp].Chartdata
@@ -1030,7 +1030,7 @@ function nextMainView() {
           }
           var chart = new ApexCharts(document.querySelector("#tmtext"), options);
           chart.render()
-          console.log("rendering for: ", finStock[temp].Name ,"temp value:", temp, " name: ", finStock[temp].Chartdata)
+          //console.log("rendering for: ", finStock[temp].Name ,"temp value:", temp, " name: ", finStock[temp].Chartdata)
         } catch (err) {
           console.log("when parsing chart: ", err)
         }
