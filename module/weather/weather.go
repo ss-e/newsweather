@@ -113,8 +113,12 @@ func getCurrentTemp() {
 			//fmt.Println("count is", jsonResponse["cnt"].(string)
 			responseArr, ok := jsonResponse["list"].([]interface{})
 			if !ok {
-				fmt.Println("error decoding response from getcurrenttemp")
-				fmt.Println("dump:", response)
+				message, ok := jsonResponse["message"].([]interface{})
+				if !ok {
+					fmt.Println("error decoding response from getcurrenttemp, unknown message")
+				} else {
+					fmt.Println("error decoding response from getcurrenttemp with message:", message)
+				}
 			} else {
 				for j := 0; j < int(jsonResponse["cnt"].(float64)); j++ {
 					temp2 := responseArr[j].(map[string]interface{})
@@ -161,13 +165,16 @@ func get6hrTemp() {
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
-			fmt.Println("error:", err)
-			fmt.Println("dump:", response)
+			fmt.Println("error decoding response:", err, "dump: ", response)
 		} else {
 			responseArr, ok := jsonResponse["hourly"].([]interface{})
 			if !ok {
-				fmt.Println("error decoding response for 6 hour temp for index: ", i)
-				fmt.Println("dump:", jsonResponse)
+				message, ok := jsonResponse["message"].([]interface{})
+				if !ok {
+					fmt.Println("error decoding response for 6 hour temp for index: ", i, " unknown message")
+				} else {
+					fmt.Println("error decoding response for 6 hour temp for index: ", i, " with message", message)
+				}
 			} else {
 				nowHour := time.Now().Hour()
 				h := 6 - (nowHour % 6)
