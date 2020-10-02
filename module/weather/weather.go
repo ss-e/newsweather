@@ -114,6 +114,7 @@ func getCurrentTemp() {
 			responseArr, ok := jsonResponse["list"].([]interface{})
 			if !ok {
 				fmt.Println("error decoding response from getcurrenttemp")
+				fmt.Println("dump:", response)
 			} else {
 				for j := 0; j < int(jsonResponse["cnt"].(float64)); j++ {
 					temp2 := responseArr[j].(map[string]interface{})
