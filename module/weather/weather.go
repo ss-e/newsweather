@@ -166,6 +166,7 @@ func get6hrTemp() {
 			responseArr, ok := jsonResponse["hourly"].([]interface{})
 			if !ok {
 				fmt.Println("error decoding response for 6 hour temp for index: ", i)
+				fmt.Println("dump:", jsonResponse)
 			} else {
 				nowHour := time.Now().Hour()
 				h := 6 - (nowHour % 6)
