@@ -946,7 +946,7 @@ function nextMainView() {
           }
           var chart = new ApexCharts(document.querySelector("#tmtext"), options);
           chart.render()
-          console.log("rendering for", finCrypto[temp].Name ," chart:  ", finCrypto[temp].Chartdata)
+          //console.log("rendering for", finCrypto[temp].Name ," chart:  ", finCrypto[temp].Chartdata)
         } catch (err) {
           if (err instanceof TypeError) {
 
@@ -976,7 +976,7 @@ function nextMainView() {
             var color = "#808080"
             var symbol = /*"\u8211"*/ "="
           }
-          console.log("color is ", color ," symbol is:", symbol)
+          //console.log("color is ", color ," symbol is:", symbol)
           var options = {
             series: [{
               data: finStock[temp].Chartdata
