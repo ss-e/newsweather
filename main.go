@@ -129,11 +129,11 @@ func loadPlaylist() {
 			fmt.Println("playlist vorbis decode error:", err)
 			continue
 		}
-		fmt.Println("decoded file ", name)
+		//fmt.Println("decoded file ", name)
 		// The speaker's sample rate is fixed at 44100. Therefore, we need to
 		// resample the file in case it's in a different sample rate.
 		resampled := beep.Resample(3, format.SampleRate, sr, streamer)
-		fmt.Println("resampled file ", name)
+		//fmt.Println("resampled file ", name)
 		// And finally, we add the song to the queue.
 		//speaker.Lock()
 		fmt.Println("adding ", name, " to queue")
