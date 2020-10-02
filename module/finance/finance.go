@@ -172,24 +172,24 @@ func getStockChartData() {
 					//fmt.Println("tdb1 declared: ", tdb1)
 					temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
 					if err != nil {
-						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, date ", err)
+						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, date ", err)
 					}
 					date := temp.Unix()
 					open, err3 := tdb1["open"].(float64)
 					if !err3 {
-						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, open ", err3)
+						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, open ", err3)
 					}
 					high, err4 := tdb1["high"].(float64)
 					if !err4 {
-						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, high ", err4)
+						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, high ", err4)
 					}
 					low, err5 := tdb1["low"].(float64)
 					if !err5 {
-						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, low ", err5)
+						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, low ", err5)
 					}
 					close, err6 := tdb1["close"].(float64)
 					if !err6 {
-						fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, close ", err6)
+						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, close ", err6)
 					}
 					if err == nil && err3 && err4 && err5 && err6 {
 						//fmt.Println("inputting entry")
