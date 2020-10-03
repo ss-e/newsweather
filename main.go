@@ -89,8 +89,6 @@ func (q *Queue) Err() error {
 	return nil
 }
 func initSound() {
-	fmt.Println("closing any open speakers")
-	speaker.Close()
 	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
 	fmt.Println("sound initiated")
