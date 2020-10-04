@@ -31,71 +31,10 @@ var sr = beep.SampleRate(44100)
 var slowplaylisti int = 0
 var slowplaylistmax int = 0
 
-//Queue struct yep
-type Queue struct {
-	streamers []beep.Streamer
-}
-
-//Streamer struct
-type Streamer interface {
-	Stream(samples [][2]float64) (n int, ok bool)
-	Err() error
-}
-
-//Add add to playlist
-func (q *Queue) Add(streamers ...beep.Streamer) {
-	q.streamers = append(q.streamers, streamers...)
-}
-
-//Stream playlist streamer
-func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
-	// We use the filled variable to track how many samples we've
-	// successfully filled already. We loop until all samples are filled.
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println("Audio stream panic!: ", err)
-			//panic("audio stream panic")
-			initSound()
-		}
-	}()
-	filled := 0
-	//fmt.Println("samples len is: ", len(samples))
-	for filled < len(samples) {
-		// There are no streamers in the queue, so we load the playlist again
-		if len(q.streamers) == 0 {
-			/*for i := range samples[filled:] {
-				samples[i][0] = 0
-				samples[i][1] = 0
-			}*/
-			//loadPlaylist()
-			slowPlaylist()
-			break
-		}
-
-		// We stream from the first streamer in the queue.
-		n, ok := q.streamers[0].Stream(samples[filled:])
-		// If it's drained, we pop it from the queue, thus continuing with the next streamer.
-		if !ok {
-			q.streamers = q.streamers[1:]
-		}
-		// We update the number of filled samples.
-		filled += n
-		//fmt.Println("filled is: ", filled, "samples len is: ", len(samples))
-	}
-	return len(samples), true
-}
-
-//Err playlist error
-func (q *Queue) Err() error {
-	fmt.Println("Audio queue playlist error!")
-	return nil
-}
-
 func initSound() {
 	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
 	fmt.Println("sound initiated")
-	//speaker.Play(&queue)
 	initPlaylist()
 	fmt.Println("playing from queue")
 }
@@ -148,46 +87,8 @@ func slowPlaylist() {
 	<-done
 	slowplaylisti++
 	slowPlaylist()
-	//fmt.Println("resampled file ", name)
-	// And finally, we add the song to the queue.
-	//speaker.Lock()
-	/*fmt.Println("adding ", name, " to queue")
-	queue.Add(resampled)*/
-	//slowplaylisti++
-	//slowPlaylist()
-	//speaker.Unlock()
 }
 
-/*
-func loadPlaylist() {
-	initPlaylist()
-	for i := range audioDB {
-		name := audioDB[i]
-		f, err := os.Open(name)
-		if err != nil {
-			fmt.Println("playlist os open error:", err)
-			continue
-		}
-		fmt.Println("opened audio file ", name)
-		// Decode it.
-		streamer, format, err := vorbis.Decode(f)
-		if err != nil {
-			fmt.Println("playlist vorbis decode error:", err)
-			continue
-		}
-		//fmt.Println("decoded file ", name)
-		// The speaker's sample rate is fixed at 44100. Therefore, we need to
-		// resample the file in case it's in a different sample rate.
-		resampled := beep.Resample(3, format.SampleRate, sr, streamer)
-		//fmt.Println("resampled file ", name)
-		// And finally, we add the song to the queue.
-		//speaker.Lock()
-		fmt.Println("adding ", name, " to queue")
-		queue.Add(resampled)
-		//speaker.Unlock()
-	}
-}
-*/
 /*
 func startup() {
 	weather.Startup()
