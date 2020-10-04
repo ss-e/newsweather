@@ -74,8 +74,7 @@ func (q *Queue) Stream(samples [][2]float64) (n int, ok bool) {
 
 		// We stream from the first streamer in the queue.
 		n, ok := q.streamers[0].Stream(samples[filled:])
-		// If it's drained, we pop it from the queue, thus continuing with
-		// the next streamer.
+		// If it's drained, we pop it from the queue, thus continuing with the next streamer.
 		if !ok {
 			q.streamers = q.streamers[1:]
 		}
@@ -134,6 +133,7 @@ func slowPlaylist() {
 	if err != nil {
 		fmt.Println("playlist vorbis decode error:", err)
 	}
+	defer streamer.Close()
 	//fmt.Println("decoded file ", name)
 	// The speaker's sample rate is fixed at 44100. Therefore, we need to
 	// resample the file in case it's in a different sample rate.
@@ -146,6 +146,8 @@ func slowPlaylist() {
 	slowplaylisti++
 	//speaker.Unlock()
 }
+
+/*
 func loadPlaylist() {
 	initPlaylist()
 	for i := range audioDB {
@@ -174,7 +176,7 @@ func loadPlaylist() {
 		//speaker.Unlock()
 	}
 }
-
+*/
 /*
 func startup() {
 	weather.Startup()
