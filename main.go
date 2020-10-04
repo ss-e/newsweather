@@ -146,14 +146,18 @@ func slowPlaylist() {
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
 		done <- true
 	})))
-	<-done
+	select {
+	case <-done:
+		slowplaylisti++
+		slowPlaylist()
+	}
 	//fmt.Println("resampled file ", name)
 	// And finally, we add the song to the queue.
 	//speaker.Lock()
 	/*fmt.Println("adding ", name, " to queue")
 	queue.Add(resampled)*/
-	slowplaylisti++
-	slowPlaylist()
+	//slowplaylisti++
+	//slowPlaylist()
 	//speaker.Unlock()
 }
 
