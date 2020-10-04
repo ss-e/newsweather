@@ -90,11 +90,13 @@ func (q *Queue) Err() error {
 	fmt.Println("Audio queue playlist error!")
 	return nil
 }
+
 func initSound() {
 	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
 	fmt.Println("sound initiated")
-	speaker.Play(&queue)
+	//speaker.Play(&queue)
+	initPlaylist()
 	fmt.Println("playing from queue")
 }
 func initPlaylist() {
@@ -116,6 +118,7 @@ func initPlaylist() {
 	})
 	fmt.Println("shuffled files, found ", len(audioDB))
 	slowplaylistmax = len(audioDB) - 1
+	slowPlaylist()
 }
 func slowPlaylist() {
 	if slowplaylisti == 0 || slowplaylisti == slowplaylistmax {
@@ -138,12 +141,19 @@ func slowPlaylist() {
 	// The speaker's sample rate is fixed at 44100. Therefore, we need to
 	// resample the file in case it's in a different sample rate.
 	resampled := beep.Resample(3, format.SampleRate, sr, streamer)
+	//attempt play
+	done := make(chan bool)
+	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
+		done <- true
+	})))
+	<-done
 	//fmt.Println("resampled file ", name)
 	// And finally, we add the song to the queue.
 	//speaker.Lock()
-	fmt.Println("adding ", name, " to queue")
-	queue.Add(resampled)
+	/*fmt.Println("adding ", name, " to queue")
+	queue.Add(resampled)*/
 	slowplaylisti++
+	slowPlaylist()
 	//speaker.Unlock()
 }
 
