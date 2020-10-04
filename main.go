@@ -104,7 +104,8 @@ func loadPlaylist() {
 		audioDB = append(audioDB, path)
 		return nil
 	})
-	audioDB = audioDB[1:]
+	//audioDB = audioDB[1:]
+	audioDB = audioDB[1:2]
 	if err != nil {
 		fmt.Println("Unable to walk filepath!")
 		return
