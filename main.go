@@ -138,9 +138,7 @@ func slowPlaylist() {
 	}
 	defer streamer.Close()
 	//fmt.Println("decoded file ", name)
-	// The speaker's sample rate is fixed at 44100. Therefore, we need to
-	// resample the file in case it's in a different sample rate.
-	resampled := beep.Resample(3, format.SampleRate, sr, streamer)
+	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
 	done := make(chan bool)
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {

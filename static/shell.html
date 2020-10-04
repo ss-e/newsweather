@@ -55,10 +55,11 @@
 }
 -->
 <style>
+/*
 @keyframes marquee {
   0%   { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-100%, 0, 0); }
-}
+}*/
 .body {
   padding:0;
   border-width:0;
@@ -165,7 +166,9 @@
   /*padding-left: 100%;*/
   white-space: nowrap;
   display: inline-block;
-  animation: wmarq 15s linear 1;
+  /* fix this */
+  /*animation: wmarq 15s linear 1;*/
+
   overflow:visible;
   min-width: 575px
 }
@@ -243,7 +246,8 @@
 .inetstatus p {
   /*display: inline-block;*/
   position: absolute;
-  animation: slide 30s linear 1;
+  /* fix this */
+  /*animation: slide 30s linear 1;*/
   width: 100%;
   /*padding-bottom: 100%;*/
   margin-top: 0px;
