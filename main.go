@@ -143,8 +143,8 @@ func slowPlaylist() {
 	resampled := beep.Resample(3, format.SampleRate, sr, streamer)
 	//attempt play
 	done := make(chan bool)
-	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
-		fmt.Println("executinug callback")
+	go speaker.Play(beep.Seq(resampled, beep.Callback(func() {
+		fmt.Println("executing callback")
 		done <- true
 	})))
 	<-done
