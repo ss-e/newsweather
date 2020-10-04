@@ -26,7 +26,6 @@ import (
 
 var audioDB []string
 var bitrate string = "4500k"
-var queue Queue
 var sr = beep.SampleRate(44100)
 var slowplaylisti int = 0
 var slowplaylistmax int = 0
