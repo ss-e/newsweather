@@ -143,7 +143,7 @@ func slowPlaylist() {
 	resampled := beep.Resample(3, format.SampleRate, sr, streamer)
 	//attempt play
 	done := make(chan bool)
-	go speaker.Play(beep.Seq(resampled, beep.Callback(func() {
+	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
 		fmt.Println("executing callback")
 		done <- true
 	})))
@@ -308,7 +308,7 @@ func main() {
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
-	initSound()
+	go initSound()
 	go ffmpegHelper()
 	go NeverExit("webViewHelper", webViewHelper)
 	//go NeverExit("loadPlaylist", loadPlaylist)
