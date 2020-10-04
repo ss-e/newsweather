@@ -29,6 +29,7 @@ var bitrate string = "4500k"
 var queue Queue
 var sr = beep.SampleRate(44100)
 var slowplaylisti int
+var slowplaylistmax int
 
 //Queue struct yep
 type Queue struct {
@@ -115,10 +116,10 @@ func initPlaylist() {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
 	fmt.Println("shuffled files, found ", len(audioDB))
-	slowplaylisti = len(audioDB)
+	slowplaylistmax = len(audioDB) - 1
 }
 func slowPlaylist() {
-	if slowplaylisti == 0 {
+	if slowplaylisti == 0 || slowplaylisti == slowplaylistmax {
 		initPlaylist()
 	}
 	name := audioDB[slowplaylisti]
