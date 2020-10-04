@@ -143,6 +143,7 @@ func slowPlaylist() {
 	//speaker.Lock()
 	fmt.Println("adding ", name, " to queue")
 	queue.Add(resampled)
+	slowplaylisti++
 	//speaker.Unlock()
 }
 func loadPlaylist() {
