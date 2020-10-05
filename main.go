@@ -58,13 +58,13 @@ func initPlaylist() {
 	slowPlaylist()
 }
 func slowPlaylist() {
-	defer func() {
+	/*defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
 			//panic("audio stream panic")
 			slowPlaylist()
 		}
-	}()
+	}()*/
 	if slowplaylisti == slowplaylistmax {
 		initPlaylist()
 	}
@@ -87,6 +87,13 @@ func slowPlaylist() {
 	//attempt play
 	done := make(chan bool)
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println("Audio stream panic!: ", err)
+				//panic("audio stream panic")
+				slowPlaylist()
+			}
+		}()
 		//fmt.Println("executing callback")
 		done <- true
 	})))
