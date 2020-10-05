@@ -55,6 +55,7 @@ func initPlaylist() {
 	})
 	fmt.Println("shuffled files, found ", len(audioDB))
 	slowplaylistmax = len(audioDB) - 1
+	slowplaylisti = 0
 	slowPlaylist()
 }
 func slowPlaylist() {
