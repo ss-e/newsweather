@@ -453,6 +453,9 @@ function nextWeatherTab() {
   w2.setAttribute('class', "wchild")
   w3.setAttribute('class', "wchild")
   t.innerHTML = weatherdb[weatheri].Name
+  if (t.innerHTML.length > 13) {
+    t.setAttribute('style', 'font-size: 3vw')
+  }
   n.innerHTML = emojiParse(weatherdb[weatheri].Now[1]) + " " + Math.round(weatherdb[weatheri].Now[0]).toString() + String.fromCharCode(176) + "c"
   var now = new Date()
   //console.log("tz: ", weatherdb[weatheri].Tz)
