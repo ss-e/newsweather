@@ -74,13 +74,14 @@ func slowPlaylist() {
 	if err != nil {
 		fmt.Println("playlist os open error:", err)
 	}
-	fmt.Println("opened audio file ", name)
+	//fmt.Println("opened audio file ", name)
 	// Decode it.
 	streamer, format, err := vorbis.Decode(f)
 	if err != nil {
 		fmt.Println("playlist vorbis decode error:", err)
 	}
 	defer streamer.Close()
+	fmt.Println("playing file #", slowplaylisti, "name: ", name)
 	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
