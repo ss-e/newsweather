@@ -59,6 +59,13 @@ func initPlaylist() {
 	slowPlaylist()
 }
 func slowPlaylist() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("Audio stream panic!: ", err)
+			//panic("audio stream panic")
+			slowPlaylist()
+		}
+	}()
 	if slowplaylisti == slowplaylistmax {
 		initPlaylist()
 	}
