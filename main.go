@@ -35,7 +35,6 @@ func initSound() {
 	speaker.Init(sr, sr.N(time.Second/10))
 	fmt.Println("sound initiated")
 	initPlaylist()
-	fmt.Println("playing from queue")
 }
 func initPlaylist() {
 	fmt.Println("loading playlist")
