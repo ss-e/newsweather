@@ -54,6 +54,10 @@ func initPlaylist() {
 		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 	})
 	fmt.Println("shuffled files, found ", len(audioDB))
+	if len(audioDB) == 0 {
+		fmt.Println("no audio files, killing sound init")
+		return
+	}
 	slowplaylistmax = len(audioDB) - 1
 	slowplaylisti = 0
 	slowPlaylist()
