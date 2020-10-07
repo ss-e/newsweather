@@ -220,6 +220,7 @@
   justify-content: center;
   align-items: center;
   word-break: break-all;
+  z-index:-2;
 }
 .inettitle {
   font-size: 3vw;
@@ -230,7 +231,8 @@
   position: relative;
   /*position: absolute;*/
   /*height: var(--mw);*/
-  height: 260px;
+  /*height: 260px;*/
+  /*height: 100%;*/
   left: 0px;
   /*top: 3vw;*/
   bottom: 0;
@@ -241,8 +243,8 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  line-height:1.2em;
+  z-index: -1;
 }
 .inetstatus p {
   /*display: inline-block;*/
@@ -257,7 +259,10 @@
   text-align: center;
   line-height:1.2em;
   /*min-height: var(--mw);*/
-  min-height: 260px;
+  /*min-height: 260px;
+  height: 260px;*/
+  /*height: 100%*/
+  /*height: 260px;*/
 }
 .main {
   height: 90%;
@@ -713,13 +718,14 @@ function nextInetUptime() {
       }
   }
   try {
-    s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
+    //s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
+    s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'>" + result + "</div>"
     if (result.length > 500) {
       $('.inetstatus').marquee({
+        allowCss3Support: false,
         startVisible: true,
         direction: 'up',
-        //duration: '28000',
-        duration: '7000',
+        duration: '28000',
         delayBeforeStart: '2000'
       })
     }
