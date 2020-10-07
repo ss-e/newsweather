@@ -103,6 +103,7 @@ func getCurrentHeadlines() {
 	response, err := netClient.Do(req)
 	if err != nil {
 		fmt.Println("Error executing news request:", err)
+		return
 	}
 	defer response.Body.Close()
 	var jsonResponse map[string]interface{}
@@ -110,6 +111,7 @@ func getCurrentHeadlines() {
 	if err != nil {
 		fmt.Println("Error decoding news response:", err)
 		fmt.Println("dump:", response)
+		return
 	} else {
 		//fmt.Println("response:", jsonResponse)
 		tdb1, ok := jsonResponse["data"].(map[string]interface{})

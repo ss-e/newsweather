@@ -77,6 +77,7 @@ func getCurrentInetStatus() {
 		response, err := netClient.Do(req)
 		if err != nil {
 			fmt.Println("inet netclient error")
+			continue
 		}
 		defer response.Body.Close()
 		if InetDB[i].Name == "Facebook" {

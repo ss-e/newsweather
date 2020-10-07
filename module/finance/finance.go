@@ -110,7 +110,8 @@ func getStockInfo() {
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("err getting stock data:", err)
+			continue
 		}
 		defer response.Body.Close()
 		var jsonResponse map[string]interface{}
@@ -151,7 +152,8 @@ func getStockChartData() {
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("err getting stock chart data:", err)
+			continue
 		}
 		defer response.Body.Close()
 		var jsonResponse []interface{}
@@ -212,7 +214,8 @@ func getCryptoInfo() {
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("err getting crypto data:", err)
+			continue
 		}
 		defer response.Body.Close()
 		var jsonResponse map[string]interface{}
@@ -256,7 +259,8 @@ func getCryptoChartData() {
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("err getting crypto chart data:", err)
+			continue
 		}
 		defer response.Body.Close()
 		var jsonResponse map[string]interface{}

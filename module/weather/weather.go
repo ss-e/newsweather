@@ -100,6 +100,7 @@ func getCurrentTemp() {
 		response, err := netClient.Get(url)
 		if err != nil {
 			fmt.Println("Error getcurrenttemp()", err)
+			continue
 		}
 		defer response.Body.Close()
 		//var temp2 []weatherData
@@ -158,7 +159,8 @@ func get6hrTemp() {
 		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("err getting 6hr temp data:", err)
+			continue
 		}
 		defer response.Body.Close()
 		//var temp2 []weatherData

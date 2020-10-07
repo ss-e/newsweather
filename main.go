@@ -203,6 +203,8 @@ func main() {
 			os.Exit(3)
 		case syscall.SIGABRT:
 			fmt.Println("SIGABRT was called!")
+		case syscall.SIGSEGV:
+			fmt.Println("SIGSEGV was called!")
 		default:
 			fmt.Println("Got signal:", sig)
 		}
