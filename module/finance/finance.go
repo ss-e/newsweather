@@ -194,7 +194,7 @@ func getStockChartData() {
 						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, close ", err6)
 					}
 					if err == nil && err3 && err4 && err5 && err6 {
-						//fmt.Println("inputting entry")
+						fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
 						entry := []float64{float64(date) * 1000, open, high, low, close}
 						StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
 					}
@@ -293,7 +293,8 @@ func getCryptoChartData() {
 							close, ok6 := tdb3[4].(float64)
 							if ok2 && ok3 && ok4 && ok5 && ok6 {
 								//fmt.Println("inputting entry:")
-								entry := []float64{float64(date), open, high, low, close}
+								fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
+								entry := []float64{float64(date) * 1000, open, high, low, close}
 								CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
 							} else {
 								fmt.Println("Finance error 2 parsing crypto chart data for ticker item ", CryptoDB[i].Ticker)
