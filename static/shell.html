@@ -714,6 +714,11 @@ function nextInetUptime() {
   }
   try {
     s.innerHTML = "<div class='inettitle' id='inettitle'>" + inetSym[ineti].Name + "</div><div class='inetstatus' id='inetstatus'><p>" + result + "</p></div>"
+    $('.inetstatus').marquee({
+      startVisible: true,
+      direction: 'up',
+      duration: '30000'
+    })
   } catch (e) {
     console.log("unable to output entry")
   }
