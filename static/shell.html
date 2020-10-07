@@ -717,7 +717,8 @@ function nextInetUptime() {
     $('.inetstatus').marquee({
       startVisible: true,
       direction: 'up',
-      duration: '30000'
+      duration: '15000',
+      delayBeforeStart: '2000'
     })
   } catch (e) {
     console.log("unable to output entry")
