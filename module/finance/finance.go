@@ -171,7 +171,7 @@ func getStockChartData() {
 				if !ok {
 					fmt.Println("Finance error response to chartdatainfo for ticker item ", StockDB[i].Ticker)
 				} else {
-					fmt.Println("tdb1 declared: ", tdb1)
+					//fmt.Println("tdb1 declared: ", tdb1)
 					temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
 					if err != nil {
 						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, date ", err)
@@ -194,7 +194,7 @@ func getStockChartData() {
 						//fmt.Println("for ", StockDB[i].Ticker, ", error parsing stock chart data, close ", err6)
 					}
 					if err == nil && err3 && err4 && err5 && err6 {
-						fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
+						//fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
 						entry := []float64{float64(date) * 1000, open, high, low, close}
 						StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
 					}
