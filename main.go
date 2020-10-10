@@ -103,6 +103,7 @@ func slowPlaylist() {
 		done <- true
 	})))
 	<-done
+	f.Close()
 	slowplaylisti++
 	slowPlaylist()
 }
