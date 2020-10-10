@@ -293,7 +293,7 @@ func getCryptoChartData() {
 							close, ok6 := tdb3[4].(float64)
 							if ok2 && ok3 && ok4 && ok5 && ok6 {
 								//fmt.Println("inputting entry:")
-								fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
+								//fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
 								entry := []float64{float64(date) * 1000, open, high, low, close}
 								CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
 							} else {
