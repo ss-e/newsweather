@@ -27,42 +27,42 @@ import (
 var audioDB []string
 var bitrate string = "4500k"
 var sr = beep.SampleRate(44100)
-var slowplaylisti int = 0
-var slowplaylistmax int = 0
 
 func initSound() {
 	fmt.Println("init speaker")
 	speaker.Init(sr, sr.N(time.Second/10))
 	fmt.Println("sound initiated")
-	initPlaylist()
+	initAudio()
 }
-func initPlaylist() {
-	fmt.Println("loading playlist")
-	audioDB = nil
-	rand.Seed(time.Now().UnixNano())
-	root := "/root/newsweather/playlist/"
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		audioDB = append(audioDB, path)
-		return nil
-	})
-	audioDB = audioDB[1:]
-	if err != nil {
-		fmt.Println("Unable to walk filepath!")
-		return
+func initAudio() {
+	for {
+		fmt.Println("loading playlist")
+		audioDB = nil
+		rand.Seed(time.Now().UnixNano())
+		root := "/root/newsweather/playlist/"
+		err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			audioDB = append(audioDB, path)
+			return nil
+		})
+		audioDB = audioDB[1:]
+		if err != nil {
+			fmt.Println("Unable to walk filepath!")
+			return
+		}
+		rand.Shuffle(len(audioDB), func(i, j int) {
+			audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
+		})
+		fmt.Println("shuffled files, found ", len(audioDB))
+		if len(audioDB) == 0 {
+			fmt.Println("no audio files, killing sound init")
+			return
+		}
+		for i := 0; i < len(audioDB); i++ {
+			playAudio(i)
+		}
 	}
-	rand.Shuffle(len(audioDB), func(i, j int) {
-		audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
-	})
-	fmt.Println("shuffled files, found ", len(audioDB))
-	if len(audioDB) == 0 {
-		fmt.Println("no audio files, killing sound init")
-		return
-	}
-	slowplaylistmax = len(audioDB) - 1
-	slowplaylisti = 0
-	slowPlaylist()
 }
-func slowPlaylist() {
+func playAudio(i int) {
 	/*defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("Audio stream panic!: ", err)
@@ -70,23 +70,25 @@ func slowPlaylist() {
 			slowPlaylist()
 		}
 	}()*/
-	if slowplaylisti == slowplaylistmax {
+	/*if slowplaylisti == slowplaylistmax {
 		initPlaylist()
-	}
-	name := audioDB[slowplaylisti]
+	}*/
+	name := audioDB[i]
 	//fmt.Println("loading file #", slowplaylisti, "name: ", name)
 	f, err := os.Open(name)
 	if err != nil {
 		fmt.Println("playlist os open error:", err)
+		return
 	}
 	//fmt.Println("opened audio file ", name)
 	// Decode it.
 	streamer, format, err := vorbis.Decode(f)
 	if err != nil {
 		fmt.Println("playlist vorbis decode error:", err)
+		return
 	}
 	defer streamer.Close()
-	fmt.Println("playing file #", slowplaylisti, "name: ", name)
+	fmt.Println("playing file #", i, "name: ", name)
 	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
@@ -96,7 +98,7 @@ func slowPlaylist() {
 			if err := recover(); err != nil {
 				fmt.Println("Audio stream panic!: ", err)
 				//panic("audio stream panic")
-				slowPlaylist()
+				return
 			}
 		}()
 		//fmt.Println("executing callback")
@@ -104,8 +106,7 @@ func slowPlaylist() {
 	})))
 	<-done
 	f.Close()
-	slowplaylisti++
-	slowPlaylist()
+	return
 }
 
 /*
