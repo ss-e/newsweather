@@ -86,7 +86,7 @@ func playAudio(i int) {
 		return
 	}
 	defer streamer.Close()
-	fmt.Println("playing file #", i, "name: ", name)
+	fmt.Println("playing file ", i, " with name: ", name)
 	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
@@ -102,7 +102,6 @@ func playAudio(i int) {
 			f.Close()
 		}()
 		//fmt.Println("executing callback")
-
 		//done <- true
 	})))
 	//<-done
