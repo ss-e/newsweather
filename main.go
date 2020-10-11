@@ -98,9 +98,11 @@ func playAudio(i int) {
 				//panic("audio stream panic")
 				return
 			}
+			fmt.Println("completed play, closing file")
+			f.Close()
 		}()
 		//fmt.Println("executing callback")
-		f.Close()
+
 		//done <- true
 	})))
 	//<-done
