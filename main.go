@@ -90,7 +90,7 @@ func playAudio(i int) {
 	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
-	//done := make(chan bool)
+	done := make(chan bool)
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
 		defer func() {
 			if err := recover(); err != nil {
@@ -98,14 +98,14 @@ func playAudio(i int) {
 				//panic("audio stream panic")
 				return
 			}
-			fmt.Println("completed play, closing file")
-			f.Close()
+			//fmt.Println("completed play, closing file")
 		}()
 		//fmt.Println("executing callback")
-		//done <- true
+		done <- true
 	})))
-	//<-done
-	//return
+	<-done
+	f.Close()
+	return
 }
 
 /*
