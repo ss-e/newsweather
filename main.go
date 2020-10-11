@@ -46,15 +46,16 @@ func initAudio() {
 			fmt.Println("Unable to walk filepath!")
 			return
 		}
-		rand.Shuffle(len(audioDB), func(i, j int) {
+		len := len(audioDB)
+		rand.Shuffle(len, func(i, j int) {
 			audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 		})
-		fmt.Println("shuffled files, found ", len(audioDB))
-		if len(audioDB) == 0 {
+		fmt.Println("shuffled files, found ", len)
+		if len == 0 {
 			fmt.Println("no audio files, killing sound init")
 			return
 		}
-		for i := 0; i < len(audioDB); i++ {
+		for i := 0; i < len; i++ {
 			playAudio(i)
 		}
 	}
@@ -68,12 +69,8 @@ func playAudio(i int) {
 			slowPlaylist()
 		}
 	}()*/
-	/*if slowplaylisti == slowplaylistmax {
-		initPlaylist()
-	}*/
-	name := audioDB[i]
 	//fmt.Println("loading file #", slowplaylisti, "name: ", name)
-	f, err := os.Open(name)
+	f, err := os.Open(audioDB[i])
 	if err != nil {
 		fmt.Println("playlist os open error:", err)
 		return
@@ -86,7 +83,7 @@ func playAudio(i int) {
 		return
 	}
 	defer streamer.Close()
-	fmt.Println("playing file ", i, " with name: ", name)
+	fmt.Println("playing file ", i, " with name: ", audioDB[i])
 	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
