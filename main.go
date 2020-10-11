@@ -28,13 +28,10 @@ var audioDB []string
 var bitrate string = "4500k"
 var sr = beep.SampleRate(44100)
 
-func initSound() {
-	fmt.Println("init speaker")
-	speaker.Init(sr, sr.N(time.Second/10))
-	fmt.Println("sound initiated")
-	initAudio()
-}
 func initAudio() {
+	fmt.Println("attempting speaker init")
+	speaker.Init(sr, sr.N(time.Second/10))
+	fmt.Println("speaker init completed")
 	for {
 		fmt.Println("loading playlist")
 		audioDB = nil
@@ -62,6 +59,7 @@ func initAudio() {
 		}
 	}
 }
+
 func playAudio(i int) {
 	/*defer func() {
 		if err := recover(); err != nil {
@@ -92,7 +90,7 @@ func playAudio(i int) {
 	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
-	done := make(chan bool)
+	//done := make(chan bool)
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
 		defer func() {
 			if err := recover(); err != nil {
@@ -102,11 +100,11 @@ func playAudio(i int) {
 			}
 		}()
 		//fmt.Println("executing callback")
-		done <- true
+		f.Close()
+		//done <- true
 	})))
-	<-done
-	f.Close()
-	return
+	//<-done
+	//return
 }
 
 /*
@@ -229,7 +227,7 @@ func main() {
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
-	go initSound()
+	go initAudio()
 	go ffmpegHelper()
 	go NeverExit("webViewHelper", webViewHelper)
 	//go NeverExit("loadPlaylist", loadPlaylist)
