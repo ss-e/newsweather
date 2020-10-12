@@ -228,7 +228,7 @@ func main() {
 		}
 	}()
 	//startup()
-	weather.Startup()
+	//weather.Startup()
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
