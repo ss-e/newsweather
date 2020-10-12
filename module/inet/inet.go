@@ -24,7 +24,10 @@ type Data struct {
 var InetDB []Data
 
 //when to prune entries, in hours
-var downtimeLength int = 168
+//var downtimeLength int = 168
+var downtimeLength int = 72
+
+//var downtimeLength int = 4
 
 //ReadInetDB return weatherdb
 func ReadInetDB() []Data {
