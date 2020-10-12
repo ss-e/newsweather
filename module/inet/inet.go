@@ -124,8 +124,9 @@ func getCurrentInetStatus() {
 						checktime = *feed.Items[y].PublishedParsed
 					}
 					fmt.Println("checking time value ", checktime)
-					//if checktime.After(now.Add(time.Duration(downtimeLength) * time.Hour)) {
-					if now.After(checktime.Add(time.Duration(downtimeLength) * time.Hour)) {
+					if checktime.After(now.Add(-(time.Duration(downtimeLength) * time.Hour))) {
+						//if checktime.After(now.Sub(time.Duration(downtimeLength) * time.Hour)) {
+						//if now.After(checktime.Add(time.Duration(downtimeLength) * time.Hour)) {
 						fmt.Println("item is after")
 						InetDB[i].Status = append(InetDB[i].Status, feed.Items[y].Title)
 						fmt.Println("appended")
