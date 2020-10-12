@@ -707,7 +707,11 @@ function nextInetUptime() {
     //console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
-        result += "\u2022 " + currentValue + " <br />"
+        if (currentValue == "Facebook Platform is Healthy") {
+          result = "OK"
+        } else {
+          result += "\u2022 " + currentValue + " <br />"
+        }
       })
     } else {
       result = "OK"
@@ -767,7 +771,7 @@ function datetime() {
 function inetPage(num) {
 	  var temp = inetSym[num].Status
     var slidetime = 20000
-	  if (inetSym[num].Status === null || inetSym[num].Status == "") {
+	  if (inetSym[num].Status === null || inetSym[num].Status == "" || inetSym[num].Status == "Facebook Platform is Healthy" ) {
 		  temp = "OK"
       slidetime = 5000
 	  } else {
