@@ -158,7 +158,7 @@ func get6hrTemp() {
 		}
 		time.Sleep(5 * time.Second)
 		//var url = weatherSite + "onecall?lat=" + weatherDB[i].Lat + "&lon=" + weatherDB[i].Lon + "&exclude=minutely,current&units=metric&appid=" + weatherAPIKey
-		var url = weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=18"
+		var url = weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=23"
 		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
