@@ -1,6 +1,6 @@
 #!/bin/bash
-while :
-do
+#while :
+#do
     export DISPLAY=:99
     export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig
     git pull && go build
@@ -9,4 +9,4 @@ do
     ./newsweather
     killall ffmpeg
     killall Xvfb
-done
+#done
