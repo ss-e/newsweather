@@ -81,6 +81,7 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 func getCurrentInetStatus() {
 	for i := range InetDB {
 		//thisTime := time.Now()
+		InetDB[i].Status = make([]StatusData, 0)
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
 		}
