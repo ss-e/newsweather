@@ -184,7 +184,7 @@ func get6hrTemp() {
 				nowHour := time.Now().Hour()
 				h := 6 - (nowHour % 6)
 				k := 0
-				for j := h; j < 24; j = i + 6 {
+				for j := h; j < 24; j = j + 6 {
 					//get main temp
 					/*main := responseArr["main"].([]interface{})
 					t1 := main[j].(map[string]interface{})*/
