@@ -176,7 +176,7 @@ func get6hrTemp() {
 			if !ok {
 				message, ok := jsonResponse["message"].([]interface{})
 				if !ok {
-					fmt.Println("error decoding response for 6 hour temp for index: ", i, " message dump: ", response.Body)
+					fmt.Println("error decoding response for 6 hour temp for index: ", i, " message dump: ", response, ",", jsonResponse)
 				} else {
 					fmt.Println("error decoding response for 6 hour temp for index: ", i, " with message", message)
 				}
