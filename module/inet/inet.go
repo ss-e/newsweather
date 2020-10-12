@@ -22,6 +22,7 @@ type Data struct {
 
 //InetDB contains all inet status info
 var InetDB []Data
+var downtimeLength int = 72
 
 //ReadInetDB return weatherdb
 func ReadInetDB() []Data {
@@ -121,7 +122,7 @@ func getCurrentInetStatus() {
 						checktime = *feed.Items[y].PublishedParsed
 					}
 					//fmt.Println("checking time value ", checktime)
-					if checktime.After(now.Add(time.Duration(12) * time.Hour)) {
+					if checktime.After(now.Add(time.Duration(downtimeLength) * time.Hour)) {
 						//fmt.Println("item is after")
 						InetDB[i].Status = append(InetDB[i].Status, feed.Items[y].Title)
 						fmt.Println("appended")
