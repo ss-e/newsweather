@@ -28,6 +28,12 @@ var audioDB []string
 var bitrate string = "4500k"
 var sr = beep.SampleRate(44100)
 
+//var streamSource string = "rtmp://live-dfw.twitch.tv/app/"
+var streamSource string = "rtmp://a.rtmp.youtube.com/live2/"
+
+//var streamKey string = "live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74"
+var streamKey string = "essa-vyky-g8fe-bkpq-0q5r"
+
 func initAudio() {
 	fmt.Println("attempting speaker init")
 	speaker.Init(sr, sr.N(time.Second/10))
@@ -114,15 +120,16 @@ func startup() {
 }*/
 
 //"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
+//"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
-		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
+		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "aac", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
-		"-vcodec", "libx264", "-g", "60", "-keyint_min", "30", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
+		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
-		"-bufsize", bitrate, "rtmp://live-dfw.twitch.tv/app/live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74",
+		"-bufsize", bitrate, streamSource+streamKey,
 	)
 }
 
