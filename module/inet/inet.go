@@ -111,8 +111,8 @@ func getCurrentInetStatus() {
 					} else {
 						//fmt.Println("tdb1 input", InetDB[i].Status[0])
 						var temp StatusData
-						temp.Title = ""
-						temp.Content = fbookTemp
+						temp.Title = fbookTemp
+						temp.Content = ""
 						InetDB[i].Status = append(InetDB[i].Status, temp)
 					}
 				}

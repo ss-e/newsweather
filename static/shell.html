@@ -707,11 +707,11 @@ function nextInetUptime() {
     console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
-        console.log("currentValue:", currentValue)
-        if (currentValue == "Facebook Platform is Healthy") {
+        console.log("currentValue title: ", currentValue.title, " currentValue content: ", currentValue.content)
+        if (currentValue.title == "Facebook Platform is Healthy") {
           result = "OK"
         } else {
-          result += "\u2022 " + currentValue + " <br />"
+          result += "\u2022 " + currentValue.title + " <br />"
         }
       })
     } else {
