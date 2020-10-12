@@ -1,9 +1,9 @@
 [
-    {"name":"Facebook", "status":[""], "url":"https://www.facebook.com/platform/api-status/"},
-    {"name":"Microsoft Azure", "status":[""], "url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
-    {"name":"AWS", "status":[""], "url":"https://status.aws.amazon.com/rss/all.rss"},
-    {"name":"Google Cloud", "status":[""], "url":"https://status.cloud.google.com/feed.atom"},
-    {"name":"Twitter", "status":[""], "url":"https://api.twitterstat.us/history.rss"},
-    {"name":"Cloudflare", "status":[""], "url":"https://www.cloudflarestatus.com/history.atom"},
-    {"name":"Discord", "status":[""], "url":"https://discord.statuspage.io/history.atom"}
+    {"name":"Facebook", "status":[{"title":"","content":""}], "url":"https://www.facebook.com/platform/api-status/"},
+    {"name":"Microsoft Azure", "status":[{"title":"","content":""}], "url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
+    {"name":"AWS", "status":[{"title":"","content":""}], "url":"https://status.aws.amazon.com/rss/all.rss"},
+    {"name":"Google Cloud", "status":[{"title":"","content":""}], "url":"https://status.cloud.google.com/feed.atom"},
+    {"name":"Twitter", "status":[{"title":"","content":""}], "url":"https://api.twitterstat.us/history.rss"},
+    {"name":"Cloudflare", "status":[{"title":"","content":""}], "url":"https://www.cloudflarestatus.com/history.atom"},
+    {"name":"Discord", "status":[{"title":"","content":""}], "url":"https://discord.statuspage.io/history.atom"}
 ]

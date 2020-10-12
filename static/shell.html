@@ -704,9 +704,10 @@ function nextInetUptime() {
   }*/
   var result = ""
   try {
-    //console.log("list length: ", list.length)
+    console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
+        console.log("currentValue:", currentValue)
         if (currentValue == "Facebook Platform is Healthy") {
           result = "OK"
         } else {
@@ -778,7 +779,11 @@ function inetPage(num) {
 		  temp = inetSym[num].Status
 	  }
     document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
-	  document.getElementById("tmtext").innerHTML = temp + "< /br>" + inetSym[num].Content
+    if (temp == "OK") {
+      document.getElementById("tmtext").innerHTML = temp
+    } else {
+      document.getElementById("tmtext").innerHTML = temp + "< /br>" + inetSym[num].Content
+    }
     if (num == inetSym.length) {
 	    setTimeout("nextMainView()", slidetime);
     } else {
