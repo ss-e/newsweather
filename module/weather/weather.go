@@ -47,7 +47,7 @@ func Startup() error {
 	readToDB("weather")
 	getCurrentTemp()
 	go get6hrTemp()
-	t1 := schedule(getCurrentTemp, 15*time.Minute)
+	t1 := schedule(getCurrentTemp, 20*time.Minute)
 	_ = t1
 	t2 := schedule(get6hrTemp, 6*time.Hour)
 	_ = t2
