@@ -28,11 +28,13 @@ var audioDB []string
 var bitrate string = "4500k"
 var sr = beep.SampleRate(44100)
 
-//var streamSource string = "rtmp://live-dfw.twitch.tv/app/"
-var streamSource string = "rtmp://a.rtmp.youtube.com/live2/"
+var streamSource string = "rtmp://live-dfw.twitch.tv/app/"
 
-//var streamKey string = "live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74"
-var streamKey string = "wdtj-uyz9-u1fe-0gyq-17w3"
+//var streamSource string = "rtmp://a.rtmp.youtube.com/live2/"
+
+var streamKey string = "live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74"
+
+//var streamKey string = "wdtj-uyz9-u1fe-0gyq-17w3"
 
 func initAudio() {
 	fmt.Println("attempting speaker init")
