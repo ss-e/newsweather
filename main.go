@@ -32,7 +32,7 @@ var sr = beep.SampleRate(44100)
 var streamSource string = "rtmp://a.rtmp.youtube.com/live2/"
 
 //var streamKey string = "live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74"
-var streamKey string = "essa-vyky-g8fe-bkpq-0q5r"
+var streamKey string = "wdtj-uyz9-u1fe-0gyq-17w3"
 
 func initAudio() {
 	fmt.Println("attempting speaker init")
