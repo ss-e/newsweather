@@ -49,7 +49,7 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 //Startup performs actions to be done on startup, start timers
 func Startup() error {
 	readToDB("weather")
-	getCurrentTemp()
+	//getCurrentTemp()
 	go get6hrTemp()
 	t1 := schedule(getCurrentTemp, 15*time.Minute)
 	_ = t1
@@ -172,10 +172,10 @@ func get6hrTemp() {
 		if err != nil {
 			fmt.Println("error decoding response:", err, "dump: ", response)
 		} else {
-			responseArr, ok := jsonResponse["list"].(map[string]interface{})
+			responseArr, ok := jsonResponse["list"].([]interface{})
 			if !ok {
-				message, ok := jsonResponse["message"].([]interface{})
-				if !ok {
+				message, ok2 := jsonResponse["message"].([]interface{})
+				if !ok2 {
 					fmt.Println("error decoding response for 6 hour temp for index: ", i, " message dump: ", response, ",", jsonResponse)
 				} else {
 					fmt.Println("error decoding response for 6 hour temp for index: ", i, " with message", message)
@@ -186,12 +186,16 @@ func get6hrTemp() {
 				k := 0
 				for j := h; j < 24; j = i + 6 {
 					//get main temp
-					main := responseArr["main"].([]interface{})
-					t1 := main[j].(map[string]interface{})
+					/*main := responseArr["main"].([]interface{})
+					t1 := main[j].(map[string]interface{})*/
+					main := responseArr[j].(map[string]interface{})
+					t1 := main["main"].(map[string]interface{})
 					weatherDB[i].W[k][0] = int(t1["temp"].(float64))
 					//get weather status
-					weather := responseArr["weather"].([]interface{})
-					t2 := weather[0].(map[string]interface{})
+					/*weather := responseArr["weather"].([]interface{})
+					t2 := weather[0].(map[string]interface{})*/
+					weather := responseArr[j].(map[string]interface{})
+					t2 := weather["weather"].(map[string]interface{})
 					weatherDB[i].W[k][1] = int(t2["id"].(float64))
 					k++
 				}
