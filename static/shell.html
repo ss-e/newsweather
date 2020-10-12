@@ -674,7 +674,6 @@ function getInetData () {
       //console.log(JSON.stringify(temp))
       //console.log("item 0 now temp: ",temp[0].Now[0], " id:", temp[0].Now[1])
       inetSym = temp
-      //nextWeatherTab()
     })
   }
   catch {
@@ -764,6 +763,26 @@ function datetime() {
   timer.textContent = h + ":" + m + ":" + s + " UTC";
   date.textContent = d.toUTCString().slice(0,11);
 }
+/* inet view helper */
+function inetPage(num) {
+	  var temp = inetSym[num].Status
+    var slidetime = 20000
+	  if (inetSym[num].Status === null || inetSym[num].Status == "") {
+		  temp = "OK"
+      slidetime = 5000
+	  } else {
+		  temp = inetSym[num].Status
+	  }
+    document.getElementById("tmheader").innerHTML = inetSym[num].Name
+	  document.getElementById("tmtext").innerHTML = temp
+    if (num == inetSym.length) {
+	    setTimeout("nextMainView()", slidetime);
+    } else {
+      setTimeout("inetPage("+(num+1)+")", slidetime);
+    }
+    return
+}
+
 /* views */
 function nextMainView() {
   document.getElementById("tmheader").innerHTML = ""
@@ -857,8 +876,11 @@ function nextMainView() {
         document.getElementById("tmheader").innerHTML = inetSym[hln].name
         document.getElementById("tmtext").innerHTML = inetSym[hln].status
         //document.getElementById("textmain").style += "animation: slide 20s linear 1;"
+        setTimeout("nextMainView()", 20000);
       } else if (mainscreen[0].substr(1).charAt(0) == "a") {
-        console.log("checking inetstatus")
+        console.log("init inetpage")
+        inetPage(0)
+        /*
         document.getElementById("tmheader").innerHTML = "Internet Service Status"
         document.getElementById("tmtext").innerHTML += "<br /><br />";
         for (x in inetSym) {
@@ -870,9 +892,9 @@ function nextMainView() {
           }
           document.getElementById("tmtext").innerHTML += inetSym[x].Name + " : " + temp + "<br /><br />"
         }
+        */
         //document.getElementById("textmain").style += ""
       }
-      setTimeout("nextMainView()", 20000);
       break;
     case 's':
       document.getElementById("bumper").style.display = "none"
