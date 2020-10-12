@@ -115,7 +115,7 @@ func getCurrentInetStatus() {
 			} else {
 				fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
 				for y := range feed.Items {
-					fmt.Println("checking item ", y, " with values: ", feed.Items[y])
+					//fmt.Println("checking item ", y, " with values: ", feed.Items[y])
 					now := time.Now()
 					checktime := time.Now()
 					if feed.Items[y].UpdatedParsed != nil {
@@ -123,13 +123,13 @@ func getCurrentInetStatus() {
 					} else {
 						checktime = *feed.Items[y].PublishedParsed
 					}
-					//fmt.Println("checking time value ", checktime)
+					fmt.Println("checking time value ", checktime)
 					if checktime.After(now.Add(time.Duration(downtimeLength) * time.Hour)) {
-						//fmt.Println("item is after")
+						fmt.Println("item is after")
 						InetDB[i].Status = append(InetDB[i].Status, feed.Items[y].Title)
 						fmt.Println("appended")
 					} else {
-						//fmt.Println("item is not after")
+						fmt.Println("item is not after")
 					}
 					if InetDB[i].Status == nil {
 						InetDB[i].Status = append(InetDB[i].Status, "OK")
