@@ -189,14 +189,18 @@ func get6hrTemp() {
 					/*main := responseArr["main"].([]interface{})
 					t1 := main[j].(map[string]interface{})*/
 					main := responseArr[j].(map[string]interface{})
+					fmt.Println("getting t1")
 					t1 := main["main"].(map[string]interface{})
 					weatherDB[i].W[k][0] = int(t1["temp"].(float64))
 					//get weather status
 					/*weather := responseArr["weather"].([]interface{})
 					t2 := weather[0].(map[string]interface{})*/
-					weather := responseArr[j].(map[string]interface{})
-					t2 := weather["weather"].(map[string]interface{})
-					weatherDB[i].W[k][1] = int(t2["id"].(float64))
+					//weather := responseArr[j].(map[string]interface{})
+					fmt.Println("getting t2")
+					t2 := main["weather"].([]interface{})
+					fmt.Println("getting t3")
+					t3 := t2[0].(map[string]interface{})
+					weatherDB[i].W[k][1] = int(t3["id"].(float64))
 					k++
 				}
 				fmt.Println("weather onecall index:", i, "w1:", weatherDB[i].W[0][0], ",", weatherDB[i].W[0][1], "w2:", weatherDB[i].W[1][0], ",", weatherDB[i].W[1][1], "w3:", weatherDB[i].W[2][0], ",", weatherDB[i].W[2][1])
