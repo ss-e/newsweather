@@ -773,8 +773,8 @@ function inetPage(num) {
 	  } else {
 		  temp = inetSym[num].Status
 	  }
-    document.getElementById("tmheader").innerHTML = inetSym[num].Name
-	  document.getElementById("tmtext").innerHTML = temp
+    document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
+	  document.getElementById("tmtext").innerHTML = temp + "< /br>" + inetSym[num].Content
     if (num == inetSym.length) {
 	    setTimeout("nextMainView()", slidetime);
     } else {
