@@ -704,14 +704,15 @@ function nextInetUptime() {
   }*/
   var result = ""
   try {
+    console.log("list values: ", list)
     console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
-        console.log("currentValue title: ", currentValue.title, " currentValue content: ", currentValue.content)
+        console.log("currentValue title: ", currentValue.Title, " currentValue content: ", currentValue.Content)
         if (currentValue.title == "Facebook Platform is Healthy") {
           result = "OK"
         } else {
-          result += "\u2022 " + currentValue.title + " <br />"
+          result += "\u2022 " + currentValue.Title + " <br />"
         }
       })
     } else {
@@ -770,9 +771,10 @@ function datetime() {
 }
 /* inet view helper */
 function inetPage(num) {
-	  var temp = inetSym[num].Status
+	  //var temp = inetSym[num].Status
+    var temp = ""
     var slidetime = 20000
-	  if (inetSym[num].Status === null || inetSym[num].Status == "" || inetSym[num].Status == "Facebook Platform is Healthy" ) {
+	  if (inetSym[num].Status.Title === null || inetSym[num].Status.Title == "" || inetSym[num].Status.Title == "Facebook Platform is Healthy" ) {
 		  temp = "OK"
       slidetime = 5000
 	  } else {
@@ -782,7 +784,7 @@ function inetPage(num) {
     if (temp == "OK") {
       document.getElementById("tmtext").innerHTML = temp
     } else {
-      document.getElementById("tmtext").innerHTML = temp + "< /br>" + inetSym[num].Content
+      document.getElementById("tmtext").innerHTML = inetSym[num].Status.Title + "< /br>" + inetSym[num].Status.Content
     }
     if (num == inetSym.length) {
 	    setTimeout("nextMainView()", slidetime);
