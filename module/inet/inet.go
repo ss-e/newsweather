@@ -22,6 +22,8 @@ type Data struct {
 
 //InetDB contains all inet status info
 var InetDB []Data
+
+//when to prune entries, in hours
 var downtimeLength int = 72
 
 //ReadInetDB return weatherdb
