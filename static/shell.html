@@ -784,13 +784,10 @@ function inetPage(num) {
         if (inetSym[num].Status[x] == null || inetSym[num].Status[x].Title == null || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
           console.log('with x: ',x, 'status is null')
           temp = "OK"
+          slidetime = 0
+          break
         } else {
           temp = inetSym[num].Status[x]
-        }
-        if (temp == "OK") {
-          console.log("temp is: OK")
-          document.getElementById("tmtext").textContent += temp
-        } else {
           console.log("temp content is: ", temp.Content)
           temp.Content = temp.Content.replace(/<\/p\s*[\/]?>/gi, "\r\n")
           temp.Content = temp.Content.replace(/<br\s*[\/]?>/gi, " ")
@@ -811,8 +808,8 @@ function inetPage(num) {
         }
       }
       if (inetSym[num].Status.length == 0) {
-        document.getElementById("tmtext").textContent = "OK"
-        slidetime = 10000
+        //document.getElementById("tmtext").textContent = "OK"
+        slidetime = 0
       }
     }
     catch (err) {
