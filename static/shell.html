@@ -777,16 +777,15 @@ function inetPage(num) {
     var temp = ""
     var slidetime = 20000
     try {
-      for (x = 0; x < (inetSym[num].Status.length+1); x++) {
+      document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
+      for (x in inetSym[num].Status.length) {
         console.log('x is ',x)
         if (inetSym[num].Status[x] == null || inetSym[num].Status[x].Title == null || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
           console.log('with x: ',x, 'status is null')
           temp = "OK"
-          slidetime = 5000
         } else {
           temp = inetSym[num].Status[x]
         }
-        document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
         if (temp == "OK") {
           console.log("temp is: OK")
           document.getElementById("tmtext").textContent += temp
@@ -796,6 +795,10 @@ function inetPage(num) {
           temp.Content = temp.Content.replace(/<br\s*[\/]?>/gi, "\r\n\r\n")
           document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
         }
+      }
+      if (inetSym[num].Status.length == 0) {
+        document.getElementById("tmtext").textContent = "OK"
+        slidetime = 5000
       }
     }
     catch (err) {
