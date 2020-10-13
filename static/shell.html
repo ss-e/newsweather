@@ -791,7 +791,7 @@ function inetPage(num) {
       }
     }
     console.log("num is: ", num, ", symlen is: ", inetSym.length)
-    if (num == inetSym.length) {
+    if (num == (inetSym.length-1)) {
 	    setTimeout("nextMainView()", slidetime);
     } else {
       setTimeout("inetPage("+(num+1)+")", slidetime);
