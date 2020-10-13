@@ -788,10 +788,10 @@ function inetPage(num) {
         document.getElementById("tmtext").innerHTML += temp.Title + "< /br>" + temp.Content
       }
     }
+    console.log("num is: ", num, ", symlen is: ", inetSym.length)
     if (num == inetSym.length) {
 	    setTimeout("nextMainView()", slidetime);
     } else {
-      console.log("num is: ", num, ", symlen is: ", netSym.length)
       setTimeout("inetPage("+(num+1)+")", slidetime);
     }
     return
