@@ -779,7 +779,7 @@ function inetPage(num) {
     try {
       for (x = 0; x < (inetSym[num].Status.length+1); x++) {
         console.log('x is ',x)
-        if (inetSym[num].Status[x].Title == null || inetSym[num].Status[x].Title == "" || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
+        if (typeof inetSym[num].Status[x].Title === 'undefined' || inetSym[num].Status[x].Title == null || inetSym[num].Status[x].Title == "" || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
           temp = "OK"
           slidetime = 5000
         } else {
