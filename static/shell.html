@@ -792,6 +792,7 @@ function inetPage(num) {
         } else {
           console.log("temp content is: ", temp.Content)
           temp.Content = temp.Content.replace(/<\/p\s*[\/]?>/gi, "\r\n")
+          temp.Content = temp.Content.replace(/<br\s*[\/]?>/gi, "\r\n")
           document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
         }
       }

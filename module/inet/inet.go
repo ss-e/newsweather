@@ -156,10 +156,13 @@ func getCurrentInetStatus() {
 					if InetDB[i].Status == nil {
 						temp.Title = feed.Items[y].Title
 						if feed.Items[y].Content != "" {
+							fmt.Println("content is not nil")
 							temp.Content = feed.Items[y].Content
-						} else if feed.Items[y].Content != "" {
+						} else if feed.Items[y].Description != "" {
+							fmt.Println("description is not nil")
 							temp.Content = feed.Items[y].Description
 						} else {
+							fmt.Println("no content")
 							temp.Content = "no content"
 						}
 						InetDB[i].Status = append(InetDB[i].Status, temp)
