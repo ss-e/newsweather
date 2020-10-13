@@ -341,6 +341,7 @@
   height: 80%;
   width: 100%;
   overflow: hidden;
+  white-space: pre;
   /*margin-left: 250px;
   animation: bigslide 20s linear 1;*/
 }
@@ -793,7 +794,7 @@ function inetPage(num) {
           console.log("temp content is: ", temp.Content)
           temp.Content = temp.Content.replace(/<\/p\s*[\/]?>/gi, "\r\n\r\n")
           temp.Content = temp.Content.replace(/<br\s*[\/]?>/gi, "\r\n\r\n")
-          document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
+          document.getElementById("tmtext").textContent += "\r\n" + temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
         }
       }
       if (inetSym[num].Status.length == 0) {
