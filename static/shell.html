@@ -795,7 +795,7 @@ function inetPage(num) {
           temp.Content = temp.Content.replace(/<\/p\s*[\/]?>/gi, "\r\n")
           temp.Content = temp.Content.replace(/<br\s*[\/]?>/gi, " ")
           document.getElementById("tmtext").textContent += "\r\n" + temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
-          if (result.length > 1250) {
+          if (document.getElementById("tmtext").textContent.length > 1250) {
             $('.tmtext').marquee({
             allowCss3Support: false,
             //duration in milliseconds of the marquee
