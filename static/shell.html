@@ -785,9 +785,9 @@ function inetPage(num) {
       }
       document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
       if (temp == "OK") {
-        document.getElementById("tmtext").innerHTML += temp
+        document.getElementById("tmtext").textContent += temp
       } else {
-        document.getElementById("tmtext").innerHTML += temp.Title + "<br />" + temp.Content + "<br />"
+        document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content + "\r\n"
       }
     }
     console.log("num is: ", num, ", symlen is: ", inetSym.length)
@@ -1138,9 +1138,9 @@ function init() {
     }
     readInetDB = function() {
       temp = new Promise ((resolve, reject) => {
-        resolve ([ {"name":"Facebook", "status":[{"title":"Test Title","content":"Test Content"}], "url":"https://www.facebook.com/platform/api-status/"},
-                   {"name":"Microsoft Azure", "status":[{"title":"Test Title","content":"Test Content Test Content Test Content"}], "url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
-                   {"name":"AWS", "status":[{"title":"Test Title","content":"Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content"}], "url":"https://status.aws.amazon.com/rss/all.rss"},])
+        resolve ([ {"Name":"Facebook", "Status":[{"Title":"Test Title","Content":"Test Content"}], "Url":"https://www.facebook.com/platform/api-status/"},
+                   {"Name":"Microsoft Azure", "Status":[{"Title":"Test Title","Content":"Test Content Test Content Test Content"}], "Url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
+                   {"Name":"AWS", "Status":[{"Title":"Test Title","Content":"Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content"}], "Url":"https://status.aws.amazon.com/rss/all.rss"},])
       });
       return temp
     }
