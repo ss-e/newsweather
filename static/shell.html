@@ -704,7 +704,7 @@ function nextInetUptime() {
   }*/
   var result = ""
   try {
-    console.log("list values: ", list)
+    //console.log("list values: ", list)
     console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
@@ -789,6 +789,7 @@ function inetPage(num) {
     if (num == inetSym.length) {
 	    setTimeout("nextMainView()", slidetime);
     } else {
+      console.log("num is: ", num, ", symlen is: ", netSym.length)
       setTimeout("inetPage("+(num+1)+")", slidetime);
     }
     return
@@ -1133,9 +1134,9 @@ function init() {
     }
     readInetDB = function() {
       temp = new Promise ((resolve, reject) => {
-        resolve ([{"Name":"Facebook", "Status":["test"], "url":"https://www.facebook.com/platform/api-status/"},
-              {"Name":"Microsoft Azure", "Status":["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at tempor orci. Integer eget dapibus sem, quis feugiat orci. Ut fermentum velit id imperdiet tincidunt. Praesent eget tincidunt massa. Sed non sapien aliquet, finibus nisl et, tempus metus. In non tempor ante, nec aliquam lectus. Maecenas ac nunc neque. Donec nulla eros, bibendum in gravida at, interdum vel lorem. Cras in luctus odio. Integer interdum nibh ut elit facilisis, id ullamcorper est suscipit. Maecenas ac pretium diam. Duis vitae dapibus ante. Sed imperdiet consequat turpis id imperdiet. Sed venenatis euismod pulvinar. Nam a euismod eros, vel interdum metus. Mauris non accumsan ligula, non feugiat diam. Proin vel ligula nulla. Aliquam rutrum lobortis aliquam. Donec facilisis lobortis lorem, nec molestie arcu ullamcorper in. Sed eleifend vitae purus at volutpat. Nulla interdum porta diam placerat gravida. Fusce interdum hendrerit dolor nec pulvinar. Suspendisse sed porttitor neque. Proin dictum, augue hendrerit tincidunt blandit, est enim rutrum justo, vel convallis elit nisi ac quam. Aenean in placerat lectus, lacinia lobortis orci. Nunc feugiat rutrum tortor, vitae aliquam mauris placerat nec. Etiam feugiat, nulla eu sollicitudin mattis, nibh velit blandit metus, et bibendum leo lorem sit amet diam. Aliquam luctus ut purus in porta. Cras vel arcu ac nibh suscipit vehicula. Integer accumsan augue non libero posuere, ut elementum enim elementum. Vivamus sagittis vel tellus vel aliquam. Suspendisse potenti. Suspendisse et pretium magna. Pellentesque convallis pellentesque urna, sed molestie odio condimentum malesuada. Ut ornare eros dolor, vitae lacinia massa tincidunt at. Aenean pulvinar, turpis ac tincidunt tempus, arcu dui pulvinar mauris, bibendum sagittis odio erat eu quam. Sed a aliquet neque, ut facilisis purus. Aenean elementum volutpat neque, pretium cursus odio feugiat et. Nullam pulvinar lacus congue sem consectetur luctus. Aliquam interdum, erat eget pulvinar pellentesque, nisl tortor sodales lacus, a aliquet tortor nisi sed tellus. Curabitur vitae rutrum mi. Fusce sed cursus mauris. Etiam egestas nec augue nec porta. Aliquam porta sapien et placerat mollis. Pellentesque non velit dignissim, luctus orci a, lobortis massa. Morbi commodo accumsan laoreet. Etiam pharetra porttitor elit, ac malesuada elit luctus vel. Phasellus in risus lacus. In vitae pulvinar nisl, semper maximus ligula. Vestibulum pellentesque luctus nibh, a sodales orci auctor et. Sed lacinia lorem a magna feugiat, in hendrerit eros mattis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec vel sapien vel ante pretium viverra. Phasellus quam massa, finibus vel vehicula id, porttitor in ex. Quisque at elit leo. Phasellus erat diam, aliquet nec metus non, consequat finibus odio. Sed accumsan pulvinar lacus nec sollicitudin. Sed auctor nec neque ac gravida. Mauris sit amet euismod lectus, interdum blandit arcu. Praesent varius a lorem ut pellentesque. In in lacus sed erat dapibus imperdiet. Nam congue convallis ligula nec accumsan. Etiam eget dignissim augue. Sed ac vehicula arcu, at dapibus turpis. Suspendisse potenti. Phasellus justo massa, ultrices vel felis sit amet, venenatis imperdiet mi. Sed vel eleifend tellus. Phasellus venenatis a felis sit amet pharetra. Cras elit est, varius vulputate magna nec, gravida tempor. "], "url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
-              {"Name":"AWS", "Status":["test"], "url":"https://status.aws.amazon.com/rss/all.rss"}])
+        resolve ([ {"name":"Facebook", "status":[{"title":"Test Title","content":"Test Content"}], "url":"https://www.facebook.com/platform/api-status/"},
+                   {"name":"Microsoft Azure", "status":[{"title":"Test Title","content":"Test Content Test Content Test Content"}], "url":"https://azurestatuscdn.azureedge.net/en-ca/status/feed/"},
+                   {"name":"AWS", "status":[{"title":"Test Title","content":"Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content Test Content"}], "url":"https://status.aws.amazon.com/rss/all.rss"},])
       });
       return temp
     }
