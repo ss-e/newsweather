@@ -774,17 +774,19 @@ function inetPage(num) {
 	  //var temp = inetSym[num].Status
     var temp = ""
     var slidetime = 20000
-	  if (inetSym[num].Status.Title === null || inetSym[num].Status.Title == "" || inetSym[num].Status.Title == "Facebook Platform is Healthy" ) {
-		  temp = "OK"
-      slidetime = 5000
-	  } else {
-		  temp = inetSym[num].Status
-	  }
-    document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
-    if (temp == "OK") {
-      document.getElementById("tmtext").innerHTML = temp
-    } else {
-      document.getElementById("tmtext").innerHTML = inetSym[num].Status.Title + "< /br>" + inetSym[num].Status.Content
+    for (x in inetSym[num].Status) {
+      if (inetSym[num].Status[x].Title === null || inetSym[num].Status[x].Title == "" || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
+        temp = "OK"
+        slidetime = 5000
+      } else {
+        temp = inetSym[num].Status[x]
+      }
+      document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
+      if (temp == "OK") {
+        document.getElementById("tmtext").innerHTML += temp
+      } else {
+        document.getElementById("tmtext").innerHTML += temp.Title + "< /br>" + temp.Content
+      }
     }
     if (num == inetSym.length) {
 	    setTimeout("nextMainView()", slidetime);
