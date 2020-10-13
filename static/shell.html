@@ -789,6 +789,7 @@ function inetPage(num) {
         if (temp == "OK") {
           document.getElementById("tmtext").textContent += temp
         } else {
+          console.log("temp is: ", temp)
           document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
         }
       }
