@@ -776,19 +776,25 @@ function inetPage(num) {
     document.getElementById("tmtext").innerHTML = ""
     var temp = ""
     var slidetime = 20000
-    for (x = 0; x < (inetSym[num].Status.length+1); x++) {
-      if (inetSym[num].Status[x].Title === null || inetSym[num].Status[x].Title == "" || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
-        temp = "OK"
-        slidetime = 5000
-      } else {
-        temp = inetSym[num].Status[x]
+    try {
+      for (x = 0; x < (inetSym[num].Status.length+1); x++) {
+        console.log('x is ',x)
+        if (inetSym[num].Status[x].Title === null || inetSym[num].Status[x].Title == "" || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
+          temp = "OK"
+          slidetime = 5000
+        } else {
+          temp = inetSym[num].Status[x]
+        }
+        document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
+        if (temp == "OK") {
+          document.getElementById("tmtext").textContent += temp
+        } else {
+          document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
+        }
       }
-      document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
-      if (temp == "OK") {
-        document.getElementById("tmtext").textContent += temp
-      } else {
-        document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
-      }
+    }
+    catch (err) {
+      console.log("error rendering inetSym", err)
     }
     console.log("num is: ", num, ", symlen is: ", inetSym.length)
     if (num == (inetSym.length-1)) {
