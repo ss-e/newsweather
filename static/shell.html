@@ -787,9 +787,11 @@ function inetPage(num) {
         }
         document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
         if (temp == "OK") {
+          console.log("temp is: OK")
           document.getElementById("tmtext").textContent += temp
         } else {
-          console.log("temp is: ", temp)
+          console.log("temp content is: ", temp.Content)
+          temp.Content = temp.Content.replace(/<\/p\s*[\/]?>/gi, "\r\n")
           document.getElementById("tmtext").textContent += temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
         }
       }
