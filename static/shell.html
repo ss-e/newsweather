@@ -772,6 +772,8 @@ function datetime() {
 /* inet view helper */
 function inetPage(num) {
 	  //var temp = inetSym[num].Status
+    document.getElementById("tmheader").innerHTML = ""
+    document.getElementById("tmtext").innerHTML = ""
     var temp = ""
     var slidetime = 20000
     for (x in inetSym[num].Status) {
