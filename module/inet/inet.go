@@ -141,19 +141,13 @@ func getCurrentInetStatus() {
 					} else {
 						checktime = *feed.Items[y].PublishedParsed
 					}
-					fmt.Println("checking time value ", checktime)
+					//fmt.Println("checking time value ", checktime)
 					if checktime.After(now.Add(-(time.Duration(downtimeLength) * time.Hour))) {
 						//if checktime.After(now.Sub(time.Duration(downtimeLength) * time.Hour)) {
 						//if now.After(checktime.Add(time.Duration(downtimeLength) * time.Hour)) {
-						fmt.Println("item is after")
-						temp.Title = feed.Items[y].Title
-						temp.Content = feed.Items[y].Content
-						InetDB[i].Status = append(InetDB[i].Status, temp)
-						fmt.Println("appended")
-					} else {
-						fmt.Println("item is not after")
-					}
-					if InetDB[i].Status == nil {
+						//fmt.Println("item is after")
+						/*temp.Title = feed.Items[y].Title
+						temp.Content = feed.Items[y].Content*/
 						temp.Title = feed.Items[y].Title
 						if feed.Items[y].Content != "" {
 							fmt.Println("content is not nil")
@@ -165,6 +159,25 @@ func getCurrentInetStatus() {
 							fmt.Println("no content")
 							temp.Content = "no content"
 						}
+						InetDB[i].Status = append(InetDB[i].Status, temp)
+						//fmt.Println("appended")
+					} else {
+						//fmt.Println("item is not after")
+					}
+					if InetDB[i].Status == nil {
+						/*temp.Title = feed.Items[y].Title
+						if feed.Items[y].Content != "" {
+							fmt.Println("content is not nil")
+							temp.Content = feed.Items[y].Content
+						} else if feed.Items[y].Description != "" {
+							fmt.Println("description is not nil")
+							temp.Content = feed.Items[y].Description
+						} else {
+							fmt.Println("no content")
+							temp.Content = "no content"
+						}*/
+						temp.Title = "OK"
+						temp.Content = "no content"
 						InetDB[i].Status = append(InetDB[i].Status, temp)
 					}
 				}
