@@ -795,21 +795,23 @@ function inetPage(num) {
           temp.Content = temp.Content.replace(/<\/p\s*[\/]?>/gi, "\r\n")
           temp.Content = temp.Content.replace(/<br\s*[\/]?>/gi, " ")
           document.getElementById("tmtext").textContent += "\r\n" + temp.Title + "\r\n" + temp.Content.replace(/(<([^>]+)>)/gi, "") + "\r\n"
-          $('.tmtext').marquee({
-          allowCss3Support: false,
-          //duration in milliseconds of the marquee
-          duration: 20000,
-          //gap in pixels between the tickers
-          gap: 50,
-          delayBeforeStart: 5000,
-          startVisible: true,
-          direction: 'up',
-          })
+          if (result.length > 1250) {
+            $('.tmtext').marquee({
+            allowCss3Support: false,
+            //duration in milliseconds of the marquee
+            duration: 20000,
+            //gap in pixels between the tickers
+            gap: 50,
+            delayBeforeStart: 5000,
+            startVisible: true,
+            direction: 'up',
+            })
+          }
         }
       }
       if (inetSym[num].Status.length == 0) {
         document.getElementById("tmtext").textContent = "OK"
-        slidetime = 5000
+        slidetime = 10000
       }
     }
     catch (err) {
