@@ -780,7 +780,7 @@ function inetPage(num) {
     try {
       document.getElementById("tmheader").innerHTML = inetSym[num].Name + " Service Status"
       for (x in inetSym[num].Status) {
-        console.log('x is ',x)
+        //console.log('x is ',x)
         if (inetSym[num].Status[x] == null || inetSym[num].Status[x].Title == null || inetSym[num].Status[x].Title == "Facebook Platform is Healthy" ) {
           console.log('with x: ',x, 'status is null')
           temp = "OK"

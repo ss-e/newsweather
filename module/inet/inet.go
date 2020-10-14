@@ -7,6 +7,7 @@ import (
 	"net/http"
 	//"strings"
 	"github.com/mmcdole/gofeed"
+	"strconv"
 	"time"
 )
 
@@ -31,9 +32,9 @@ var InetDB []Data
 
 //when to prune entries, in hours
 //var downtimeLength int = 168
-var downtimeLength int = 72
+//var downtimeLength int = 72
 
-//var downtimeLength int = 4
+var downtimeLength int = 4
 
 //ReadInetDB return weatherdb
 func ReadInetDB() []Data {
@@ -130,7 +131,7 @@ func getCurrentInetStatus() {
 				temp.Content = "OK"
 				InetDB[i].Status = append(InetDB[i].Status, temp)
 			} else {
-				fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
+				//fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
 				for y := range feed.Items {
 					var temp StatusData
 					//fmt.Println("checking item ", y, " with values: ", feed.Items[y])
@@ -150,13 +151,13 @@ func getCurrentInetStatus() {
 						temp.Content = feed.Items[y].Content*/
 						temp.Title = feed.Items[y].Title
 						if feed.Items[y].Content != "" {
-							fmt.Println("content is not nil")
+							//fmt.Println("content is not nil")
 							temp.Content = feed.Items[y].Content
 						} else if feed.Items[y].Description != "" {
-							fmt.Println("description is not nil")
+							//fmt.Println("description is not nil")
 							temp.Content = feed.Items[y].Description
 						} else {
-							fmt.Println("no content")
+							//fmt.Println("no content")
 							temp.Content = "no content"
 						}
 						InetDB[i].Status = append(InetDB[i].Status, temp)
@@ -181,7 +182,7 @@ func getCurrentInetStatus() {
 						InetDB[i].Status = append(InetDB[i].Status, temp)
 					}
 				}
-				fmt.Println("inet: " + InetDB[i].Name + " parsed successfully")
+				fmt.Println("inet: ", InetDB[i].Name, " parsed successfully with ", strconv.Itoa(len(InetDB[i].Status)), "items")
 			}
 		}
 	}
