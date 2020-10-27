@@ -230,6 +230,7 @@ func getCryptoInfo() {
 			tdb1, ok := jsonResponse["result"].(map[string]interface{})
 			if !ok {
 				fmt.Println("Finance error response to getCryptoInfo for ticker item ", CryptoDB[i].Ticker)
+				fmt.Println("resultdump:", jsonResponse)
 			} else {
 				tdb2 := tdb1["price"].(map[string]interface{})
 				tdb3 := tdb2["change"].(map[string]interface{})
