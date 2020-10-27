@@ -145,6 +145,6 @@ func getCurrentHeadlines() {
 			}
 		}
 	}
-	HeadlineDB = HeadlineDB[:25]
+	HeadlineDB = HeadlineDB[25:]
 	fmt.Println("got news")
 }
