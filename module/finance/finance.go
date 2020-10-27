@@ -353,9 +353,9 @@ func Startup() error {
 	_ = t1
 	t2 := schedule(getStockChartData, 15*time.Minute)
 	_ = t2
-	t3 := schedule(getCryptoInfo, 3*time.Minute)
+	t3 := schedule(getCryptoInfo, 5*time.Minute)
 	_ = t3
-	t4 := schedule(getCryptoChartData, 10*time.Minute)
+	t4 := schedule(getCryptoChartData, 15*time.Minute)
 	_ = t4
 	return nil
 }
