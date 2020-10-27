@@ -112,39 +112,39 @@ func getCurrentHeadlines() {
 		fmt.Println("Error decoding news response:", err)
 		fmt.Println("dump:", response)
 		return
-	} else {
-		//fmt.Println("response:", jsonResponse)
-		tdb1, ok := jsonResponse["data"].(map[string]interface{})
+	}
+	//fmt.Println("response:", jsonResponse)
+	tdb1, ok := jsonResponse["data"].(map[string]interface{})
+	if !ok {
+		fmt.Println("Error with news response data:", err)
+		fmt.Println("dump:", jsonResponse["data"])
+		return
+	}
+	//fmt.Println("tdb1 success")
+	tdb2, ok := tdb1["children"].([]interface{})
+	if !ok {
+		fmt.Println("Error with news response data children:", err)
+		fmt.Println("dump:", tdb1["children"])
+		return
+	}
+	fmt.Println("tdb2 success, len:", len(tdb2))
+	for i := 0; i < 25; i++ {
+		tdb3, ok := tdb2[i].(map[string]interface{})
 		if !ok {
-			fmt.Println("Error with news response data:", err)
-			fmt.Println("dump:", jsonResponse["data"])
+			fmt.Println("Error with news response data tdb3:", err)
+			fmt.Println("dump:", tdb1)
 		} else {
-			tdb2, ok := tdb1["children"].([]interface{})
+			tdb4, ok := tdb3["data"].(map[string]interface{})
 			if !ok {
-				fmt.Println("Error with news response data children:", err)
-				fmt.Println("dump:", tdb1["children"])
+				fmt.Println("Error with news response data tdb4:", err)
+				fmt.Println("dump:", tdb1)
 			} else {
-				for i := 0; i < 25; i++ {
-					tdb3, ok := tdb2[i].(map[string]interface{})
-					if !ok {
-						fmt.Println("Error with news response data tdb3:", err)
-						fmt.Println("dump:", tdb1)
-					} else {
-						tdb4, ok := tdb3["data"].(map[string]interface{})
-						if !ok {
-							fmt.Println("Error with news response data tdb4:", err)
-							fmt.Println("dump:", tdb1)
-						} else {
-							if tdb4["stickied"] == false {
-								HeadlineDB = append(HeadlineDB, tdb4["title"].(string))
-							}
-						}
-					}
+				if tdb4["stickied"] == false {
+					HeadlineDB = append(HeadlineDB, tdb4["title"].(string))
 				}
-				HeadlineDB = HeadlineDB[:25]
 			}
 		}
-		//fmt.Println("tdb1 success")
-		//fmt.Println("tdb2 success, len:", len(tdb2))
 	}
+	HeadlineDB = HeadlineDB[:25]
+	fmt.Println("got news")
 }
