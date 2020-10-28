@@ -145,11 +145,11 @@ func getCurrentHeadlines() {
 			}
 		}
 	}
-	fmt.Println("headlinedb len: ", len(HeadlineDB))
-	if len(HeadlineDB) < 24 {
-		HeadlineDB = HeadlineDB[:25]
+	if len(HeadlineDB) <= 25 {
 		fmt.Println("first news grab, getting first 25")
+		HeadlineDB = HeadlineDB[:25]
 	} else {
+		fmt.Println("headlinedb len: ", len(HeadlineDB))
 		HeadlineDB = HeadlineDB[25:]
 	}
 	fmt.Println("got news")
