@@ -1,0 +1,266 @@
+.body {
+    padding:0;
+    border-width:0;
+  }
+.date {
+  height: 5%;
+  width: 20%;
+  left: 70%;
+  top: 0;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.time {
+  height: 5%;
+  width: 20%;
+  left: 70%;
+  top: 5%;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 2vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo {
+  height: 10%;
+  width: 10%;
+  left: 90%;
+  top: 0;
+  position: absolute;
+  background: #111111;
+  font-size: 4vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stock {
+  height: 10%;
+  width: 30%;
+  left: 70%;
+  top: 10%;
+  position: absolute;
+  background: #111111;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stock p {
+  font-size: 2vw;
+}
+.sports {
+  height: 30%;
+  width: 30%;
+  left: 70%;
+  top: 20%;
+  position: absolute;
+  background: #EEEEEE;
+  font-size: 4vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.weather {
+  height: 40%;
+  width: 30%;
+  left: 70%;
+  bottom: 10%;
+  position: absolute;
+  background: #111111;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color:white;
+  display: block;
+  overflow:hidden;
+}
+.wheader {
+  height: 5vw;
+  font-size: 4vw;
+  text-align: center;
+  white-space: nowrap;
+  display: inline-block;
+  /* fix this */
+  /*animation: wmarq 15s linear 1;*/
+
+  overflow:visible;
+  min-width: 575px
+}
+.wcontainer{
+  display: flex;
+}
+.weathernow {
+  font-size: 3vw;
+  text-align: center;
+}
+.wchild {
+  font-size: 3vw;
+  text-align: center;
+  width: 33%;
+}
+.wpopup {
+  font-size: 1vw;
+  width:75px;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color: #111111;
+  white-space: nowrap;
+  text-shadow:
+    -1px -1px 0 white,
+    1px -1px 0 white,
+    -1px 1px 0 white,
+    1px 1px 0 white;
+}
+.inet {
+  height: 30%;
+  width: 30%;
+  left: 70%;
+  bottom: 50%;
+  position: absolute;
+  background: #EEEEEE;
+  color: #000000;
+  font-size: 3vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  word-break: break-all;
+  z-index:-2;
+  overflow: hidden;
+}
+.inettitle {
+  font-size: 3vw;
+  vertical-align: top;
+}
+.inetstatus {
+  font-size: 25px;
+  position: relative;
+  left: 0px;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  line-height:1.2em;
+  z-index: -1;
+}
+.inetstatus p {
+  position: absolute;
+  /* fix this */
+  /*animation: slide 30s linear 1;*/
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  vertical-align: bottom;
+  text-align: center;
+  line-height:1.2em;
+}
+.main {
+  height: 90%;
+  width: 70%;
+  left: 0;
+  top: 0;
+  position: absolute;
+  background: #111111;
+}
+.ticker {
+  height: 10%;
+  width: 100%;
+  background: #EEEEEE;
+  left: 0px;
+  bottom: 0;
+  position: absolute;
+  display: inline-block;
+}
+.tickermarquee {
+  font-size: 3vw;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.bumper {
+  background: #111111;
+  font-size: 6vw;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color: white;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.textmain {
+  background: #111111;
+  font: 'Bitstream Vera';
+  color: white;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  /*animation: slide 20s linear 1;*/
+}
+.tmheader {
+  font-size: 3vw;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  /*height: 100%;*/
+  width: 100%;
+  overflow: hidden;
+  justify-content: center;
+  /*animation: slide 20s linear 1;*/
+}
+.tmtext {
+  background: #111111;
+  font-size: 2vw;
+  color: white;
+  display: flex;
+  height: 80%;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: normal;
+  /*margin-left: 250px;
+  animation: bigslide 20s linear 1;*/
+}
+.wmap{
+  background: #111111;
+  font-size: 6vw;
+  text-align: center;
+  font: 'Bitstream Vera';
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
