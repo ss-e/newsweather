@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	//"strconv"
+	"os"
 	"strings"
 	"time"
 )
@@ -29,30 +29,22 @@ var FxDB []Item
 //CryptoDB contains all crypto info
 var CryptoDB []Item
 
-var iexapikey = "pk_e536792fe9314ac4bf94d49a2893af3c"
+var iexapikey = os.Getenv("IEX_APIKEY")
 var iexsite = "https://cloud.iexapis.com/"
 var cryptoapi = "https://api.cryptowat.ch/markets/binance/"
 
-//var cryptoapikey = "HZHYTYA1E0K18WDDEZQP"
-//var cryptoapiprivkey = "v+6BkA4H2Rlg8sRW9U1jDgx7fYA2Y+xOM+I637VW"
-
 //ReadStockDB return weatherdb
 func ReadStockDB() []Item {
-	//return []string{"test","2222"}
-	//fmt.Println("stockdb: ", StockDB)
 	return StockDB
 }
 
 //ReadFxDB return weatherdb
 func ReadFxDB() []Item {
-	//return []string{"test","2222"}
 	return FxDB
 }
 
 //ReadCryptoDB return weatherdb
 func ReadCryptoDB() []Item {
-	//return []string{"test","2222"}
-	//fmt.Println("cryptodb: ", CryptoDB)
 	return CryptoDB
 }
 
@@ -66,7 +58,6 @@ func getFxInfo() {
 		ta = append(ta, FxDB[i].Ticker)
 	}
 	temp := strings.Join(ta, ",")
-	//var url = iexsite +  + fxString.join(",") + "&token=" + iexapikey
 	req, err := http.NewRequest("GET", iexsite+"stable/fx/latest?symbols="+temp+"&token="+iexapikey, nil)
 	req.Header.Set("user-agent", "newsweather/0.1")
 	response, err := netClient.Do(req)
@@ -80,7 +71,6 @@ func getFxInfo() {
 		fmt.Println("error:", err)
 		fmt.Println("dump:", response)
 	} else {
-		//fmt.Println("response:", jsonResponse)
 		for i := range jsonResponse {
 			ticker, ok := jsonResponse[i]["symbol"].(string)
 			if ok {
@@ -103,7 +93,6 @@ func getFxInfo() {
 
 func getStockInfo() {
 	for i := range StockDB {
-		//thisTime := time.Now()
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
 		}
@@ -121,7 +110,6 @@ func getStockInfo() {
 			fmt.Println("error:", err)
 			fmt.Println("dump:", response)
 		} else {
-			//fmt.Println("response:", jsonResponse)
 			tdb1, ok := jsonResponse["quote"].(map[string]interface{})
 			if !ok {
 				fmt.Println("Finance error response to getstockinfo for ticker item ", StockDB[i].Ticker)
@@ -145,7 +133,6 @@ func getStockInfo() {
 func getStockChartData() {
 	for i := range StockDB {
 		fmt.Println("trying: ", StockDB[i].Ticker)
-		//thisTime := time.Now()
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
 		}
@@ -163,11 +150,8 @@ func getStockChartData() {
 			fmt.Println("error:", err)
 			fmt.Println("dump:", response)
 		} else {
-			//fmt.Println("dump:", jsonResponse)
 			StockDB[i].Chartdata = nil
 			for j := range jsonResponse {
-				//fmt.Println("trying ", j, " attempt")
-				//var tempdata Chartdata
 				tdb1, ok := jsonResponse[j].(map[string]interface{})
 				if !ok {
 					fmt.Println("Finance error response to chartdatainfo for ticker item ", StockDB[i].Ticker)
@@ -207,11 +191,9 @@ func getStockChartData() {
 
 func getCryptoInfo() {
 	for i := range CryptoDB {
-		//thisTime := time.Now()
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
 		}
-		//req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary"+"?apikey="+cryptoapikey, nil)
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary", nil)
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
@@ -226,7 +208,6 @@ func getCryptoInfo() {
 			fmt.Println("error:", err)
 			fmt.Println("dump:", response)
 		} else {
-			//fmt.Println("response:", jsonResponse)
 			tdb1, ok := jsonResponse["result"].(map[string]interface{})
 			if !ok {
 				fmt.Println("Finance error response to getCryptoInfo for ticker item ", CryptoDB[i].Ticker)
@@ -256,9 +237,6 @@ func getCryptoChartData() {
 			Timeout: time.Second * 10,
 		}
 		thisTime := fmt.Sprintf("%v", t2.Unix())
-		//fmt.Printf("%v,\n", thisTime)
-		/*fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"&apikey="+cryptoapikey)
-		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime+"&apikey="+cryptoapikey, nil)*/
 		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime)
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime, nil)
 		req.Header.Set("user-agent", "newsweather/0.1")
@@ -274,7 +252,6 @@ func getCryptoChartData() {
 			fmt.Println("error:", err)
 			fmt.Println("dump:", response)
 		} else {
-			//fmt.Println("resultdump:", jsonResponse)
 			CryptoDB[i].Chartdata = nil
 			tdb1, ok := jsonResponse["result"].(map[string]interface{})
 			if !ok {
@@ -285,19 +262,15 @@ func getCryptoChartData() {
 				if !ok {
 					fmt.Println("Finance error response to 1800 for ticker item ", CryptoDB[i].Ticker)
 				} else {
-					//fmt.Println("found tdb2:", tdb2)
 					for j := range tdb2 {
-						//fmt.Println("tdb2[", j, "] is:", tdb2[j])
 						tdb3, ok := tdb2[j].([]interface{})
 						if ok {
-							//fmt.Println("tdb3 is:", tdb3)
 							date, ok2 := tdb3[0].(float64)
 							open, ok3 := tdb3[1].(float64)
 							high, ok4 := tdb3[2].(float64)
 							low, ok5 := tdb3[3].(float64)
 							close, ok6 := tdb3[4].(float64)
 							if ok2 && ok3 && ok4 && ok5 && ok6 {
-								//fmt.Println("inputting entry:")
 								//fmt.Println("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
 								entry := []float64{float64(date) * 1000, open, high, low, close}
 								CryptoDB[i].Chartdata = append(CryptoDB[i].Chartdata, entry)
@@ -326,7 +299,6 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 
 //ReadToDB read cities in database
 func readToDB(dbname string, database *[]Item) {
-	// open json file
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
 		fmt.Println(err)
@@ -334,18 +306,13 @@ func readToDB(dbname string, database *[]Item) {
 	err = json.Unmarshal(jsonFile, &database)
 	if err != nil {
 		fmt.Println("error reading stock db: ", err)
-		//fmt.Println("dump:", jsonFile)
 	}
-	//fmt.Println("read dump:", &database)
 }
 
 //Startup starts authentication and headline scheduling
 func Startup() error {
 	readToDB("stock", &StockDB)
-	//fmt.Println("stock access dump:", StockDB)
-	//readToDB("fx", FxDB)
 	readToDB("crypto", &CryptoDB)
-	//fmt.Println("crypto access dump:", CryptoDB)
 	getStockInfo()
 	getStockChartData()
 	getCryptoInfo()

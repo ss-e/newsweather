@@ -1,21 +1,21 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
+
 	"./module/finance"
 	"./module/inet"
 	"./module/news"
 	"./module/weather"
-	"bytes"
-	"fmt"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/vorbis"
 	"github.com/webview/webview"
-	//"io/ioutil"
-	//"log"
+
 	"math/rand"
 	"net/http"
-	//"net/url"
+
 	"os"
 	"os/exec"
 	"os/signal"
@@ -28,13 +28,8 @@ var audioDB []string
 var bitrate string = "4500k"
 var sr = beep.SampleRate(44100)
 
-//var streamSource string = "rtmp://live-dfw.twitch.tv/app/"
-
-var streamSource string = "rtmp://a.rtmp.youtube.com/live2/"
-
-//var streamKey string = "live_549245702_mRU9289erMlZy6vFsTztEO9hbi5s74"
-
-var streamKey string = "wdtj-uyz9-u1fe-0gyq-17w3"
+var streamSource string = os.Getenv("STREAM_SOURCE")
+var streamKey string = os.Getenv("STREAM_KEY")
 
 func initAudio() {
 	fmt.Println("attempting speaker init")
@@ -69,21 +64,12 @@ func initAudio() {
 }
 
 func playAudio(i int) {
-	/*defer func() {
-		if err := recover(); err != nil {
-			fmt.Println("Audio stream panic!: ", err)
-			//panic("audio stream panic")
-			slowPlaylist()
-		}
-	}()*/
-	//fmt.Println("loading file #", slowplaylisti, "name: ", name)
 	f, err := os.Open(audioDB[i])
 	if err != nil {
 		fmt.Println("playlist os open error:", err)
 		return
 	}
-	//fmt.Println("opened audio file ", name)
-	// Decode it.
+	// decode audio
 	streamer, format, err := vorbis.Decode(f)
 	if err != nil {
 		fmt.Println("playlist vorbis decode error:", err)
@@ -91,7 +77,6 @@ func playAudio(i int) {
 	}
 	defer streamer.Close()
 	fmt.Println("playing file ", i, " with name: ", audioDB[i])
-	//fmt.Println("decoded file ", name)
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
 	done := make(chan bool)
@@ -99,12 +84,9 @@ func playAudio(i int) {
 		defer func() {
 			if err := recover(); err != nil {
 				fmt.Println("Audio stream panic!: ", err)
-				//panic("audio stream panic")
 				return
 			}
-			//fmt.Println("completed play, closing file")
 		}()
-		//fmt.Println("executing callback")
 		done <- true
 	})))
 	<-done
@@ -112,17 +94,6 @@ func playAudio(i int) {
 	return
 }
 
-/*
-func startup() {
-	weather.Startup()
-	news.Startup()
-	inet.Startup()
-	finance.Startup()
-	fmt.Println("startup complete")
-}*/
-
-//"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
-//"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
@@ -142,7 +113,6 @@ func ffmpegHelper() {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = &stderr
 		fmt.Println("starting ffmpeg")
-		//cmd.Start()
 		if err := cmd.Run(); err != nil {
 			fmt.Printf("Fatal ffmpeg Error: %v\n", stderr.String())
 		}
@@ -154,8 +124,6 @@ func webViewHelper() {
 	fmt.Println("starting webview")
 	w := webview.New(true)
 	defer w.Destroy()
-	//w.SetTitle("newsweather")
-	//w.SetSize(1280, 720, webview.HintFixed)
 	w.SetSize(1920, 1080, webview.HintFixed)
 	w.Bind("readWeatherDB", weather.ReadWeatherDB)
 	w.Bind("readHeadlineDB", news.ReadHeadlineDB)
@@ -163,7 +131,6 @@ func webViewHelper() {
 	w.Bind("readStockDB", finance.ReadStockDB)
 	w.Bind("readCryptoDB", finance.ReadCryptoDB)
 	fmt.Println("navigating")
-	//w.Navigate("https://en.m.wikipedia.org/wiki/Main_Page")
 	w.Navigate("http://127.0.0.1:8888/shell.html")
 	fmt.Println("window loading")
 	w.Run()
@@ -173,7 +140,6 @@ func webViewHelper() {
 // NErecover soon to be removed
 func NErecover(name string, f func()) {
 	v := recover()
-	// A panic is detected.
 	if v != nil {
 		fmt.Println(v, name, "has paniced. Restarting.")
 		go NeverExit(name, f) // restart
@@ -236,7 +202,5 @@ func main() {
 	go initAudio()
 	go ffmpegHelper()
 	go NeverExit("webViewHelper", webViewHelper)
-	//go NeverExit("loadPlaylist", loadPlaylist)
-	//go NeverExit("ffmpegHelper", ffmpegHelper)
 	select {}
 }

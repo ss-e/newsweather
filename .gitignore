@@ -3,3 +3,9 @@
 *.m4a
 *.webm
 *.exe
+vnc.sh
+*.vscode
+*.code-workspace
+prototype/
+keys.txt
+run.sh

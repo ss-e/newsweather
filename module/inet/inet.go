@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	//"strings"
-	"github.com/mmcdole/gofeed"
 	"strconv"
 	"time"
+
+	"github.com/mmcdole/gofeed"
 )
 
 //StatusData struct for inet status data
@@ -30,15 +30,11 @@ type Data struct {
 //InetDB contains all inet status info
 var InetDB []Data
 
-//when to prune entries, in hours
-//var downtimeLength int = 168
-//var downtimeLength int = 72
-
+//downtimeLength when to prune entries, in hours
 var downtimeLength int = 4
 
-//ReadInetDB return weatherdb
+//ReadInetDB return inet status database
 func ReadInetDB() []Data {
-	//return []string{"test","2222"}
 	return InetDB
 }
 
@@ -54,17 +50,13 @@ func Startup() error {
 //ReadToDB read cities in database
 func readToDB(dbname string) {
 	// open json file
-	//fmt.Println("attempting to read: ", dbname)
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
 		fmt.Println(err)
 	}
-	//fmt.Println("read inet db, unmarshalling")
 	err2 := json.Unmarshal(jsonFile, &InetDB)
 	if err2 != nil {
-		fmt.Println("experienced error")
 		fmt.Println("error reading inet db: ", err2)
-		//fmt.Println("dump:", jsonFile)
 	}
 	fmt.Println("readToDB completed successfully")
 }
@@ -81,7 +73,6 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 
 func getCurrentInetStatus() {
 	for i := range InetDB {
-		//thisTime := time.Now()
 		InetDB[i].Status = make([]StatusData, 0)
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
@@ -101,17 +92,14 @@ func getCurrentInetStatus() {
 				fmt.Println("Error decoding response from Facebook:", err)
 				fmt.Println("dump:", response)
 			} else {
-				//fmt.Println("response:", jsonResponse)
 				tdb1, ok := jsonResponse["current"].(map[string]interface{})
 				if !ok {
 					fmt.Println("Error decoding current response from Facebook")
 				} else {
-					//fmt.Println("tdb1 success - inet", tdb1)
 					fbookTemp, ok := tdb1["subject"].(string)
 					if !ok {
 						fmt.Println("Error decoding subject response from Facebook")
 					} else {
-						//fmt.Println("tdb1 input", InetDB[i].Status[0])
 						var temp StatusData
 						temp.Title = fbookTemp
 						temp.Content = ""
@@ -120,21 +108,17 @@ func getCurrentInetStatus() {
 				}
 			}
 		} else {
-			//InetDB[i].Status = map[string]string{}
 			fp := gofeed.NewParser()
 			feed, err := fp.Parse(response.Body)
 			if err != nil {
 				fmt.Println("Error parsing: "+InetDB[i].Name+" : ", err)
-				//InetDB[i].Status = []string{"OK"}
 				var temp StatusData
 				temp.Title = "OK"
 				temp.Content = "OK"
 				InetDB[i].Status = append(InetDB[i].Status, temp)
 			} else {
-				//fmt.Println("for item: ", InetDB[i].Name, " length is: ", len(InetDB[i].Status))
 				for y := range feed.Items {
 					var temp StatusData
-					//fmt.Println("checking item ", y, " with values: ", feed.Items[y])
 					now := time.Now()
 					checktime := time.Now()
 					if feed.Items[y].UpdatedParsed != nil {
@@ -142,41 +126,18 @@ func getCurrentInetStatus() {
 					} else {
 						checktime = *feed.Items[y].PublishedParsed
 					}
-					//fmt.Println("checking time value ", checktime)
 					if checktime.After(now.Add(-(time.Duration(downtimeLength) * time.Hour))) {
-						//if checktime.After(now.Sub(time.Duration(downtimeLength) * time.Hour)) {
-						//if now.After(checktime.Add(time.Duration(downtimeLength) * time.Hour)) {
-						//fmt.Println("item is after")
-						/*temp.Title = feed.Items[y].Title
-						temp.Content = feed.Items[y].Content*/
 						temp.Title = feed.Items[y].Title
 						if feed.Items[y].Content != "" {
-							//fmt.Println("content is not nil")
 							temp.Content = feed.Items[y].Content
 						} else if feed.Items[y].Description != "" {
-							//fmt.Println("description is not nil")
 							temp.Content = feed.Items[y].Description
 						} else {
-							//fmt.Println("no content")
 							temp.Content = "no content"
 						}
 						InetDB[i].Status = append(InetDB[i].Status, temp)
-						//fmt.Println("appended")
-					} else {
-						//fmt.Println("item is not after")
 					}
 					if InetDB[i].Status == nil {
-						/*temp.Title = feed.Items[y].Title
-						if feed.Items[y].Content != "" {
-							fmt.Println("content is not nil")
-							temp.Content = feed.Items[y].Content
-						} else if feed.Items[y].Description != "" {
-							fmt.Println("description is not nil")
-							temp.Content = feed.Items[y].Description
-						} else {
-							fmt.Println("no content")
-							temp.Content = "no content"
-						}*/
 						temp.Title = "OK"
 						temp.Content = "no content"
 						InetDB[i].Status = append(InetDB[i].Status, temp)

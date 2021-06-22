@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -23,12 +24,11 @@ type Data struct {
 }
 
 var weatherDB []Data
-var weatherAPIKey string = "de13a6c0963d7352292091b6f234070b"
+var weatherAPIKey = os.Getenv("OWM_APIKEY")
 var weatherSite string = "https://api.openweathermap.org/data/2.5/"
 
 //ReadWeatherDB return weatherdb
 func ReadWeatherDB() []Data {
-	//fmt.Println("weatherdb dump: ", weatherDB)
 	return weatherDB
 }
 
@@ -64,7 +64,6 @@ func readToDB(dbname string) {
 	err = json.Unmarshal(jsonFile, &weatherDB)
 	if err != nil {
 		fmt.Println("error unmarshalling weather db: ", err)
-		//fmt.Println("dump:", jsonFile)
 	}
 }
 
@@ -76,9 +75,7 @@ func getCurrentTemp() {
 	temp := make([][]string, 0)
 	t2 := make([]string, 0)
 	for i := 0; i < len(weatherDB); i++ {
-		//fmt.Println("len is: ", len(t2), "temp len is:", len(temp), " weatherdb len is: ", len(weatherDB))
 		if len(t2) >= 20 {
-			//fmt.Println("appending t2 to temp")
 			temp = append(temp, t2)
 			t2 = nil
 			t2 = make([]string, 0)
@@ -89,26 +86,21 @@ func getCurrentTemp() {
 	}
 	temp = append(temp, t2)
 	t2 = nil
-	//fmt.Println("temp length is:", len(temp))
 	for i := 0; i < len(temp); i++ {
 		fmt.Println("loading map temperature batch:", i+1, "/", len(temp))
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
-		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
 			fmt.Println("Error getcurrenttemp()", err)
 			continue
 		}
 		defer response.Body.Close()
-		//var temp2 []weatherData
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
 			fmt.Println("error decoding getcurrenttemp:", err)
 			fmt.Println("dump:", response)
 		} else {
-			//fmt.Println("we made it this far:", jsonResponse)
-			//fmt.Println("count is", jsonResponse["cnt"].(string)
 			responseArr, ok := jsonResponse["list"].([]interface{})
 			if !ok {
 				message, ok := jsonResponse["message"].([]interface{})
@@ -126,13 +118,9 @@ func getCurrentTemp() {
 					id := int(temp2["id"].(float64))
 					nowtemp := int(math.Round(t3["temp"].(float64)))
 					nowid := int(t5["id"].(float64))
-					//fmt.Println("name: ", temp2["name"], "now: ", nowtemp, "weatherid:", nowid)
 					for index := range weatherDB {
 						t0, _ := strconv.Atoi(weatherDB[index].ID)
-						//fmt.Println("comparing ", t0, " & ", id)
-						//if strings.Compare(weatherDB[index].ID, id) == 0 {
 						if t0 == id {
-							//fmt.Println("found at index: ", index)
 							weatherDB[index].Now[0] = nowtemp
 							weatherDB[index].Now[1] = nowid
 							break
@@ -144,8 +132,6 @@ func getCurrentTemp() {
 		fmt.Println("got batch, waiting 30 seconds")
 		time.Sleep(30 * time.Second)
 	}
-	//fmt.Println("temp: ", weatherDB[0].Now.temp, "id: ", weatherDB[0].Now.id)
-	//fmt.Println("end dump: ", weatherDB)
 }
 
 func get6hrTemp() {
@@ -156,7 +142,6 @@ func get6hrTemp() {
 		time.Sleep(5 * time.Second)
 		//var url = weatherSite + "onecall?lat=" + weatherDB[i].Lat + "&lon=" + weatherDB[i].Lon + "&exclude=minutely,current&units=metric&appid=" + weatherAPIKey
 		var url = weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=19"
-		//fmt.Println("url is: ", url)
 		response, err := netClient.Get(url)
 		if err != nil {
 			fmt.Println("err getting 6hr temp data:", err)
@@ -181,17 +166,12 @@ func get6hrTemp() {
 				h := 6 - (nowHour % 6)
 				k := 0
 				for j := h; j < 19; j = j + 6 {
-					//fmt.Println("j is", j)
 					//get main temp
 					main := responseArr[j].(map[string]interface{})
-					//fmt.Println("getting t1")
 					t1 := main["main"].(map[string]interface{})
 					weatherDB[i].W[k][0] = int(t1["temp"].(float64))
 					//get weather status
-					//weather := responseArr[j].(map[string]interface{})
-					//fmt.Println("getting t2")
 					t2 := main["weather"].([]interface{})
-					//fmt.Println("getting t3")
 					t3 := t2[0].(map[string]interface{})
 					weatherDB[i].W[k][1] = int(t3["id"].(float64))
 					k++
