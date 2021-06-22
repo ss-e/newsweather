@@ -3,9 +3,11 @@
 *.m4a
 *.webm
 *.exe
-vnc.sh
+*.dll
 *.vscode
 *.code-workspace
-prototype/
+vnc.sh
 keys.txt
 run.sh
+prototype/
+.vscode/

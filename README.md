@@ -6,7 +6,8 @@ Requirements:
 * Linux machine with X installed (uses Xvfb)
 * FFMPEG available in global shell
 * Stream
-* API keys for IEX, Open Weather Maps, reddit
+* API keys for IEX, Open Weather Maps, reddit application (set to script)
+* On windows, webview.dll and WebView2Loader.dll (available: https://github.com/webview/webview)
 
 ## Usage
 Set the following variables in shell
@@ -15,9 +16,9 @@ Set the following variables in shell
 * IEX_APIKEY - IEX API key
 * OWM_APIKEY - Open Weather Maps API key
 * reddit
-    * REDDIT_PHASH - reddit API username hash
-    * REDDIT_USERNAME - reddit API username
-    * REDDIT_PASSWORD - reddit API password
+    * REDDIT_PHASH - reddit API password client secret
+    * REDDIT_USERNAME - reddit API app username
+    * REDDIT_PASSWORD - reddit API app secret
 
 run update.sh on a Linux machine
 * package will build automatically
