@@ -5,7 +5,7 @@ Grabs information from freely available public sources, displays them in a frien
 Requirements:
 * Linux machine with X installed (uses Xvfb)
 * FFMPEG available in global shell
-* Stream
+* Stream keys and stream setup (Youtube, Twitch tested)
 * API keys for IEX, Open Weather Maps, reddit application (set to script)
 * On windows, webview.dll and WebView2Loader.dll (available: https://github.com/webview/webview)
 
