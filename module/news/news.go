@@ -11,9 +11,10 @@ import (
 
 //HeadlineDB contains all headlines
 var HeadlineDB []string
-var redditPasswordHash string = os.Getenv("REDDIT_PHASH")
-var redditAccessTokenUsername string = os.Getenv("REDDIT_USERNAME")
-var redditAccessTokenPassword string = os.Getenv("REDDIT_PASSWORD")
+var redditUsername string = os.Getenv("REDDIT_USERNAME")
+var redditPassword string = os.Getenv("REDDIT_PASSWORD")
+var redditAppUsername string = os.Getenv("REDDIT_APP_USERNAME")
+var redditAppSecret string = os.Getenv("REDDIT_APP_SECRET")
 var redditAccessToken string
 var redditAccessTokenExpiry int64
 
@@ -45,12 +46,12 @@ func ReadHeadlineDB() []string {
 //redditOAuth regenerate reddit oauth token
 func redditOAuth() {
 	url := "https://api.reddit.com/api/v1/access_token"
-	post := strings.NewReader("grant_type=password&username=newsweather&password=" + redditPasswordHash)
+	post := strings.NewReader("grant_type=password&username=" + redditUsername + "&password=" + redditPassword)
 	var netClient = &http.Client{
 		Timeout: time.Second * 10,
 	}
 	req, err := http.NewRequest("POST", url, post)
-	req.SetBasicAuth(redditAccessTokenUsername, redditAccessTokenPassword)
+	req.SetBasicAuth(redditAppUsername, redditAppSecret)
 	req.Header.Set("user-agent", "newsweather/0.1")
 	response, err := netClient.Do(req)
 	if err != nil {

@@ -16,9 +16,10 @@ Set the following variables in shell
 * IEX_APIKEY - IEX API key
 * OWM_APIKEY - Open Weather Maps API key
 * reddit
-    * REDDIT_PHASH - reddit API password client secret
-    * REDDIT_USERNAME - reddit API app username
-    * REDDIT_PASSWORD - reddit API app secret
+    * REDDIT_USERNAME - reddit username (use a throwaway)
+    * REDDIT_PASSWORD - reddit password
+    * REDDIT_APP_USERNAME - reddit API app username
+    * REDDIT_APP_SECRET - reddit API app secret
 
 run update.sh on a Linux machine
 * package will build automatically
