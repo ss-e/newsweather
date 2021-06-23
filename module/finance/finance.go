@@ -297,7 +297,7 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 	return ticker
 }
 
-//ReadToDB read cities in database
+//ReadToDB read tickers to check
 func readToDB(dbname string, database *[]Item) {
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {

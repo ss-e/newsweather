@@ -36,12 +36,13 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 	return ticker
 }
 
-//ReadHeadlineDB return weatherdb
+//ReadHeadlineDB return HeadlineDB
 func ReadHeadlineDB() []string {
 	//return []string{"test","2222"}
 	return HeadlineDB
 }
 
+//redditOAuth regenerate reddit oauth token
 func redditOAuth() {
 	url := "https://api.reddit.com/api/v1/access_token"
 	post := strings.NewReader("grant_type=password&username=newsweather&password=" + redditPasswordHash)
@@ -124,7 +125,6 @@ func getCurrentHeadlines() {
 		fmt.Println("dump:", jsonResponse["data"])
 		return
 	}
-	//fmt.Println("tdb1 success")
 	tdb2, ok := tdb1["children"].([]interface{})
 	if !ok {
 		fmt.Println("Error with news response data children:", err)

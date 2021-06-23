@@ -1,11 +1,9 @@
 var weatheri = 0;
-//var mainscreen = ["bmain","bweather","bstock","binet"]
 //var mainscreen = ["bmain","bweather","wnanortheast","wnawest","wnasouth","wsacentral","wsasouth","weuwest","weunorth","weueast","wafnorth","wafeast", "wafsouth", "wmecenter","wasiacenter","wasiasouth","bstock","ss0","ss1","ss2","ss3","sc","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
 var mainscreen = ["bmain","bweather","wnanortheast","wnawest","wnasouth","wsacentral","wsasouth","weuwest","weunorth","weueast","wafnorth","wafeast", "wafsouth", "wmecenter","wasiacenter","wasiasouth","bstock","ss0","ss1","ss2","ss3","sc0","sc1","binet","ia"]
 //var mainscreen = ["bstock","ss0","ss1","ss2","ss3","ss4","ss5","sc","sx","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
 //var mainscreen = ["bstock","ss0","ss1","ss2","ss3","sc0","bnews","nh0","nh1","nh2","nh3","nh4","nh5","nh6","nh7","nh8","nh9","nh10","binet","is0","is1","is2","is3","is4"]
 //var mainscreen = ["bstock","sc0","sc1","ss0","ss1","ss2","ss3","binet", "ia"]
-//var mainscreen = ["binet", "ia"]
 var stocki = 0;
 var stockj = "";
 var charti = 0;
@@ -18,21 +16,12 @@ var audioNum = 0
 var weatherdb = []
 var gettingHeadlines = false
 //helper functions
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-	return array
-}
 function next(arr) {
   arr.push(arr[0]);
   return arr.shift();
 }
 function emojiParse(weather){
-  //console.log("weather: " + weather)
   wtemp = weather.toString()
-  //console.log("wtemp: " + wtemp)
   switch (wtemp.charAt(0)) {
     case "2":
     //thunderstorm
@@ -65,10 +54,9 @@ function emojiParse(weather){
     default:
     return ("error: " + wtemp.charAt(0))
   }
-  return ("big error: " + wtemp)
 }
 /* weather info */
-function getWeatherData () {
+function getWeatherData() {
   readWeatherDB().then((temp) => {
     //console.log(JSON.stringify(temp))
     //console.log("item 0 now temp: ",temp[0].Now[0], " id:", temp[0].Now[1])
@@ -76,13 +64,11 @@ function getWeatherData () {
     nextWeatherTab()
   })
 }
-
+/* weather sidebar */
 function nextWeatherTab() {
-  //getWeatherData()
   if (weatheri == weatherdb.length) {
     weatheri = 0
   }
-  //var s = document.getElementById('weather')
   var r = document.getElementById('weather')
   r.innerHTML = ""
   var t = document.createElement('div')
@@ -134,34 +120,40 @@ function nextWeatherTab() {
   r.appendChild(n)
   r.appendChild(wc)
   weatheri++
-  //next(weatherdb)
+}
+
+/* update weather map*/
+function updateMap() {
+  mapsPlaceholder[0].eachLayer(function (layer) {
+    //console.log(layer._url)
+    if (!layer._url) {
+      mapsPlaceholder[0].removeLayer(layer)
+    }
+  });
+  for (x in weatherdb) {
+    updateMapData(weatherdb[x].Lat,weatherdb[x].Lon,weatherdb[x].Name,weatherdb[x].Now[1],weatherdb[x].Now[0])
+  }
+}
+function updateMapData(lat, lon, name, id, temp) {
+  var newIcon = L.divIcon({className:"wpopup", iconAnchor:[37.5,37.5], iconSize:"0px", html: '<p>' + name + "<br />" + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c</p>"})
+  L.marker([lat,lon],{icon: newIcon}).addTo(mapsPlaceholder[0])
+  //mapsPlaceholder[0].setView([39.09973, -94.57857], 4)
 }
 
 /* stock ticker */
-/*
-function getCurrencyData() {
-  var req = new XMLHttpRequest();
-  var fxString = []
-  for (x in finFxSym) {
-    fxString.push(finFxSym[x].name)
+function changePriceRender(changeprice) {
+  var val = parseFloat(parseFloat(changeprice).toFixed(2));
+  if (val > 0) {
+    var temp = "<p style='color:green;font-size:100%;'>\u25B2</p>" + val + "%"
+  } else if (val < 0) {
+    var temp = "<p style='color:red;font-size:100%;'>\u25BC</p>" + val + "%"
+  } else if (val == 0) {
+    var temp = "<p style='font-size:100%;> = </p>" + val + "%"
+  } else {
+    var temp = "err"
   }
-  var url = iexsite + "stable/fx/latest?symbols=" + fxString.join(",") + "&token=" + iexapikey
-  req.onload = function(e) {
-    var temp = JSON.parse(this.responseText)
-    for (x in temp) {
-     for (y in finFxSym) {
-        if (finFxSym[y].name == temp[x].symbol) {
-          finFxSym[y].value = temp[x].rate;
-          break;
-        }
-      }
-    }
-  }
-  req.open("GET", url);
-  req.responseType = "text";
-  req.send();
+  return temp
 }
-}*/
 function getFinanceData() {
   console.log("getting finance data")
   readStockDB().then((temp) => {
@@ -171,6 +163,7 @@ function getFinanceData() {
     finCrypto = temp
   })
 }
+/* stock ticker sidebar */
 function nextFinanceTab() {
   var s = document.getElementById('stock')
   if (stockj == "Crypto") {
@@ -179,18 +172,8 @@ function nextFinanceTab() {
         stockj = "Stock"
         stocki = 0
     } else {
-        var changepercent = parseFloat(parseFloat(finCrypto[stocki].ChangePercent).toFixed(2));
-        if (changepercent > 0) {
-          var temp2 = "<p style='color:green;font-size:100%;'>\u25B2</p>" + changepercent + "%"
-        } else if (changepercent < 0) {
-          var temp2 = "<p style='color:red;font-size:100%;'> \u25BC</p>" + changepercent + "%"
-        } else if (changepercent == 0) {
-          var temp2 = /*"\u8211"*/ "<p style='font-size:100%;> = </p>" + changepercent + "%"
-        } else {
-          var temp2 = "err"
-        }
-        s.innerHTML = "<p>" + finCrypto[stocki].Name + ": " + finCrypto[stocki].Value + temp2 + "</p>"
-        stocki++
+      s.innerHTML = "<p>" + finCrypto[stocki].Name + ": " + finCrypto[stocki].Value + changePriceRender(finCrypto[stocki].ChangePercent) + "</p>"
+      stocki++
     }
   } else if (stockj == "" || stockj == "Stock") {
     if (stocki == finStock.length) {
@@ -198,22 +181,12 @@ function nextFinanceTab() {
         stockj = "Crypto"
         stocki = 0
     } else {
-      var temp = parseFloat(finStock[stocki].Value).toFixed(2)
-      var changepercent = parseFloat(parseFloat(finStock[stocki].ChangePercent).toFixed(2));
-      if (changepercent > 0) {
-        var temp2 = "<p style='color:green;font-size:100%;'>\u25B2</p>" + changepercent + "%"
-      } else if (changepercent < 0) {
-        var temp2 = "<p style='color:red;font-size:100%;'>\u25BC</p>" + changepercent + "%"
-      } else if (changepercent == 0) {
-        var temp2 = /*"\u8211"*/ "<p style='font-size:100%;> = </p>" + changepercent + "%"
-      } else {
-        var temp2 = "err"
-      }
-      s.innerHTML = "<p>" + finStock[stocki].Name + " " + temp + temp2 + "</p>"
+      s.innerHTML = "<p>" + finStock[stocki].Name + " " + parseFloat(finStock[stocki].Value).toFixed(2) + changePriceRender(finStock[stocki].ChangePercent) + "</p>"
       stocki++
     }
   }
 }
+
 /* news headline ticker */
 function getNewsHeadlines() {
   console.log("getting news headlines")
@@ -277,7 +250,6 @@ function nextInetUptime() {
   }
   var result = ""
   try {
-    //console.log("list values: ", list)
     console.log("list length: ", list.length)
     if (list.length > 0) {
       list.forEach(function(currentValue, currentIndex, listObj) {
@@ -313,34 +285,7 @@ function nextInetUptime() {
   }
   ineti++
 }
-/* date */
-/* update weather map*/
-function updateMap() {
-  mapsPlaceholder[0].eachLayer(function (layer) {
-    //console.log(layer._url)
-    if (!layer._url) {
-      mapsPlaceholder[0].removeLayer(layer)
-    }
-  });
-  for (x in weatherdb) {
-    updateMapData(weatherdb[x].Lat,weatherdb[x].Lon,weatherdb[x].Name,weatherdb[x].Now[1],weatherdb[x].Now[0])
-  }
-}
-function updateMapData(lat, lon, name, id, temp) {
-  var newIcon = L.divIcon({className:"wpopup", iconAnchor:[37.5,37.5], iconSize:"0px", html: '<p>' + name + "<br />" + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c</p>"})
-  L.marker([lat,lon],{icon: newIcon}).addTo(mapsPlaceholder[0])
-  //mapsPlaceholder[0].setView([39.09973, -94.57857], 4)
-}
-function datetime() {
-  var timer = document.getElementById('time');
-  var date = document.getElementById('date');
-  var d = new Date();
-  var s = ('0' + d.getUTCSeconds()).slice(-2);
-  var m = ('0' + d.getUTCMinutes()).slice(-2);
-  var h = ('0' + d.getUTCHours()).slice(-2);
-  timer.textContent = h + ":" + m + ":" + s + " UTC";
-  date.textContent = d.toUTCString().slice(0,11);
-}
+
 /* inet view helper */
 function inetPage(num) {
 	  //var temp = inetSym[num].Status
@@ -379,7 +324,7 @@ function inetPage(num) {
         }
       }
       if (inetSym[num].Status.length == 0) {
-        //document.getElementById("tmtext").textContent = "OK"
+        //if there is no status message in db, skip to next slide
         slidetime = 0
       }
     }
@@ -395,6 +340,18 @@ function inetPage(num) {
     return
 }
 
+/* render date and time */
+function datetime() {
+  var timer = document.getElementById('time');
+  var date = document.getElementById('date');
+  var d = new Date();
+  var s = ('0' + d.getUTCSeconds()).slice(-2);
+  var m = ('0' + d.getUTCMinutes()).slice(-2);
+  var h = ('0' + d.getUTCHours()).slice(-2);
+  timer.textContent = h + ":" + m + ":" + s + " UTC";
+  date.textContent = d.toUTCString().slice(0,11);
+}
+
 /* views */
 function nextMainView() {
   document.getElementById("tmheader").innerHTML = ""
@@ -408,7 +365,6 @@ function nextMainView() {
     console.log("attempt to destroy chart failed with: ", err)
     }
   }
-  //console.log("from:", mainscreen, "displaying: ", mainscreen[0])
   console.log("displaying: ", mainscreen[0])
   switch (mainscreen[0].charAt(0)) {
     case 'b':
@@ -474,7 +430,6 @@ function nextMainView() {
         console.log("checking headline #" + hln)
         document.getElementById("tmheader").innerHTML = headlines[hln]
         document.getElementById("tmtext").innerHTML = "A summary for the article will appear here in the future"
-        //document.getElementById("textmain").style += "animation: slide 20s linear 1;"
       }
       setTimeout("nextMainView()", 20000);
       break;
@@ -487,25 +442,10 @@ function nextMainView() {
         console.log("checking status #" + hln)
         document.getElementById("tmheader").innerHTML = inetSym[hln].name
         document.getElementById("tmtext").innerHTML = inetSym[hln].status
-        //document.getElementById("textmain").style += "animation: slide 20s linear 1;"
         setTimeout("nextMainView()", 20000);
       } else if (mainscreen[0].substr(1).charAt(0) == "a") {
         console.log("init inetpage")
         inetPage(0)
-        /*
-        document.getElementById("tmheader").innerHTML = "Internet Service Status"
-        document.getElementById("tmtext").innerHTML += "<br /><br />";
-        for (x in inetSym) {
-          var temp = inetSym[x].Status
-          if (inetSym[x].Status === null || inetSym[x].Status == "") {
-            temp = "OK"
-          } else {
-            temp = inetSym[x].Status
-          }
-          document.getElementById("tmtext").innerHTML += inetSym[x].Name + " : " + temp + "<br /><br />"
-        }
-        */
-        //document.getElementById("textmain").style += ""
       }
       break;
     case 's':
@@ -699,9 +639,8 @@ var mapsPlaceholder = [];
 window.onload = init;
 function init() {
   console.log("init")
-  var element = document.getElementById('debug');
   L.Map.addInitHook(function () {
-    mapsPlaceholder.push(this); // Use whatever global scope variable you like.
+    mapsPlaceholder.push(this);
   });
   datetime();
   //are we in a debugging session

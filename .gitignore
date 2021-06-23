@@ -8,6 +8,6 @@
 *.code-workspace
 vnc.sh
 keys.txt
-run.sh
+debug.sh
 prototype/
 .vscode/

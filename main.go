@@ -24,13 +24,20 @@ import (
 	"time"
 )
 
+// audio database to be filled
 var audioDB []string
+
+// bitrate of stream
 var bitrate string = "4500k"
+
+// samplerate of audio
 var sr = beep.SampleRate(44100)
 
+// stream source and key
 var streamSource string = os.Getenv("STREAM_SOURCE")
 var streamKey string = os.Getenv("STREAM_KEY")
 
+// initAudio ensure that audio playlist is loaded and that audio backend is ready
 func initAudio() {
 	fmt.Println("attempting speaker init")
 	speaker.Init(sr, sr.N(time.Second/10))
@@ -63,6 +70,7 @@ func initAudio() {
 	}
 }
 
+// playAudio play single track for stream using audio channel initiated by initAudio
 func playAudio(i int) {
 	f, err := os.Open(audioDB[i])
 	if err != nil {
@@ -94,6 +102,7 @@ func playAudio(i int) {
 	return
 }
 
+// newCmd used for ffmpeg launch
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
@@ -106,6 +115,7 @@ func newCmd() *exec.Cmd {
 	)
 }
 
+// ffmpegHelper start ffmpeg and persistently relaunch on stream close, drop outs
 func ffmpegHelper() {
 	for {
 		var stderr bytes.Buffer
@@ -120,11 +130,13 @@ func ffmpegHelper() {
 	}
 }
 
+// webViewHelper set bindings and send commands on webview start
 func webViewHelper() {
 	fmt.Println("starting webview")
 	w := webview.New(true)
 	defer w.Destroy()
 	w.SetSize(1920, 1080, webview.HintFixed)
+	//pass backend module binds to frontend
 	w.Bind("readWeatherDB", weather.ReadWeatherDB)
 	w.Bind("readHeadlineDB", news.ReadHeadlineDB)
 	w.Bind("readInetDB", inet.ReadInetDB)
@@ -137,34 +149,18 @@ func webViewHelper() {
 	fmt.Println("window closed")
 }
 
-// NErecover soon to be removed
-func NErecover(name string, f func()) {
+// webViewRecover if webview crashes, run this function
+func webViewRecover(f func()) {
 	v := recover()
 	if v != nil {
-		fmt.Println(v, name, "has paniced. Restarting.")
-		go NeverExit(name, f) // restart
+		fmt.Println("webViewHelper has paniced. Restarting.")
+		go webViewHelper()
 	}
-	fmt.Println(v, name, "is exiting normally")
-}
-
-// NeverExit soon to be removed
-func NeverExit(name string, f func()) {
-	/*
-		defer func() {
-			if v := recover(); v != nil {
-				// A panic is detected.
-				fmt.Println(name, "is crashed. Restart it now.")
-				go NeverExit(name, f) // restart
-			}
-		}()
-	*/
-	defer NErecover(name, f)
-	fmt.Println("Calling ", name)
-	f()
-	fmt.Println("Returned normally.")
+	fmt.Println(v, "webViewHelper is exiting normally")
 }
 
 func main() {
+	//signal grabber, if we recieve an errant signal (likely from webview) do not exit, instead kill client and relaunch
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel)
 	go func() {
@@ -182,6 +178,7 @@ func main() {
 		}
 	}()
 	fmt.Println("starting up")
+	//launch HTTP server for frontend client
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 	go func() {
@@ -193,14 +190,16 @@ func main() {
 			}
 		}
 	}()
-	//startup()
+	//startup service modules to grab data, persistently running in order to avoid needing to grab too much data from providers on refresh
 	weather.Startup()
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
 	fmt.Println("startup complete")
+	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
 	go ffmpegHelper()
-	go NeverExit("webViewHelper", webViewHelper)
+	defer webViewRecover(webViewHelper)
+	go webViewHelper()
 	select {}
 }
