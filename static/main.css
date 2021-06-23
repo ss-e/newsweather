@@ -9,7 +9,7 @@
   top: 0;
   position: absolute;
   background: #EEEEEE;
-  font-size: 3vw;
+  font-size: 2vw;
   text-align: center;
   font: 'Bitstream Vera';
   font-weight: bold;
@@ -66,22 +66,6 @@
 }
 .stock p {
   font-size: 2vw;
-}
-.sports {
-  height: 30%;
-  width: 30%;
-  left: 70%;
-  top: 20%;
-  position: absolute;
-  background: #EEEEEE;
-  font-size: 4vw;
-  text-align: center;
-  font: 'Bitstream Vera';
-  font-weight: bold;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .weather {
   height: 40%;
