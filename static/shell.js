@@ -141,19 +141,22 @@ function updateMap() {
 }
 function updateMapData(lat, lon, name, id, temp) {
   text = '<svg height="50" width="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\
+  <style>\
   .m {\
-    font-size: 20px;\
-     font: "Bitstream Vera";\
-     font-weight: bold;\
-     fill: white;\
-     text-shadow:\
-       -1px -1px 0 black,\
-       1px -1px 0 black,\
-       -1px 1px 0 black,\
-       1px 1px 0 black;\
+    font: bold 20px "Bitstream Vera";\
+    fill: black;\
   }\
-  <text class="m" x="0" y="20">' + name + '</text>\
-  <text class="m" x="0" y="40">' + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c" + '</text>\
+  </style>\
+  <filter id="whiteOutlineEffect" color-interpolation-filters="sRGB">\
+    <feMorphology in="SourceAlpha" result="MORPH" operator="dilate" radius="2" />\
+    <feColorMatrix in="MORPH" result="WHITENED" type="matrix" values="-1 0 0 0 1, 0 -1 0 0 1, 0 0 -1 0 1, 0 0 0 1 0"/>\
+    <feMerge>\
+      <feMergeNode in="WHITENED"/>\
+      <feMergeNode in="SourceGraphic"/>\
+    </feMerge>\
+  </filter>\
+  <text class="m" x="0" y="20" filter="url(#whiteOutlineEffect)">' + name + '</text>\
+  <text class="m" x="0" y="40" filter="url(#whiteOutlineEffect)">' + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c" + '</text>\
   </svg>';
   img = 'data:image/svg+xml,' + encodeURIComponent(text);
   //var marker = L.marker([lat,lon],{icon: L.icon({iconUrl: img, iconAnchor: [37.5,37.5],iconSize: [100, 100] })})
