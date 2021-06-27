@@ -399,6 +399,7 @@ function nextMainView() {
         document.getElementById("bumper").innerHTML = "International" + "<br />" + "News and Weather"
       } else if (mainscreen[0].substr(1) == "weather") {
         document.getElementById("bumper").innerHTML = "Current International Weather"
+        updateMap()
       } else if (mainscreen[0].substr(1) == "stock") {
         document.getElementById("bumper").innerHTML = "Financial Market Report"
       } else if (mainscreen[0].substr(1) == "news") {
@@ -415,7 +416,6 @@ function nextMainView() {
       document.getElementById("wmap").style.display = "block"
       document.getElementById("textmain").style.display = "none"
       if (mainscreen[0].substr(1) == "nanortheast") {
-        updateMap()
         mapsPlaceholder[0].setView([40.71427, -78.00597], 5.5)
       } else if (mainscreen[0].substr(1) == "nawest") {
         mapsPlaceholder[0].setView([43.2827, -121.1207], 5.25)
