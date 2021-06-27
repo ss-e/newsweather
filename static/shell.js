@@ -143,7 +143,7 @@ function updateMapData(lat, lon, name, id, temp) {
   text = '<svg height="50" width="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\
   <style>\
   .m {\
-    font: bold 20px "Bitstream Vera";\
+    font: bold 16px "Bitstream Vera";\
     fill: black;\
   }\
   </style>\
@@ -415,6 +415,7 @@ function nextMainView() {
       document.getElementById("wmap").style.display = "block"
       document.getElementById("textmain").style.display = "none"
       if (mainscreen[0].substr(1) == "nanortheast") {
+        updateMap()
         mapsPlaceholder[0].setView([40.71427, -78.00597], 5.5)
       } else if (mainscreen[0].substr(1) == "nawest") {
         mapsPlaceholder[0].setView([43.2827, -121.1207], 5.25)
@@ -719,7 +720,7 @@ function init() {
   setInterval("nextInetUptime()", 30000);
   setInterval("nextFinanceTab()", 15000);
   setInterval("location.reload()", 14400000)
-  setInterval("updateMap()", 30000);
+  //setInterval("updateMap()", 30000);
   setInterval("datetime()", 1000);
   L.map('wmap', {
     attributionControl: false,
