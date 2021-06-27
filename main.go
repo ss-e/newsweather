@@ -46,7 +46,7 @@ func initAudio() {
 		fmt.Println("loading playlist")
 		audioDB = nil
 		rand.Seed(time.Now().UnixNano())
-		err := filepath.Walk("/root/newsweather/playlist/", func(path string, info os.FileInfo, err error) error {
+		err := filepath.Walk("./playlist/", func(path string, info os.FileInfo, err error) error {
 			audioDB = append(audioDB, path)
 			return nil
 		})

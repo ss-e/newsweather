@@ -5,6 +5,7 @@ Grabs information from freely available public sources, displays them in a frien
 Requirements:
 * Linux machine with X installed (uses Xvfb)
 * FFMPEG available in global shell
+* Audio functionality enabled
 * Stream keys and stream setup (Youtube, Twitch tested)
 * API keys for IEX, Open Weather Maps, reddit application (set to script)
 * On windows, webview.dll and WebView2Loader.dll (available: https://github.com/webview/webview)
@@ -20,8 +21,8 @@ Set the following variables in shell
     * REDDIT_PASSWORD - reddit password
     * REDDIT_APP_USERNAME - reddit API app username
     * REDDIT_APP_SECRET - reddit API app secret
-
-run update.sh on a Linux machine
+* Add audio files to be played in playlist directory
+run run.sh on a Linux machine
 * package will build automatically
 
 ## TODO
