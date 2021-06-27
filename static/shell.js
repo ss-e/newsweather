@@ -124,20 +124,41 @@ function nextWeatherTab() {
 
 /* update weather map*/
 function updateMap() {
+  //remove existing canvas layer
   mapsPlaceholder[0].eachLayer(function (layer) {
-    //console.log(layer._url)
     if (!layer._url) {
       mapsPlaceholder[0].removeLayer(layer)
     }
   });
+  //create new canvas layer
+  var markersCanvas = new L.MarkersCanvas();
+  markersCanvas.addTo(mapsPlaceholder[0]);
+  var markers = [];
   for (x in weatherdb) {
-    updateMapData(weatherdb[x].Lat,weatherdb[x].Lon,weatherdb[x].Name,weatherdb[x].Now[1],weatherdb[x].Now[0])
+    markers.push(updateMapData(weatherdb[x].Lat,weatherdb[x].Lon,weatherdb[x].Name,weatherdb[x].Now[1],weatherdb[x].Now[0]))
   }
+  markersCanvas.addMarkers(markers);
 }
 function updateMapData(lat, lon, name, id, temp) {
-  var newIcon = L.divIcon({className:"wpopup", iconAnchor:[37.5,37.5], iconSize:"0px", html: '<p>' + name + "<br />" + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c</p>"})
-  L.marker([lat,lon],{icon: newIcon}).addTo(mapsPlaceholder[0])
-  //mapsPlaceholder[0].setView([39.09973, -94.57857], 4)
+  text = '<svg height="50" width="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\
+  .m {\
+    font-size: 20px;\
+     font: "Bitstream Vera";\
+     font-weight: bold;\
+     fill: white;\
+     text-shadow:\
+       -1px -1px 0 black,\
+       1px -1px 0 black,\
+       -1px 1px 0 black,\
+       1px 1px 0 black;\
+  }\
+  <text class="m" x="0" y="20">' + name + '</text>\
+  <text class="m" x="0" y="40">' + emojiParse(id) + " " + Math.round(temp).toString() + String.fromCharCode(176) + "c" + '</text>\
+  </svg>';
+  img = 'data:image/svg+xml,' + encodeURIComponent(text);
+  //var marker = L.marker([lat,lon],{icon: L.icon({iconUrl: img, iconAnchor: [37.5,37.5],iconSize: [100, 100] })})
+  var marker = L.marker([lat,lon],{icon: L.icon({iconUrl: img, iconAnchor: [0,0],iconSize: [200, 50] })})
+  return marker
 }
 
 /* stock ticker */
@@ -649,9 +670,10 @@ function init() {
     readWeatherDB = function() {
       temp = new Promise ((resolve, reject) => {
         resolve ([{"Name":"Aberdeen", "Id": "2657832", "Tz":"Europe/London", "Lat":"57.14369", "Lon":"-2.09814", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
-              {"Name":"Ho Chi Minh City", "Id": "1566083", "Tz":"Asia/Ho_Chi_Minh", "Lat":"52.37403", "Lon":"4.88969", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
-              {"Name":"Santa Cruz de la Sierra", "Id": "1566083", "Tz":"Asia/Ho_Chi_Minh", "Lat":"52.37403", "Lon":"4.88969", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
-              {"Name":"Accra", "Id": "1566083", "Tz":"Asia/Ho_Chi_Minh", "Lat":"52.37403", "Lon":"4.88969", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
+              {"Name":"Ho Chi Minh City", "Id": "1566083", "Tz":"Asia/Ho_Chi_Minh", "Lat":"10.82302", "Lon":"106.62965", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
+              {"Name":"Santa Cruz de la Sierra", "Id": "1566083", "Tz":"Asia/Ho_Chi_Minh", "Lat":"-17.78629", "Lon":"-63.18117", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
+              {"Name":"Accra", "Id": "1566083", "Tz":"Asia/Ho_Chi_Minh", "Lat":"5.55602", "Lon":"-0.1969", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
+              {"Name":"Amsterdam", "Id": "2759794", "Tz":"Europe/Amsterdam", "Lat":"52.37403", "Lon":"4.88969", "Now":[20,2], "W":[[20,2],[20,2],[20,2]]},
               ]);
         });
       return temp
@@ -700,6 +722,7 @@ function init() {
     attributionControl: false,
     zoomControl: false,
     debounceMoveend: true,
+    preferCanvas: true
     }).setView([0, -0], 0); //lat:"39.09973", lon:"-94.57857"
   L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
     attribution: '',
