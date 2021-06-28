@@ -15,6 +15,7 @@ var headlines = []
 var audioNum = 0
 var weatherdb = []
 var gettingHeadlines = false
+var mapsPlaceholder = [];
 //helper functions
 function next(arr) {
   arr.push(arr[0]);
@@ -399,9 +400,10 @@ function nextMainView() {
         document.getElementById("bumper").innerHTML = "International" + "<br />" + "News and Weather"
       } else if (mainscreen[0].substr(1) == "weather") {
         document.getElementById("bumper").innerHTML = "Current International Weather"
-        updateMap()
+        buildMap()
       } else if (mainscreen[0].substr(1) == "stock") {
         document.getElementById("bumper").innerHTML = "Financial Market Report"
+        destroyMap()
       } else if (mainscreen[0].substr(1) == "news") {
         document.getElementById("bumper").innerHTML = "International News Headlines"
       } else if (mainscreen[0].substr(1) == "inet") {
@@ -659,14 +661,39 @@ function nextMainView() {
   }
   next(mainscreen)
 }
-/* init */
-var mapsPlaceholder = [];
-window.onload = init;
-function init() {
-  console.log("init")
+function buildMap() {
   L.Map.addInitHook(function () {
     mapsPlaceholder.push(this);
   });
+  L.map('wmap', {
+    attributionControl: false,
+    zoomControl: false,
+    debounceMoveend: true,
+    preferCanvas: true
+    }).setView([0, -0], 0); //lat:"39.09973", lon:"-94.57857"
+  L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
+    attribution: '',
+    subdomains: 'abcd',
+    minZoom: 0,
+    maxZoom: 20,
+    ext: 'png'
+  }).addTo(mapsPlaceholder[0]);
+  mapsPlaceholder[0].on('moveend', function() {
+    console.log("triggering map invalidatesize")
+    mapsPlaceholder[0].invalidateSize(true)
+  })
+  updateMap()
+}
+function destroyMap() {
+  mapsPlaceholder[0].off()
+  mapsPlaceholder[0].remove()
+  mapsPlaceholder.length = 0;
+}
+/* init */
+window.onload = init;
+function init() {
+  console.log("init")
+
   datetime();
   //are we in a debugging session
   if(typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined" && typeof window.readWeatherDB === "undefined") {
@@ -698,13 +725,17 @@ function init() {
     }
     readStockDB = function() {
       temp = new Promise ((resolve, reject) => {
-        resolve ([{"Name": "S&P 500/SPY", "Ticker":"SPY", "Value":690.05, "Open":680.05, "ChangePercent":6.9, "Chartdata":[]}])
+        resolve ([{"Name": "S&P 500/SPY", "Ticker":"SPY", "Value":690.05, "Open":680.05, "ChangePercent":6.9, "Chartdata":[]},
+        {"Name": "Rsl 2000/IWM", "Ticker":"IWM", "Value":690.05, "Open":680.05, "ChangePercent":6.9, "Chartdata":[]},
+        {"Name": "Dow Jones/DIA", "Ticker":"DIA", "Value":690.05, "Open":680.05, "ChangePercent":6.9, "Chartdata":[]},
+        {"Name": "Nasdaq/QQQ", "Ticker":"QQQ", "Value":690.05, "Open":680.05, "ChangePercent":6.9, "Chartdata":[]}])
       });
       return temp
     }
     readCryptoDB = function() {
       temp = new Promise ((resolve, reject) => {
-        resolve ([{"Name":"Bitcoin/US$", "Ticker":"BTCUSDT", "Value":6969,"Open":6880, "ChangePercent":13.37, "Chartdata":[]}])
+        resolve ([{"Name":"Bitcoin/US$", "Ticker":"BTCUSDT", "Value":6969,"Open":6880, "ChangePercent":13.37, "Chartdata":[]},
+        {"Name":"Ethereum/US$", "Ticker":"ETHUSDT", "Value":69.69,"Open":68, "ChangePercent":13.37, "Chartdata":[]}])
       });
       return temp
     }
@@ -722,21 +753,4 @@ function init() {
   setInterval("location.reload()", 14400000)
   //setInterval("updateMap()", 30000);
   setInterval("datetime()", 1000);
-  L.map('wmap', {
-    attributionControl: false,
-    zoomControl: false,
-    debounceMoveend: true,
-    preferCanvas: true
-    }).setView([0, -0], 0); //lat:"39.09973", lon:"-94.57857"
-  L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}', {
-    attribution: '',
-    subdomains: 'abcd',
-    minZoom: 0,
-    maxZoom: 20,
-    ext: 'png'
-  }).addTo(mapsPlaceholder[0]);
-  mapsPlaceholder[0].on('moveend', function() {
-    console.log("triggering map invalidatesize")
-    mapsPlaceholder[0].invalidateSize(true)
-  })
 }
