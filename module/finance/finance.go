@@ -202,11 +202,15 @@ func getCryptoInfo() {
 			continue
 		}
 		defer response.Body.Close()
+		//if we put too many requests across, stop immediately
+		if response.StatusCode == 429 {
+			fmt.Println("recieved 429 code doing getCryptoInfo", err)
+			return
+		}
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
-			fmt.Println("error:", err)
-			fmt.Println("dump:", response)
+			fmt.Println("error:", err, " dump:", response)
 		} else {
 			tdb1, ok := jsonResponse["result"].(map[string]interface{})
 			if !ok {
@@ -237,7 +241,7 @@ func getCryptoChartData() {
 			Timeout: time.Second * 10,
 		}
 		thisTime := fmt.Sprintf("%v", t2.Unix())
-		fmt.Println("trying url: ", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime)
+		fmt.Println("getting crypto chart data for: ", CryptoDB[i].Ticker+" for time: "+thisTime)
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime, nil)
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
@@ -246,11 +250,15 @@ func getCryptoChartData() {
 			continue
 		}
 		defer response.Body.Close()
+		//if we put too many requests across, stop immediately
+		if response.StatusCode == 429 {
+			fmt.Println("recieved 429 code doing getCryptoChartData", err)
+			return
+		}
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
-			fmt.Println("error:", err)
-			fmt.Println("dump:", response)
+			fmt.Println("error:", err, " dump:", response)
 		} else {
 			CryptoDB[i].Chartdata = nil
 			tdb1, ok := jsonResponse["result"].(map[string]interface{})
