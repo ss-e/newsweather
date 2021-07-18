@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
+	"./module/debug"
 	"./module/finance"
 	"./module/inet"
 	"./module/news"
@@ -37,13 +38,17 @@ var sr = beep.SampleRate(44100)
 var streamSource string = os.Getenv("STREAM_SOURCE")
 var streamKey string = os.Getenv("STREAM_KEY")
 
+func debugOutput(t string) {
+	debug.Output("main", t)
+}
+
 // initAudio ensure that audio playlist is loaded and that audio backend is ready
 func initAudio() {
-	fmt.Println("attempting speaker init")
+	debugOutput("attempting speaker init")
 	speaker.Init(sr, sr.N(time.Second/10))
-	fmt.Println("speaker init completed")
+	debugOutput("speaker init completed")
 	for {
-		fmt.Println("loading playlist")
+		debugOutput("loading playlist")
 		audioDB = nil
 		rand.Seed(time.Now().UnixNano())
 		err := filepath.Walk("./playlist/", func(path string, info os.FileInfo, err error) error {
@@ -52,16 +57,16 @@ func initAudio() {
 		})
 		audioDB = audioDB[1:]
 		if err != nil {
-			fmt.Println("Unable to walk filepath!")
+			debugOutput("Unable to walk audiodb filepath!")
 			return
 		}
 		len := len(audioDB)
 		rand.Shuffle(len, func(i, j int) {
 			audioDB[i], audioDB[j] = audioDB[j], audioDB[i]
 		})
-		fmt.Println("shuffled files, found ", len)
+		debugOutput("shuffled files, found " + fmt.Sprintf("%d", len))
 		if len == 0 {
-			fmt.Println("no audio files, killing sound init")
+			debugOutput("no audio files, killing sound init")
 			return
 		}
 		for i := 0; i < len; i++ {
@@ -74,24 +79,24 @@ func initAudio() {
 func playAudio(i int) {
 	f, err := os.Open(audioDB[i])
 	if err != nil {
-		fmt.Println("playlist os open error:", err)
+		debugOutput("playlist os open error:" + err.Error())
 		return
 	}
 	// decode audio
 	streamer, format, err := vorbis.Decode(f)
 	if err != nil {
-		fmt.Println("playlist vorbis decode error:", err)
+		debugOutput("playlist vorbis decode error:" + err.Error())
 		return
 	}
 	defer streamer.Close()
-	fmt.Println("playing file ", i, " with name: ", audioDB[i])
+	debugOutput("playing file " + fmt.Sprintf("%d", i) + " with name: " + audioDB[i])
 	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
 	//attempt play
 	done := make(chan bool)
 	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
 		defer func() {
 			if err := recover(); err != nil {
-				fmt.Println("Audio stream panic!: ", err)
+				debugOutput("Audio stream panic!")
 				return
 			}
 		}()
@@ -122,17 +127,17 @@ func ffmpegHelper() {
 		cmd := newCmd()
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = &stderr
-		fmt.Println("starting ffmpeg")
+		debugOutput("starting ffmpeg")
 		if err := cmd.Run(); err != nil {
 			fmt.Printf("Fatal ffmpeg Error: %v\n", stderr.String())
 		}
-		fmt.Println("ffmpeg exited")
+		debugOutput("ffmpeg exited")
 	}
 }
 
 // webViewHelper set bindings and send commands on webview start
 func webViewHelper() {
-	fmt.Println("starting webview")
+	debugOutput("starting webview")
 	w := webview.New(true)
 	defer w.Destroy()
 	w.SetSize(1920, 1080, webview.HintFixed)
@@ -142,21 +147,21 @@ func webViewHelper() {
 	w.Bind("readInetDB", inet.ReadInetDB)
 	w.Bind("readStockDB", finance.ReadStockDB)
 	w.Bind("readCryptoDB", finance.ReadCryptoDB)
-	fmt.Println("navigating")
+	debugOutput("navigating")
 	w.Navigate("http://127.0.0.1:8888/shell.html")
-	fmt.Println("window loading")
+	debugOutput("window loading")
 	w.Run()
-	fmt.Println("window closed")
+	debugOutput("window closed")
 }
 
 // webViewRecover if webview crashes, run this function
 func webViewRecover(f func()) {
 	v := recover()
 	if v != nil {
-		fmt.Println("webViewHelper has paniced. Restarting.")
+		debugOutput("webViewHelper has paniced. Restarting.")
 		go webViewHelper()
 	}
-	fmt.Println(v, "webViewHelper is exiting normally")
+	debugOutput("webViewHelper is exiting normally")
 }
 
 func main() {
@@ -166,27 +171,27 @@ func main() {
 	go func() {
 		sig := <-signalChannel
 		switch sig {
-		case os.Interrupt, syscall.SIGTERM:
-			fmt.Println("OS interrupt/SIGTERM was called!")
+		case os.Interrupt, syscall.SIGTERM, syscall.SIGINT:
+			debugOutput("OS interrupt/SIGTERM/SIGINT was called! Quitting...")
 			os.Exit(3)
 		case syscall.SIGABRT:
-			fmt.Println("SIGABRT was called!")
+			debugOutput("SIGABRT was called!")
 		case syscall.SIGSEGV:
-			fmt.Println("SIGSEGV was called!")
+			debugOutput("SIGSEGV was called!")
 		default:
-			fmt.Println("Got signal:", sig)
+			debugOutput("Got signal:" + sig.String())
 		}
 	}()
-	fmt.Println("starting up")
+	debugOutput("starting up")
 	//launch HTTP server for frontend client
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 	go func() {
 		for {
-			fmt.Println("starting up http")
+			debugOutput("starting up http")
 			err := http.ListenAndServe(":8888", nil)
 			if err != nil {
-				fmt.Println("http server error: " + err.Error())
+				debugOutput("http server error: " + err.Error())
 			}
 		}
 	}()
@@ -195,7 +200,7 @@ func main() {
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
-	fmt.Println("startup complete")
+	debugOutput("startup complete")
 	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
 	go ffmpegHelper()

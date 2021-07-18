@@ -2,11 +2,12 @@ package inet
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+
+	"../debug"
 
 	"github.com/mmcdole/gofeed"
 )
@@ -38,6 +39,10 @@ func ReadInetDB() []Data {
 	return InetDB
 }
 
+func debugOutput(t string) {
+	debug.Output("finance", t)
+}
+
 //Startup starts authentication and headline scheduling
 func Startup() error {
 	readToDB("inet")
@@ -52,13 +57,12 @@ func readToDB(dbname string) {
 	// open json file
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
-		fmt.Println(err)
+		debugOutput("Error reading db:" + err.Error())
 	}
 	err2 := json.Unmarshal(jsonFile, &InetDB)
 	if err2 != nil {
-		fmt.Println("error reading inet db: ", err2)
+		debugOutput("Error unmarshalling db:" + err2.Error())
 	}
-	fmt.Println("readToDB completed successfully")
 }
 
 func schedule(f func(), interval time.Duration) *time.Ticker {
@@ -81,7 +85,7 @@ func getCurrentInetStatus() {
 		req.Header.Set("user-agent", "newsweather/0.1")
 		response, err := netClient.Do(req)
 		if err != nil {
-			fmt.Println("inet netclient error")
+			debugOutput("inet netclient error")
 			continue
 		}
 		defer response.Body.Close()
@@ -89,16 +93,15 @@ func getCurrentInetStatus() {
 			var jsonResponse map[string]interface{}
 			err := json.NewDecoder(response.Body).Decode(&jsonResponse)
 			if err != nil {
-				fmt.Println("Error decoding response from Facebook:", err)
-				fmt.Println("dump:", response)
+				debugOutput("Error decoding response from Facebook:" + err.Error())
 			} else {
 				tdb1, ok := jsonResponse["current"].(map[string]interface{})
 				if !ok {
-					fmt.Println("Error decoding current response from Facebook")
+					debugOutput("Error decoding current response from Facebook")
 				} else {
 					fbookTemp, ok := tdb1["subject"].(string)
 					if !ok {
-						fmt.Println("Error decoding subject response from Facebook")
+						debugOutput("Error decoding subject response from Facebook")
 					} else {
 						var temp StatusData
 						temp.Title = fbookTemp
@@ -111,7 +114,7 @@ func getCurrentInetStatus() {
 			fp := gofeed.NewParser()
 			feed, err := fp.Parse(response.Body)
 			if err != nil {
-				fmt.Println("Error parsing: "+InetDB[i].Name+" : ", err)
+				debugOutput("Error parsing: " + InetDB[i].Name + " : " + err.Error())
 				var temp StatusData
 				temp.Title = "OK"
 				temp.Content = "OK"
@@ -143,7 +146,7 @@ func getCurrentInetStatus() {
 						InetDB[i].Status = append(InetDB[i].Status, temp)
 					}
 				}
-				fmt.Println("inet: ", InetDB[i].Name, " parsed successfully with ", strconv.Itoa(len(InetDB[i].Status)), "items")
+				debugOutput("inet: " + InetDB[i].Name + " parsed successfully with " + strconv.Itoa(len(InetDB[i].Status)) + "items")
 			}
 		}
 	}

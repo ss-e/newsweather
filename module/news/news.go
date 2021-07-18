@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"../debug"
 )
 
 //HeadlineDB contains all headlines
@@ -17,6 +19,10 @@ var redditAppUsername string = os.Getenv("REDDIT_APP_USERNAME")
 var redditAppSecret string = os.Getenv("REDDIT_APP_SECRET")
 var redditAccessToken string
 var redditAccessTokenExpiry int64
+
+func debugOutput(t string) {
+	debug.Output("finance", t)
+}
 
 //Startup starts authentication and headline scheduling
 func Startup() error {
@@ -55,7 +61,7 @@ func redditOAuth() {
 	req.Header.Set("user-agent", "newsweather/0.1")
 	response, err := netClient.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		debugOutput("Oauth post errror: " + err.Error())
 		return
 	}
 	defer response.Body.Close()
@@ -63,23 +69,21 @@ func redditOAuth() {
 	var jsonResponse map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
-		fmt.Println("Error decoding reddit access token resonse:", err)
-		fmt.Println("dump:", response)
+		debugOutput("Error decoding reddit access token response:" + err.Error())
 	} else {
-		//fmt.Println("dump:", jsonResponse)
-		//fmt.Println("key is: ", jsonResponse["access_token"], " expires in: ", jsonResponse["expires_in"])
+		//debugOutput("key is: " + jsonResponse["access_token"] + " expires in: " + jsonResponse["expires_in"])
 		redditAccessTokenTemp, ok := jsonResponse["access_token"].(string)
 		if !ok {
-			fmt.Println("Error with reddit access token")
+			debugOutput("Error with reddit access token")
 		} else {
 			redditAccessToken = redditAccessTokenTemp
 			thisTime := time.Now()
 			redditAccessTokenExpiryTemp, ok := jsonResponse["expires_in"].(float64)
 			if !ok {
-				fmt.Println("Error with reddit access token expiry time")
+				debugOutput("Error with reddit access token expiry time")
 			} else {
 				redditAccessTokenExpiry = thisTime.Unix() + int64(redditAccessTokenExpiryTemp)
-				//fmt.Println("key is: ", redditAccessToken, " expires at: ", redditAccessTokenExpiry)
+				//debugOutput("key is: ", redditAccessToken, " expires at: ", redditAccessTokenExpiry)
 			}
 		}
 	}
@@ -87,62 +91,54 @@ func redditOAuth() {
 
 //getCurrentHeadlines poll for headlines
 func getCurrentHeadlines() {
-	fmt.Println("key is: ", redditAccessToken, " expires at: ", redditAccessTokenExpiry)
+	//debugOutput("key is: " + redditAccessToken + " expires at: " + redditAccessTokenExpiry)
 	var url = "https://oauth.reddit.com/r/worldnews/hot.json?limit=25"
 	thisTime := time.Now()
-	//fmt.Println("comparing", thisTime.Unix(), "and", redditAccessTokenExpiry)
 	if thisTime.Unix() > redditAccessTokenExpiry {
-		fmt.Println("OAuth is expired, renewing")
+		debugOutput("OAuth is expired, renewing")
 		redditOAuth()
 		return
 	}
-	//fmt.Println("passed check")
 	var netClient = &http.Client{
 		Timeout: time.Second * 10,
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		fmt.Println("Error creating news request:", err)
+		debugOutput("Error creating news request:" + err.Error())
 	}
 	req.Header.Add("Authorization", "bearer "+redditAccessToken)
 	req.Header.Set("user-agent", "newsweather/0.1")
 	response, err := netClient.Do(req)
 	if err != nil {
-		fmt.Println("Error executing news request:", err)
+		debugOutput("Error executing news request:" + err.Error())
 		return
 	}
 	defer response.Body.Close()
 	var jsonResponse map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
-		fmt.Println("Error decoding news response:", err)
-		fmt.Println("dump:", response)
+		debugOutput("Error decoding news response:" + err.Error())
 		return
 	}
-	//fmt.Println("response:", jsonResponse)
 	tdb1, ok := jsonResponse["data"].(map[string]interface{})
 	if !ok {
-		fmt.Println("Error with news response data:", err)
-		fmt.Println("dump:", jsonResponse["data"])
+		debugOutput("Error with news response data:" + err.Error() + " dump: " + jsonResponse["data"].(string))
 		return
 	}
 	tdb2, ok := tdb1["children"].([]interface{})
 	if !ok {
-		fmt.Println("Error with news response data children:", err)
-		fmt.Println("dump:", tdb1["children"])
+		debugOutput("Error with news response data children:" + err.Error() + "dump:" + tdb1["children"].(string))
 		return
 	}
-	fmt.Println("tdb2 success, len:", len(tdb2))
+	debugOutput("tdb2 success, len:" + fmt.Sprintf("%d", len(tdb2)))
 	for i := 0; i < 25; i++ {
 		tdb3, ok := tdb2[i].(map[string]interface{})
 		if !ok {
-			fmt.Println("Error with news response data tdb3:", err)
-			fmt.Println("dump:", tdb1)
+			debugOutput("Error with news response data tdb3:" + err.Error())
 		} else {
 			tdb4, ok := tdb3["data"].(map[string]interface{})
 			if !ok {
-				fmt.Println("Error with news response data tdb4:", err)
-				fmt.Println("dump:", tdb1)
+				debugOutput("Error with news response data tdb4:" + err.Error())
 			} else {
 				if tdb4["stickied"] == false {
 					HeadlineDB = append(HeadlineDB, tdb4["title"].(string))
@@ -151,11 +147,10 @@ func getCurrentHeadlines() {
 		}
 	}
 	if len(HeadlineDB) <= 25 {
-		fmt.Println("first news grab, getting first 25")
+		debugOutput("first news grab, getting first 25")
 		HeadlineDB = HeadlineDB[:25]
 	} else {
-		fmt.Println("headlinedb len: ", len(HeadlineDB))
+		debugOutput("headlinedb len: " + fmt.Sprintf("%d", len(HeadlineDB)))
 		HeadlineDB = HeadlineDB[25:]
 	}
-	fmt.Println("got news")
 }

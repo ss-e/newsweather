@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"../debug"
 )
 
 //Data contains critical data for weather
@@ -26,6 +28,10 @@ type Data struct {
 var weatherDB []Data
 var weatherAPIKey = os.Getenv("OWM_APIKEY")
 var weatherSite string = "https://api.openweathermap.org/data/2.5/"
+
+func debugOutput(t string) {
+	debug.Output("finance", t)
+}
 
 //ReadWeatherDB return weatherdb
 func ReadWeatherDB() []Data {
@@ -59,11 +65,11 @@ func readToDB(dbname string) {
 	// open json file
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
-		fmt.Println("error reading weather db: ", err)
+		debugOutput("error reading db: " + err.Error())
 	}
 	err = json.Unmarshal(jsonFile, &weatherDB)
 	if err != nil {
-		fmt.Println("error unmarshalling weather db: ", err)
+		debugOutput("error unmarshalling db: " + err.Error())
 	}
 }
 
@@ -87,28 +93,28 @@ func getCurrentTemp() {
 	temp = append(temp, t2)
 	t2 = nil
 	for i := 0; i < len(temp); i++ {
-		fmt.Println("loading map temperature batch:", i+1, "/", len(temp))
+		debugOutput("loading map temperature batch:" + fmt.Sprintf("%d", i+1) + "/" + fmt.Sprintf("%d", len(temp)))
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
 		response, err := netClient.Get(url)
 		if err != nil {
-			fmt.Println("Error getcurrenttemp()", err)
+			debugOutput("Error getcurrenttemp()" + err.Error())
 			continue
 		}
 		defer response.Body.Close()
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
-			fmt.Println("error decoding getcurrenttemp:", err)
-			fmt.Println("dump:", response)
+			debugOutput("error decoding getCurrentTemp:" + err.Error())
 		} else {
 			responseArr, ok := jsonResponse["list"].([]interface{})
 			if !ok {
-				message, ok := jsonResponse["message"].([]interface{})
+				debugOutput("error decoding response from getcurrenttemp")
+				/*message, ok := jsonResponse["message"].([]interface{})
 				if !ok {
-					fmt.Println("error decoding response from getcurrenttemp, unknown message")
+					debugOutput("error decoding response from getcurrenttemp, response: " + response)
 				} else {
-					fmt.Println("error decoding response from getcurrenttemp with message:", message)
-				}
+					debugOutput("error decoding response from getcurrenttemp with message:" + message)
+				}*/
 			} else {
 				for j := 0; j < int(jsonResponse["cnt"].(float64)); j++ {
 					temp2 := responseArr[j].(map[string]interface{})
@@ -129,7 +135,7 @@ func getCurrentTemp() {
 				}
 			}
 		}
-		fmt.Println("got batch, waiting 30 seconds")
+		debugOutput("got batch, waiting 30 seconds")
 		time.Sleep(30 * time.Second)
 	}
 }
@@ -144,23 +150,24 @@ func get6hrTemp() {
 		var url = weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=19"
 		response, err := netClient.Get(url)
 		if err != nil {
-			fmt.Println("err getting 6hr temp data:", err)
+			debugOutput("err getting 6hr temp data:" + err.Error())
 			continue
 		}
 		defer response.Body.Close()
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
-			fmt.Println("error decoding response:", err, "dump: ", response)
+			debugOutput("error decoding get6hrTemp response:" + err.Error())
 		} else {
 			responseArr, ok := jsonResponse["list"].([]interface{})
 			if !ok {
-				message, ok2 := jsonResponse["message"].([]interface{})
+				debugOutput("error decoding response from get6hrTemp")
+				/*message, ok2 := jsonResponse["message"].([]interface{})
 				if !ok2 {
-					fmt.Println("error decoding response for 6 hour temp for index: ", i, " message dump: ", response, ",", jsonResponse)
+					debugOutput("error decoding response for 6 hour temp for index: "+fmt.Sprintf("%d",i)+" message dump: ", response, ",", jsonResponse)
 				} else {
-					fmt.Println("error decoding response for 6 hour temp for index: ", i, " with message", message)
-				}
+					debugOutput("error decoding response for 6 hour temp for index: "+fmt.Sprintf("%d",i)+" with message", message)
+				}*/
 			} else {
 				nowHour := time.Now().Hour()
 				h := 6 - (nowHour % 6)
@@ -176,7 +183,7 @@ func get6hrTemp() {
 					weatherDB[i].W[k][1] = int(t3["id"].(float64))
 					k++
 				}
-				fmt.Println("weather 6hr index:", i, "w1:", weatherDB[i].W[0][0], ",", weatherDB[i].W[0][1], "w2:", weatherDB[i].W[1][0], ",", weatherDB[i].W[1][1], "w3:", weatherDB[i].W[2][0], ",", weatherDB[i].W[2][1])
+				debugOutput("weather 6hr index:" + fmt.Sprintf("%d", i) + "w1:" + fmt.Sprintf("%d", weatherDB[i].W[0][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[0][1]) + "w2:" + fmt.Sprintf("%d", weatherDB[i].W[1][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[1][1]) + "w3:" + fmt.Sprintf("%d", weatherDB[i].W[2][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[2][1]))
 			}
 		}
 	}
