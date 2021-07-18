@@ -171,6 +171,7 @@ func main() {
 	go func() {
 		for {
 			sig := <-signalChannel
+			debugOutput("Got signal:" + sig.String())
 			switch sig {
 			case os.Interrupt, syscall.SIGTERM:
 				fmt.Println("OS interrupt/SIGTERM was called! Restarting...")
@@ -182,8 +183,6 @@ func main() {
 				debugOutput("SIGABRT was called!")
 			case syscall.SIGSEGV:
 				debugOutput("SIGSEGV was called!")
-			default:
-				debugOutput("Got signal:" + sig.String())
 			}
 		}
 	}()

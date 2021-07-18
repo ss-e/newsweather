@@ -13,6 +13,6 @@ do
     if [ $? -eq 0 ]
     then
         echo "quitting"
-        return
+        exit 0
     fi
 done
