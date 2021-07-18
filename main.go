@@ -169,17 +169,22 @@ func main() {
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel)
 	go func() {
-		sig := <-signalChannel
-		switch sig {
-		case os.Interrupt, syscall.SIGTERM, syscall.SIGINT:
-			debugOutput("OS interrupt/SIGTERM/SIGINT was called! Quitting...")
-			os.Exit(3)
-		case syscall.SIGABRT:
-			debugOutput("SIGABRT was called!")
-		case syscall.SIGSEGV:
-			debugOutput("SIGSEGV was called!")
-		default:
-			debugOutput("Got signal:" + sig.String())
+		for {
+			sig := <-signalChannel
+			switch sig {
+			case os.Interrupt, syscall.SIGTERM:
+				fmt.Println("OS interrupt/SIGTERM was called! Restarting...")
+				os.Exit(2)
+			case syscall.SIGINT:
+				fmt.Println("SIGINT was called! Quitting...")
+				os.Exit(0)
+			case syscall.SIGABRT:
+				debugOutput("SIGABRT was called!")
+			case syscall.SIGSEGV:
+				debugOutput("SIGSEGV was called!")
+			default:
+				debugOutput("Got signal:" + sig.String())
+			}
 		}
 	}()
 	debugOutput("starting up")

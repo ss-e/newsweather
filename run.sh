@@ -10,4 +10,9 @@ do
     ./newsweather 2>&1 | tee log.txt
     killall ffmpeg
     killall Xvfb
+    if [ $? -eq 0 ]
+    then
+        echo "quitting"
+        return
+    fi
 done
