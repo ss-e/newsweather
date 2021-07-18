@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"syscall"
 
 	"./module/debug"
 	"./module/finance"
@@ -177,6 +178,10 @@ func main() {
 			case os.Kill:
 				fmt.Println("OS interrupt was called! Quitting...")
 				os.Exit(0)
+			case syscall.Signal(0x17):
+				//ignore
+			default:
+				debugOutput("Signal " + sig.String() + "was called! Ignoring...")
 			}
 		}
 	}()
