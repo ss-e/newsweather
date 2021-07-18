@@ -21,7 +21,6 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-	"syscall"
 	"time"
 )
 
@@ -165,7 +164,7 @@ func webViewRecover(f func()) {
 }
 
 func main() {
-	//signal grabber, if we recieve an errant signal (likely from webview) do not exit, instead kill client and relaunch
+	//signal grabber, if we recieve an errant signal (likely from webview) do not exit
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel)
 	go func() {
@@ -173,16 +172,12 @@ func main() {
 			sig := <-signalChannel
 			debugOutput("Got signal:" + sig.String())
 			switch sig {
-			case os.Interrupt, syscall.SIGTERM:
-				fmt.Println("OS interrupt/SIGTERM was called! Restarting...")
+			case os.Interrupt:
+				fmt.Println("OS kill was called! Restarting...")
 				os.Exit(2)
-			case syscall.SIGINT:
-				fmt.Println("SIGINT was called! Quitting...")
+			case os.Kill:
+				fmt.Println("OS interrupt was called! Quitting...")
 				os.Exit(0)
-			case syscall.SIGABRT:
-				debugOutput("SIGABRT was called!")
-			case syscall.SIGSEGV:
-				debugOutput("SIGSEGV was called!")
 			}
 		}
 	}()

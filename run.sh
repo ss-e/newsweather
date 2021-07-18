@@ -12,7 +12,7 @@ do
     killall Xvfb
     if [ $? -eq 0 ]
     then
-        echo "quitting"
+        echo "exiting normally"
         exit 0
     fi
 done
