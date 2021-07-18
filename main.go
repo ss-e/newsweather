@@ -170,7 +170,6 @@ func main() {
 	go func() {
 		for {
 			sig := <-signalChannel
-			debugOutput("Got signal:" + sig.String())
 			switch sig {
 			case os.Interrupt:
 				fmt.Println("OS kill was called! Restarting...")
@@ -199,11 +198,10 @@ func main() {
 	news.Startup()
 	inet.Startup()
 	finance.Startup()
-	debugOutput("startup complete")
 	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
-	go ffmpegHelper()
 	defer webViewRecover(webViewHelper)
 	go webViewHelper()
+	go ffmpegHelper()
 	select {}
 }
