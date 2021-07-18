@@ -21,7 +21,7 @@ var redditAccessToken string
 var redditAccessTokenExpiry int64
 
 func debugOutput(t string) {
-	debug.Output("finance", t)
+	debug.Output("news", t)
 }
 
 //Startup starts authentication and headline scheduling

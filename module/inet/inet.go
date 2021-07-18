@@ -40,7 +40,7 @@ func ReadInetDB() []Data {
 }
 
 func debugOutput(t string) {
-	debug.Output("finance", t)
+	debug.Output("inet", t)
 }
 
 //Startup starts authentication and headline scheduling

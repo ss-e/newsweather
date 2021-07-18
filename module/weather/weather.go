@@ -30,7 +30,7 @@ var weatherAPIKey = os.Getenv("OWM_APIKEY")
 var weatherSite string = "https://api.openweathermap.org/data/2.5/"
 
 func debugOutput(t string) {
-	debug.Output("finance", t)
+	debug.Output("weather", t)
 }
 
 //ReadWeatherDB return weatherdb
