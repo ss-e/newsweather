@@ -203,5 +203,8 @@ func main() {
 	go initAudio()
 	go webViewHelper()
 	go ffmpegHelper()
-	select {}
+	//need to do health checks, restart helpers if needed
+	for {
+		select {}
+	}
 }
