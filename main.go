@@ -187,10 +187,10 @@ func main() {
 	http.Handle("/", fs)
 	go func() {
 		for {
-			debugOutput("starting up http")
+			debugOutput("Starting up HTTP server for frontend client.")
 			err := http.ListenAndServe(":8888", nil)
 			if err != nil {
-				debugOutput("http server error: " + err.Error())
+				debugOutput("HTTP frontend client server error: " + err.Error())
 			}
 		}
 	}()

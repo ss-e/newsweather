@@ -32,7 +32,11 @@ type Data struct {
 var InetDB []Data
 
 //downtimeLength when to prune entries, in hours
-var downtimeLength int = 4
+const (
+	downtimeLength = 4
+	userAgent      = "newsweather/0.1"
+	httpTimeout    = 10
+)
 
 //ReadInetDB return inet status database
 func ReadInetDB() []Data {
@@ -79,10 +83,10 @@ func getCurrentInetStatus() {
 	for i := range InetDB {
 		InetDB[i].Status = make([]StatusData, 0)
 		var netClient = &http.Client{
-			Timeout: time.Second * 10,
+			Timeout: time.Second * httpTimeout,
 		}
 		req, err := http.NewRequest("GET", InetDB[i].URL, nil)
-		req.Header.Set("user-agent", "newsweather/0.1")
+		req.Header.Set("user-agent", userAgent)
 		response, err := netClient.Do(req)
 		if err != nil {
 			debugOutput("inet netclient error")
@@ -94,19 +98,23 @@ func getCurrentInetStatus() {
 			err := json.NewDecoder(response.Body).Decode(&jsonResponse)
 			if err != nil {
 				debugOutput("Error decoding response from Facebook:" + err.Error())
+				continue
 			} else {
 				tdb1, ok := jsonResponse["current"].(map[string]interface{})
 				if !ok {
 					debugOutput("Error decoding current response from Facebook")
+					continue
 				} else {
 					fbookTemp, ok := tdb1["subject"].(string)
 					if !ok {
 						debugOutput("Error decoding subject response from Facebook")
+						continue
 					} else {
 						var temp StatusData
 						temp.Title = fbookTemp
 						temp.Content = ""
 						InetDB[i].Status = append(InetDB[i].Status, temp)
+						debugOutput("inet: " + InetDB[i].Name + " parsed successfully with " + strconv.Itoa(len(InetDB[i].Status)) + "items")
 					}
 				}
 			}

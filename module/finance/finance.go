@@ -32,8 +32,17 @@ var FxDB []Item
 var CryptoDB []Item
 
 var iexapikey = os.Getenv("IEX_APIKEY")
-var iexsite = "https://cloud.iexapis.com/"
-var cryptoapi = "https://api.cryptowat.ch/markets/binance/"
+
+const (
+	iexsite              = "https://cloud.iexapis.com/"
+	cryptoapi            = "https://api.cryptowat.ch/markets/binance/"
+	userAgent            = "newsweather/0.1"
+	httpTimeout          = 10
+	delayStockInfo       = 3
+	delayStockChartData  = 15
+	delayCryptoInfo      = 5
+	delayCryptoChartData = 15
+)
 
 //ReadStockDB return weatherdb
 func ReadStockDB() []Item {
@@ -57,7 +66,7 @@ func debugOutput(t string) {
 func getFxInfo() {
 	//thisTime := time.Now()
 	var netClient = &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * httpTimeout,
 	}
 	ta := []string{}
 	for i := range FxDB {
@@ -65,7 +74,7 @@ func getFxInfo() {
 	}
 	temp := strings.Join(ta, ",")
 	req, err := http.NewRequest("GET", iexsite+"stable/fx/latest?symbols="+temp+"&token="+iexapikey, nil)
-	req.Header.Set("user-agent", "newsweather/0.1")
+	req.Header.Set("user-agent", userAgent)
 	response, err := netClient.Do(req)
 	if err != nil {
 		debugOutput("Error getting fxinfo: " + err.Error())
@@ -99,10 +108,10 @@ func getFxInfo() {
 func getStockInfo() {
 	for i := range StockDB {
 		var netClient = &http.Client{
-			Timeout: time.Second * 10,
+			Timeout: time.Second * httpTimeout,
 		}
 		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/book?token="+iexapikey, nil)
-		req.Header.Set("user-agent", "newsweather/0.1")
+		req.Header.Set("user-agent", userAgent)
 		response, err := netClient.Do(req)
 		if err != nil {
 			debugOutput("err getting stock data:" + err.Error())
@@ -138,10 +147,10 @@ func getStockChartData() {
 	for i := range StockDB {
 		debugOutput("getStockChartData for: " + StockDB[i].Ticker)
 		var netClient = &http.Client{
-			Timeout: time.Second * 10,
+			Timeout: time.Second * httpTimeout,
 		}
 		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/intraday-prices?chartInterval=5&token="+iexapikey, nil)
-		req.Header.Set("user-agent", "newsweather/0.1")
+		req.Header.Set("user-agent", userAgent)
 		response, err := netClient.Do(req)
 		if err != nil {
 			debugOutput("err getStockChartData:" + err.Error())
@@ -194,10 +203,10 @@ func getStockChartData() {
 func getCryptoInfo() {
 	for i := range CryptoDB {
 		var netClient = &http.Client{
-			Timeout: time.Second * 10,
+			Timeout: time.Second * httpTimeout,
 		}
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary", nil)
-		req.Header.Set("user-agent", "newsweather/0.1")
+		req.Header.Set("user-agent", userAgent)
 		response, err := netClient.Do(req)
 		if err != nil {
 			debugOutput("err getting getCryptoInfo http:" + err.Error())
@@ -239,12 +248,12 @@ func getCryptoChartData() {
 		t1 := time.Now()
 		t2 := t1.Add(-24 * time.Hour)
 		var netClient = &http.Client{
-			Timeout: time.Second * 10,
+			Timeout: time.Second * httpTimeout,
 		}
 		thisTime := fmt.Sprintf("%v", t2.Unix())
 		debugOutput("getting crypto chart data for: " + CryptoDB[i].Ticker + " for time: " + thisTime)
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime, nil)
-		req.Header.Set("user-agent", "newsweather/0.1")
+		req.Header.Set("user-agent", userAgent)
 		response, err := netClient.Do(req)
 		if err != nil {
 			debugOutput("err getting crypto chart data: " + err.Error())
@@ -325,13 +334,13 @@ func Startup() error {
 	getStockChartData()
 	getCryptoInfo()
 	getCryptoChartData()
-	t1 := schedule(getStockInfo, 3*time.Minute)
+	t1 := schedule(getStockInfo, delayStockInfo*time.Minute)
 	_ = t1
-	t2 := schedule(getStockChartData, 15*time.Minute)
+	t2 := schedule(getStockChartData, delayStockChartData*time.Minute)
 	_ = t2
-	t3 := schedule(getCryptoInfo, 5*time.Minute)
+	t3 := schedule(getCryptoInfo, delayCryptoInfo*time.Minute)
 	_ = t3
-	t4 := schedule(getCryptoChartData, 15*time.Minute)
+	t4 := schedule(getCryptoChartData, delayStockChartData*time.Minute)
 	_ = t4
 	return nil
 }

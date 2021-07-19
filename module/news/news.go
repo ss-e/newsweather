@@ -20,15 +20,24 @@ var redditAppSecret string = os.Getenv("REDDIT_APP_SECRET")
 var redditAccessToken string
 var redditAccessTokenExpiry int64
 
+const (
+	delayCurrentHeadlines = 3
+	redditOAuthURL        = "https://api.reddit.com/api/v1/access_token"
+	redditUserAgent       = "newsweather/0.1"
+	redditArticleURL      = "https://oauth.reddit.com/r/worldnews/hot.json?limit=25"
+	httpTimeout           = 10
+)
+
 func debugOutput(t string) {
 	debug.Output("news", t)
+	return
 }
 
 //Startup starts authentication and headline scheduling
 func Startup() error {
 	redditOAuth()
 	getCurrentHeadlines()
-	t1 := schedule(getCurrentHeadlines, 3*time.Minute)
+	t1 := schedule(getCurrentHeadlines, delayCurrentHeadlines*time.Minute)
 	_ = t1
 	return nil
 }
@@ -45,20 +54,18 @@ func schedule(f func(), interval time.Duration) *time.Ticker {
 
 //ReadHeadlineDB return HeadlineDB
 func ReadHeadlineDB() []string {
-	//return []string{"test","2222"}
 	return HeadlineDB
 }
 
 //redditOAuth regenerate reddit oauth token
 func redditOAuth() {
-	url := "https://api.reddit.com/api/v1/access_token"
 	post := strings.NewReader("grant_type=password&username=" + redditUsername + "&password=" + redditPassword)
 	var netClient = &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * httpTimeout,
 	}
-	req, err := http.NewRequest("POST", url, post)
+	req, err := http.NewRequest("POST", redditOAuthURL, post)
 	req.SetBasicAuth(redditAppUsername, redditAppSecret)
-	req.Header.Set("user-agent", "newsweather/0.1")
+	req.Header.Set("user-agent", redditUserAgent)
 	response, err := netClient.Do(req)
 	if err != nil {
 		debugOutput("Oauth post errror: " + err.Error())
@@ -70,6 +77,7 @@ func redditOAuth() {
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
 		debugOutput("Error decoding reddit access token response:" + err.Error())
+		return
 	} else {
 		//debugOutput("key is: " + jsonResponse["access_token"] + " expires in: " + jsonResponse["expires_in"])
 		redditAccessTokenTemp, ok := jsonResponse["access_token"].(string)
@@ -87,12 +95,12 @@ func redditOAuth() {
 			}
 		}
 	}
+	return
 }
 
 //getCurrentHeadlines poll for headlines
 func getCurrentHeadlines() {
 	//debugOutput("key is: " + redditAccessToken + " expires at: " + redditAccessTokenExpiry)
-	var url = "https://oauth.reddit.com/r/worldnews/hot.json?limit=25"
 	thisTime := time.Now()
 	if thisTime.Unix() > redditAccessTokenExpiry {
 		debugOutput("OAuth is expired, renewing")
@@ -100,14 +108,15 @@ func getCurrentHeadlines() {
 		return
 	}
 	var netClient = &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * httpTimeout,
 	}
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", redditArticleURL, nil)
 	if err != nil {
 		debugOutput("Error creating news request:" + err.Error())
+		return
 	}
 	req.Header.Add("Authorization", "bearer "+redditAccessToken)
-	req.Header.Set("user-agent", "newsweather/0.1")
+	req.Header.Set("user-agent", redditUserAgent)
 	response, err := netClient.Do(req)
 	if err != nil {
 		debugOutput("Error executing news request:" + err.Error())
@@ -155,4 +164,5 @@ func getCurrentHeadlines() {
 		debugOutput("headlinedb len: " + fmt.Sprintf("%d", len(HeadlineDB)))
 		HeadlineDB = HeadlineDB[25:]
 	}
+	return
 }
