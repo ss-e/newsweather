@@ -80,18 +80,17 @@ func getCurrentTemp() {
 	}
 	temp := make([][]string, 0)
 	t2 := make([]string, 0)
-	for i := 0; i < len(weatherDB); i++ {
+	for k := 0; k < len(weatherDB); k++ {
 		if len(t2) >= 20 {
 			temp = append(temp, t2)
 			t2 = nil
 			t2 = make([]string, 0)
-			t2 = append(t2, weatherDB[i].ID)
+			t2 = append(t2, weatherDB[k].ID)
 		} else {
-			t2 = append(t2, weatherDB[i].ID)
+			t2 = append(t2, weatherDB[k].ID)
 		}
 	}
 	temp = append(temp, t2)
-	t2 = nil
 	for i := 0; i < len(temp); i++ {
 		debugOutput("loading map temperature batch:" + fmt.Sprintf("%d", i+1) + "/" + fmt.Sprintf("%d", len(temp)))
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
@@ -183,7 +182,7 @@ func get6hrTemp() {
 					weatherDB[i].W[k][1] = int(t3["id"].(float64))
 					k++
 				}
-				debugOutput("weather 6hr index:" + fmt.Sprintf("%d", i) + "w1:" + fmt.Sprintf("%d", weatherDB[i].W[0][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[0][1]) + "w2:" + fmt.Sprintf("%d", weatherDB[i].W[1][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[1][1]) + "w3:" + fmt.Sprintf("%d", weatherDB[i].W[2][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[2][1]))
+				//debugOutput("weather 6hr index:" + fmt.Sprintf("%d", i) + "w1:" + fmt.Sprintf("%d", weatherDB[i].W[0][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[0][1]) + "w2:" + fmt.Sprintf("%d", weatherDB[i].W[1][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[1][1]) + "w3:" + fmt.Sprintf("%d", weatherDB[i].W[2][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[2][1]))
 			}
 		}
 	}

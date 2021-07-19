@@ -180,6 +180,9 @@ func main() {
 				os.Exit(0)
 			case syscall.Signal(0x17):
 				//ignore
+			case syscall.SIGSEGV:
+				fmt.Println("Segfaulted! Restarting...")
+				os.Exit(2)
 			default:
 				debugOutput("Signal " + sig.String() + "was called! Ignoring...")
 			}

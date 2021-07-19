@@ -122,15 +122,17 @@ func getCurrentHeadlines() {
 	}
 	tdb1, ok := jsonResponse["data"].(map[string]interface{})
 	if !ok {
-		debugOutput("Error with news response data:" + err.Error() + " dump: " + jsonResponse["data"].(string))
+		//debugOutput("Error with news response data:" + err.Error() + " dump: " + jsonResponse["data"].(string))
+		debugOutput("Error with news response data:" + err.Error())
 		return
 	}
 	tdb2, ok := tdb1["children"].([]interface{})
 	if !ok {
-		debugOutput("Error with news response data children:" + err.Error() + "dump:" + tdb1["children"].(string))
+		//debugOutput("Error with news response data children:" + err.Error() + "dump:" + tdb1["children"].(string))
+		debugOutput("Error with news response data children:" + err.Error())
 		return
 	}
-	debugOutput("tdb2 success, len:" + fmt.Sprintf("%d", len(tdb2)))
+	//debugOutput("Got temp db2, len:" + fmt.Sprintf("%d", len(tdb2)))
 	for i := 0; i < 25; i++ {
 		tdb3, ok := tdb2[i].(map[string]interface{})
 		if !ok {
