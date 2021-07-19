@@ -25,7 +25,6 @@ const (
 	redditOAuthURL        = "https://api.reddit.com/api/v1/access_token"
 	redditUserAgent       = "newsweather/0.1"
 	redditArticleURL      = "https://oauth.reddit.com/r/worldnews/hot.json?limit=25"
-	httpTimeout           = 10
 )
 
 func debugOutput(t string) {
@@ -34,19 +33,19 @@ func debugOutput(t string) {
 }
 
 //Startup starts authentication and headline scheduling
-func Startup() error {
-	redditOAuth()
-	getCurrentHeadlines()
-	t1 := schedule(getCurrentHeadlines, delayCurrentHeadlines*time.Minute)
+func Startup(nc *http.Client) error {
+	redditOAuth(nc)
+	getCurrentHeadlines(nc)
+	t1 := schedule(getCurrentHeadlines, delayCurrentHeadlines*time.Minute, nc)
 	_ = t1
 	return nil
 }
 
-func schedule(f func(), interval time.Duration) *time.Ticker {
+func schedule(f func(*http.Client), interval time.Duration, nc *http.Client) *time.Ticker {
 	ticker := time.NewTicker(interval)
 	go func() {
 		for range ticker.C {
-			f()
+			f(nc)
 		}
 	}()
 	return ticker
@@ -58,15 +57,12 @@ func ReadHeadlineDB() []string {
 }
 
 //redditOAuth regenerate reddit oauth token
-func redditOAuth() {
+func redditOAuth(nc *http.Client) {
 	post := strings.NewReader("grant_type=password&username=" + redditUsername + "&password=" + redditPassword)
-	var netClient = &http.Client{
-		Timeout: time.Second * httpTimeout,
-	}
 	req, err := http.NewRequest("POST", redditOAuthURL, post)
 	req.SetBasicAuth(redditAppUsername, redditAppSecret)
 	req.Header.Set("user-agent", redditUserAgent)
-	response, err := netClient.Do(req)
+	response, err := nc.Do(req)
 	if err != nil {
 		debugOutput("Oauth post errror: " + err.Error())
 		return
@@ -99,16 +95,13 @@ func redditOAuth() {
 }
 
 //getCurrentHeadlines poll for headlines
-func getCurrentHeadlines() {
+func getCurrentHeadlines(nc *http.Client) {
 	//debugOutput("key is: " + redditAccessToken + " expires at: " + redditAccessTokenExpiry)
 	thisTime := time.Now()
 	if thisTime.Unix() > redditAccessTokenExpiry {
 		debugOutput("OAuth is expired, renewing")
-		redditOAuth()
+		redditOAuth(nc)
 		return
-	}
-	var netClient = &http.Client{
-		Timeout: time.Second * httpTimeout,
 	}
 	req, err := http.NewRequest("GET", redditArticleURL, nil)
 	if err != nil {
@@ -117,7 +110,7 @@ func getCurrentHeadlines() {
 	}
 	req.Header.Add("Authorization", "bearer "+redditAccessToken)
 	req.Header.Set("user-agent", redditUserAgent)
-	response, err := netClient.Do(req)
+	response, err := nc.Do(req)
 	if err != nil {
 		debugOutput("Error executing news request:" + err.Error())
 		return

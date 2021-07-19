@@ -28,15 +28,26 @@ import (
 // audio database to be filled
 var audioDB []string
 
-// bitrate of stream
-var bitrate string = "4500k"
-
 // samplerate of audio
 var sr = beep.SampleRate(44100)
 
 // stream source and key
 var streamSource string = os.Getenv("STREAM_SOURCE")
 var streamKey string = os.Getenv("STREAM_KEY")
+
+//HTTP client transport for goroutines
+var nc = &http.Client{
+	Timeout: time.Second * httpTimeout,
+}
+
+const (
+	// http client timeout
+	httpTimeout = 60
+	// bitrate of twitch stream
+	bitrate = "4500k"
+	// playlist file directory location
+	playlistLoc = "./playlist/"
+)
 
 func debugOutput(t string) {
 	debug.Output("main", t)
@@ -51,7 +62,7 @@ func initAudio() {
 		debugOutput("loading playlist")
 		audioDB = nil
 		rand.Seed(time.Now().UnixNano())
-		err := filepath.Walk("./playlist/", func(path string, info os.FileInfo, err error) error {
+		err := filepath.Walk(playlistLoc, func(path string, info os.FileInfo, err error) error {
 			audioDB = append(audioDB, path)
 			return nil
 		})
@@ -114,8 +125,9 @@ func newCmd() *exec.Cmd {
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "25", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
-		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
+		"-vcodec", "libx264", "-g", "100", "-keyint_min", "50", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
+		"-threads", "2",
 		"-bufsize", bitrate, streamSource+streamKey,
 	)
 }
@@ -195,10 +207,10 @@ func main() {
 		}
 	}()
 	//startup service modules to grab data, persistently running in order to avoid needing to grab too much data from providers on refresh
-	weather.Startup()
-	news.Startup()
-	inet.Startup()
-	finance.Startup()
+	weather.Startup(nc)
+	news.Startup(nc)
+	inet.Startup(nc)
+	finance.Startup(nc)
 	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
 	go webViewHelper()

@@ -33,7 +33,6 @@ const (
 	delayCurrentTemp = 20
 	delay6hrTemp     = 6
 	delayBatch       = 30
-	httpTimeout      = 10
 )
 
 func debugOutput(t string) {
@@ -46,24 +45,24 @@ func ReadWeatherDB() []Data {
 	return weatherDB
 }
 
-func schedule(f func(), interval time.Duration) *time.Ticker {
+func schedule(f func(*http.Client), interval time.Duration, nc *http.Client) *time.Ticker {
 	ticker := time.NewTicker(interval)
 	go func() {
 		for range ticker.C {
-			f()
+			f(nc)
 		}
 	}()
 	return ticker
 }
 
 //Startup performs actions to be done on startup, start timers
-func Startup() error {
+func Startup(nc *http.Client) error {
 	readToDB("weather")
-	getCurrentTemp()
-	go get6hrTemp()
-	t1 := schedule(getCurrentTemp, delayCurrentTemp*time.Minute)
+	getCurrentTemp(nc)
+	go get6hrTemp(nc)
+	t1 := schedule(getCurrentTemp, delayCurrentTemp*time.Minute, nc)
 	_ = t1
-	t2 := schedule(get6hrTemp, delay6hrTemp*time.Hour)
+	t2 := schedule(get6hrTemp, delay6hrTemp*time.Hour, nc)
 	_ = t2
 	return nil
 }
@@ -85,7 +84,7 @@ func readToDB(dbname string) {
 }
 
 //GetCurrentTemp poll database entries for current temperature
-func getCurrentTemp() {
+func getCurrentTemp(nc *http.Client) {
 	//we can do batches of 20 requests at a time in order to limit HTTP overhead
 	temp := make([][]string, 0)
 	t2 := make([]string, 0)
@@ -104,11 +103,9 @@ func getCurrentTemp() {
 	//send batches
 	for i := 0; i < len(temp); i++ {
 		debugOutput("Loading map temperature batch: " + fmt.Sprintf("%d", i+1) + "/" + fmt.Sprintf("%d", len(temp)))
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
-		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
-		response, err := netClient.Get(url)
+		//var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
+		//response, err := nc.Get(url)
+		response, err := nc.Get(weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey)
 		if err != nil {
 			debugOutput("Error in getCurrentTemp get request: " + err.Error())
 			continue
@@ -162,15 +159,13 @@ func getCurrentTemp() {
 	return
 }
 
-func get6hrTemp() {
+func get6hrTemp(nc *http.Client) {
 	for i := range weatherDB {
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
 		time.Sleep(5 * time.Second)
 		//var url = weatherSite + "onecall?lat=" + weatherDB[i].Lat + "&lon=" + weatherDB[i].Lon + "&exclude=minutely,current&units=metric&appid=" + weatherAPIKey
-		var url = weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=19"
-		response, err := netClient.Get(url)
+		//var url = weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=19"
+		//response, err := nc.Get(url)
+		response, err := nc.Get(weatherSite + "forecast?id=" + weatherDB[i].ID + "&appid=" + weatherAPIKey + "&units=metric&cnt=19")
 		if err != nil {
 			debugOutput("err getting 6hr temp data: " + err.Error())
 			continue

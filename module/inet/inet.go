@@ -35,7 +35,6 @@ var InetDB []Data
 const (
 	downtimeLength = 4
 	userAgent      = "newsweather/0.1"
-	httpTimeout    = 10
 )
 
 //ReadInetDB return inet status database
@@ -45,13 +44,14 @@ func ReadInetDB() []Data {
 
 func debugOutput(t string) {
 	debug.Output("inet", t)
+	return
 }
 
 //Startup starts authentication and headline scheduling
-func Startup() error {
+func Startup(nc *http.Client) error {
 	readToDB("inet")
-	getCurrentInetStatus()
-	t1 := schedule(getCurrentInetStatus, 3*time.Minute)
+	getCurrentInetStatus(nc)
+	t1 := schedule(getCurrentInetStatus, 3*time.Minute, nc)
 	_ = t1
 	return nil
 }
@@ -69,27 +69,24 @@ func readToDB(dbname string) {
 	}
 }
 
-func schedule(f func(), interval time.Duration) *time.Ticker {
+func schedule(f func(*http.Client), interval time.Duration, nc *http.Client) *time.Ticker {
 	ticker := time.NewTicker(interval)
 	go func() {
 		for range ticker.C {
-			f()
+			f(nc)
 		}
 	}()
 	return ticker
 }
 
-func getCurrentInetStatus() {
+func getCurrentInetStatus(nc *http.Client) {
 	for i := range InetDB {
 		InetDB[i].Status = make([]StatusData, 0)
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
 		req, err := http.NewRequest("GET", InetDB[i].URL, nil)
 		req.Header.Set("user-agent", userAgent)
-		response, err := netClient.Do(req)
+		response, err := nc.Do(req)
 		if err != nil {
-			debugOutput("inet netclient error")
+			debugOutput("inet nc error")
 			continue
 		}
 		defer response.Body.Close()

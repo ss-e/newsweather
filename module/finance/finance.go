@@ -37,7 +37,6 @@ const (
 	iexsite              = "https://cloud.iexapis.com/"
 	cryptoapi            = "https://api.cryptowat.ch/markets/binance/"
 	userAgent            = "newsweather/0.1"
-	httpTimeout          = 10
 	delayStockInfo       = 3
 	delayStockChartData  = 15
 	delayCryptoInfo      = 5
@@ -61,13 +60,11 @@ func ReadCryptoDB() []Item {
 
 func debugOutput(t string) {
 	debug.Output("finance", t)
+	return
 }
 
-func getFxInfo() {
+func getFxInfo(nc *http.Client) {
 	//thisTime := time.Now()
-	var netClient = &http.Client{
-		Timeout: time.Second * httpTimeout,
-	}
 	ta := []string{}
 	for i := range FxDB {
 		ta = append(ta, FxDB[i].Ticker)
@@ -75,7 +72,7 @@ func getFxInfo() {
 	temp := strings.Join(ta, ",")
 	req, err := http.NewRequest("GET", iexsite+"stable/fx/latest?symbols="+temp+"&token="+iexapikey, nil)
 	req.Header.Set("user-agent", userAgent)
-	response, err := netClient.Do(req)
+	response, err := nc.Do(req)
 	if err != nil {
 		debugOutput("Error getting fxinfo: " + err.Error())
 	}
@@ -105,14 +102,11 @@ func getFxInfo() {
 	}
 }
 
-func getStockInfo() {
+func getStockInfo(nc *http.Client) {
 	for i := range StockDB {
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
 		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/book?token="+iexapikey, nil)
 		req.Header.Set("user-agent", userAgent)
-		response, err := netClient.Do(req)
+		response, err := nc.Do(req)
 		if err != nil {
 			debugOutput("err getting stock data:" + err.Error())
 			continue
@@ -143,15 +137,12 @@ func getStockInfo() {
 	}
 }
 
-func getStockChartData() {
+func getStockChartData(nc *http.Client) {
 	for i := range StockDB {
 		debugOutput("getStockChartData for: " + StockDB[i].Ticker)
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
 		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/intraday-prices?chartInterval=5&token="+iexapikey, nil)
 		req.Header.Set("user-agent", userAgent)
-		response, err := netClient.Do(req)
+		response, err := nc.Do(req)
 		if err != nil {
 			debugOutput("err getStockChartData:" + err.Error())
 			continue
@@ -200,14 +191,11 @@ func getStockChartData() {
 	}
 }
 
-func getCryptoInfo() {
+func getCryptoInfo(nc *http.Client) {
 	for i := range CryptoDB {
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/summary", nil)
 		req.Header.Set("user-agent", userAgent)
-		response, err := netClient.Do(req)
+		response, err := nc.Do(req)
 		if err != nil {
 			debugOutput("err getting getCryptoInfo http:" + err.Error())
 			continue
@@ -243,18 +231,15 @@ func getCryptoInfo() {
 	}
 }
 
-func getCryptoChartData() {
+func getCryptoChartData(nc *http.Client) {
 	for i := range CryptoDB {
 		t1 := time.Now()
 		t2 := t1.Add(-24 * time.Hour)
-		var netClient = &http.Client{
-			Timeout: time.Second * httpTimeout,
-		}
 		thisTime := fmt.Sprintf("%v", t2.Unix())
 		debugOutput("getting crypto chart data for: " + CryptoDB[i].Ticker + " for time: " + thisTime)
 		req, err := http.NewRequest("GET", cryptoapi+CryptoDB[i].Ticker+"/ohlc?periods=1800&after="+thisTime, nil)
 		req.Header.Set("user-agent", userAgent)
-		response, err := netClient.Do(req)
+		response, err := nc.Do(req)
 		if err != nil {
 			debugOutput("err getting crypto chart data: " + err.Error())
 			continue
@@ -304,11 +289,11 @@ func getCryptoChartData() {
 	}
 }
 
-func schedule(f func(), interval time.Duration) *time.Ticker {
+func schedule(f func(*http.Client), interval time.Duration, nc *http.Client) *time.Ticker {
 	ticker := time.NewTicker(interval)
 	go func() {
 		for range ticker.C {
-			f()
+			f(nc)
 		}
 	}()
 	return ticker
@@ -327,20 +312,20 @@ func readToDB(dbname string, database *[]Item) {
 }
 
 //Startup starts authentication and headline scheduling
-func Startup() error {
+func Startup(nc *http.Client) error {
 	readToDB("stock", &StockDB)
 	readToDB("crypto", &CryptoDB)
-	getStockInfo()
-	getStockChartData()
-	getCryptoInfo()
-	getCryptoChartData()
-	t1 := schedule(getStockInfo, delayStockInfo*time.Minute)
+	getStockInfo(nc)
+	getStockChartData(nc)
+	getCryptoInfo(nc)
+	getCryptoChartData(nc)
+	t1 := schedule(getStockInfo, delayStockInfo*time.Minute, nc)
 	_ = t1
-	t2 := schedule(getStockChartData, delayStockChartData*time.Minute)
+	t2 := schedule(getStockChartData, delayStockChartData*time.Minute, nc)
 	_ = t2
-	t3 := schedule(getCryptoInfo, delayCryptoInfo*time.Minute)
+	t3 := schedule(getCryptoInfo, delayCryptoInfo*time.Minute, nc)
 	_ = t3
-	t4 := schedule(getCryptoChartData, delayStockChartData*time.Minute)
+	t4 := schedule(getCryptoChartData, delayStockChartData*time.Minute, nc)
 	_ = t4
 	return nil
 }
