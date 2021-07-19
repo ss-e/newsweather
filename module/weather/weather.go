@@ -89,17 +89,17 @@ func getCurrentTemp() {
 	}
 	temp = append(temp, t2)
 	for i := 0; i < len(temp); i++ {
+		debugOutput("loading map temperature batch:" + fmt.Sprintf("%d", i+1) + "/" + fmt.Sprintf("%d", len(temp)))
 		var netClient = &http.Client{
 			Timeout: time.Second * 10,
 		}
-		debugOutput("loading map temperature batch:" + fmt.Sprintf("%d", i+1) + "/" + fmt.Sprintf("%d", len(temp)))
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
 		response, err := netClient.Get(url)
 		if err != nil {
 			debugOutput("Error getcurrenttemp()" + err.Error())
 			continue
 		}
-		defer response.Body.Close()
+		//defer response.Body.Close()
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
@@ -134,6 +134,7 @@ func getCurrentTemp() {
 				}
 			}
 		}
+		response.Body.Close()
 		debugOutput("got batch, waiting 30 seconds")
 		time.Sleep(30 * time.Second)
 		debugOutput("done sleeping")
