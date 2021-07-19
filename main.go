@@ -111,7 +111,7 @@ func playAudio(i int) {
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
-		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
+		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "25", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
 		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
@@ -125,11 +125,12 @@ func ffmpegHelper() {
 	for {
 		var stderr bytes.Buffer
 		cmd := newCmd()
-		cmd.Stdout = os.Stdout
+		//cmd.Stdout = os.Stdout
+		cmd.Stdout = nil
 		cmd.Stderr = &stderr
 		debugOutput("starting ffmpeg")
 		if err := cmd.Run(); err != nil {
-			fmt.Printf("Fatal ffmpeg Error: %v\n", stderr.String())
+			debugOutput("Fatal ffmpeg Error: " + stderr.String())
 		}
 		debugOutput("ffmpeg exited")
 	}
@@ -137,31 +138,23 @@ func ffmpegHelper() {
 
 // webViewHelper set bindings and send commands on webview start
 func webViewHelper() {
-	debugOutput("starting webview")
-	w := webview.New(true)
-	defer w.Destroy()
-	w.SetSize(1920, 1080, webview.HintFixed)
-	//pass backend module binds to frontend
-	w.Bind("readWeatherDB", weather.ReadWeatherDB)
-	w.Bind("readHeadlineDB", news.ReadHeadlineDB)
-	w.Bind("readInetDB", inet.ReadInetDB)
-	w.Bind("readStockDB", finance.ReadStockDB)
-	w.Bind("readCryptoDB", finance.ReadCryptoDB)
-	debugOutput("navigating")
-	w.Navigate("http://127.0.0.1:8888/shell.html")
-	debugOutput("window loading")
-	w.Run()
-	debugOutput("window closed")
-}
-
-// webViewRecover if webview crashes, run this function
-func webViewRecover(f func()) {
-	v := recover()
-	if v != nil {
-		debugOutput("webViewHelper has paniced. Restarting.")
-		go webViewHelper()
+	for {
+		debugOutput("starting webview")
+		w := webview.New(true)
+		defer w.Destroy()
+		w.SetSize(1920, 1080, webview.HintFixed)
+		//pass backend module binds to frontend
+		w.Bind("readWeatherDB", weather.ReadWeatherDB)
+		w.Bind("readHeadlineDB", news.ReadHeadlineDB)
+		w.Bind("readInetDB", inet.ReadInetDB)
+		w.Bind("readStockDB", finance.ReadStockDB)
+		w.Bind("readCryptoDB", finance.ReadCryptoDB)
+		debugOutput("webview window  navigating")
+		w.Navigate("http://127.0.0.1:8888/shell.html")
+		debugOutput("webview window loading")
+		w.Run()
+		debugOutput("webview window closed")
 	}
-	debugOutput("webViewHelper is exiting normally")
 }
 
 func main() {
@@ -208,7 +201,6 @@ func main() {
 	finance.Startup()
 	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
-	defer webViewRecover(webViewHelper)
 	go webViewHelper()
 	go ffmpegHelper()
 	select {}

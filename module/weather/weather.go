@@ -136,6 +136,7 @@ func getCurrentTemp() {
 		}
 		debugOutput("got batch, waiting 30 seconds")
 		time.Sleep(30 * time.Second)
+		debugOutput("done sleeping")
 	}
 }
 
@@ -183,6 +184,7 @@ func get6hrTemp() {
 					k++
 				}
 				//debugOutput("weather 6hr index:" + fmt.Sprintf("%d", i) + "w1:" + fmt.Sprintf("%d", weatherDB[i].W[0][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[0][1]) + "w2:" + fmt.Sprintf("%d", weatherDB[i].W[1][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[1][1]) + "w3:" + fmt.Sprintf("%d", weatherDB[i].W[2][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[2][1]))
+				debugOutput("grabbed 6hr index for item:" + fmt.Sprintf("%d", i))
 			}
 		}
 	}
