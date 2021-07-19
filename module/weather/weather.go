@@ -75,9 +75,6 @@ func readToDB(dbname string) {
 
 //GetCurrentTemp poll database entries for current temperature
 func getCurrentTemp() {
-	var netClient = &http.Client{
-		Timeout: time.Second * 10,
-	}
 	temp := make([][]string, 0)
 	t2 := make([]string, 0)
 	for k := 0; k < len(weatherDB); k++ {
@@ -92,6 +89,9 @@ func getCurrentTemp() {
 	}
 	temp = append(temp, t2)
 	for i := 0; i < len(temp); i++ {
+		var netClient = &http.Client{
+			Timeout: time.Second * 10,
+		}
 		debugOutput("loading map temperature batch:" + fmt.Sprintf("%d", i+1) + "/" + fmt.Sprintf("%d", len(temp)))
 		var url = weatherSite + "group?id=" + strings.Join(temp[i], ",") + "&units=metric&appid=" + weatherAPIKey
 		response, err := netClient.Get(url)
