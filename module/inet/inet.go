@@ -62,10 +62,12 @@ func readToDB(dbname string) {
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
 		debugOutput("Error reading db:" + err.Error())
+		return
 	}
 	err2 := json.Unmarshal(jsonFile, &InetDB)
 	if err2 != nil {
 		debugOutput("Error unmarshalling db:" + err2.Error())
+		return
 	}
 }
 
@@ -91,6 +93,10 @@ func getCurrentInetStatus(nc *http.Client) {
 		}
 		defer response.Body.Close()
 		if InetDB[i].Name == "Facebook" {
+			if response.Body == nil {
+				debugOutput("Did not recieve a response from server.")
+				return
+			}
 			var jsonResponse map[string]interface{}
 			err := json.NewDecoder(response.Body).Decode(&jsonResponse)
 			if err != nil {

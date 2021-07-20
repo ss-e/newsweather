@@ -127,7 +127,7 @@ func newCmd() *exec.Cmd {
 		"-f", "flv", "-ac", "2", "-ar", "44100",
 		"-vcodec", "libx264", "-g", "100", "-keyint_min", "50", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
-		"-threads", "2",
+		"-threads", "0",
 		"-bufsize", bitrate, streamSource+streamKey,
 	)
 }

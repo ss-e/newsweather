@@ -64,12 +64,16 @@ func redditOAuth(nc *http.Client) {
 	req.Header.Set("user-agent", redditUserAgent)
 	response, err := nc.Do(req)
 	if err != nil {
-		debugOutput("Oauth post errror: " + err.Error())
+		debugOutput("Oauth post error: " + err.Error())
 		return
 	}
 	defer response.Body.Close()
 	//var temp2 []weatherData
 	var jsonResponse map[string]interface{}
+	if response.Body == nil {
+		debugOutput("Did not recieve a response from server.")
+		return
+	}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
 		debugOutput("Error decoding reddit access token response:" + err.Error())
@@ -117,6 +121,15 @@ func getCurrentHeadlines(nc *http.Client) {
 	}
 	defer response.Body.Close()
 	var jsonResponse map[string]interface{}
+	if response.StatusCode == 401 {
+		debugOutput("OAuth is expired, renewing")
+		redditOAuth(nc)
+		return
+	}
+	if response.Body == nil {
+		debugOutput("Did not recieve a response from server.")
+		return
+	}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
 		debugOutput("Error decoding news response:" + err.Error())

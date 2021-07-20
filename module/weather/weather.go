@@ -110,7 +110,11 @@ func getCurrentTemp(nc *http.Client) {
 			debugOutput("Error in getCurrentTemp get request: " + err.Error())
 			continue
 		}
-		//defer response.Body.Close()
+		defer response.Body.Close()
+		if response.Body == nil {
+			debugOutput("Did not recieve a response from server.")
+			return
+		}
 		var jsonResponse map[string]interface{}
 		err2 := json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err2 != nil {
@@ -149,7 +153,6 @@ func getCurrentTemp(nc *http.Client) {
 				}
 			}
 		}
-		response.Body.Close()
 		//once we get batch, wait delayBatch seconds for API to be ready again
 		debugOutput("got batch, waiting " + fmt.Sprintf("%d", delayBatch) + " seconds")
 		time.Sleep(time.Second * delayBatch)
@@ -171,6 +174,10 @@ func get6hrTemp(nc *http.Client) {
 			continue
 		}
 		defer response.Body.Close()
+		if response.Body == nil {
+			debugOutput("Did not recieve a response from server.")
+			return
+		}
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {

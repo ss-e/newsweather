@@ -77,6 +77,10 @@ func getFxInfo(nc *http.Client) {
 		debugOutput("Error getting fxinfo: " + err.Error())
 	}
 	defer response.Body.Close()
+	if response.Body == nil {
+		debugOutput("Did not recieve a response from server.")
+		return
+	}
 	var jsonResponse []map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
@@ -112,6 +116,10 @@ func getStockInfo(nc *http.Client) {
 			continue
 		}
 		defer response.Body.Close()
+		if response.Body == nil {
+			debugOutput("Did not recieve a response from server.")
+			return
+		}
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
@@ -148,6 +156,10 @@ func getStockChartData(nc *http.Client) {
 			continue
 		}
 		defer response.Body.Close()
+		if response.Body == nil {
+			debugOutput("Did not recieve a response from server.")
+			return
+		}
 		var jsonResponse []interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
@@ -206,6 +218,10 @@ func getCryptoInfo(nc *http.Client) {
 			debugOutput("recieved 429 code doing getCryptoInfo" + err.Error())
 			return
 		}
+		if response.Body == nil {
+			debugOutput("Did not recieve a response from server.")
+			return
+		}
 		var jsonResponse map[string]interface{}
 		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 		if err != nil {
@@ -248,6 +264,10 @@ func getCryptoChartData(nc *http.Client) {
 		//if we put too many requests across, stop immediately
 		if response.StatusCode == 429 {
 			debugOutput("recieved 429 code doing getCryptoChartData" + err.Error())
+			return
+		}
+		if response.Body == nil {
+			debugOutput("Did not recieve a response from server.")
 			return
 		}
 		var jsonResponse map[string]interface{}
@@ -304,10 +324,12 @@ func readToDB(dbname string, database *[]Item) {
 	jsonFile, err := ioutil.ReadFile("./db/" + dbname + ".json")
 	if err != nil {
 		debugOutput("Error reading db file" + err.Error())
+		return
 	}
 	err = json.Unmarshal(jsonFile, &database)
 	if err != nil {
 		debugOutput("Error unmarshalling db file" + err.Error())
+		return
 	}
 }
 
