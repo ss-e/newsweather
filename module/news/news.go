@@ -122,7 +122,7 @@ func getCurrentHeadlines(nc *http.Client) {
 	defer response.Body.Close()
 	var jsonResponse map[string]interface{}
 	if response.StatusCode == 401 {
-		debugOutput("OAuth is expired, renewing")
+		debugOutput("Recieved 401 code - OAuth is expired, renewing")
 		redditOAuth(nc)
 		return
 	}

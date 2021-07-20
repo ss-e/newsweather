@@ -4,6 +4,10 @@ do
     unset XDG_RUNTIME_DIR
     export DISPLAY=:99
     export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig
+    export MESA_NO_DITHER=1
+    export WEBKIT_DISABLE_COMPOSITING_MODE=1
+    export WEBKIT_SHOW_FPS=1
+    #export GODEBUG=http2debug=1
     go build
     rm -rf ~/.cache/newsweather/WebKitCache/
     Xvfb :99 -screen 0 1920x1080x24 &
