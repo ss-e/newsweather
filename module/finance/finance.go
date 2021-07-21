@@ -215,7 +215,7 @@ func getCryptoInfo(nc *http.Client) {
 		defer response.Body.Close()
 		//if we put too many requests across, stop immediately
 		if response.StatusCode == 429 {
-			debugOutput("recieved 429 code doing getCryptoInfo" + err.Error())
+			debugOutput("recieved 429 code doing getCryptoInfo")
 			return
 		}
 		if response.Body == nil {
@@ -263,7 +263,7 @@ func getCryptoChartData(nc *http.Client) {
 		defer response.Body.Close()
 		//if we put too many requests across, stop immediately
 		if response.StatusCode == 429 {
-			debugOutput("recieved 429 code doing getCryptoChartData" + err.Error())
+			debugOutput("recieved 429 code doing getCryptoChartData")
 			return
 		}
 		if response.Body == nil {
