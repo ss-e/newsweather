@@ -122,10 +122,10 @@ func playAudio(i int) {
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
-		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "25", "-i", ":99.0",
+		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "44100",
-		"-vcodec", "libx264", "-g", "100", "-keyint_min", "50", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
+		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
 		"-threads", "0",
 		"-bufsize", bitrate, streamSource+streamKey,
