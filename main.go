@@ -29,7 +29,7 @@ import (
 var audioDB []string
 
 // samplerate of audio
-var sr = beep.SampleRate(44100)
+var sr = beep.SampleRate(48000)
 
 // stream source and key
 var streamSource string = os.Getenv("STREAM_SOURCE")
@@ -124,7 +124,7 @@ func newCmd() *exec.Cmd {
 		"-hide_banner", "-nostats", "-loglevel", "error",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
 		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
-		"-f", "flv", "-ac", "2", "-ar", "44100",
+		"-f", "flv", "-ac", "2", "-ar", "48000",
 		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
 		"-threads", "0",
