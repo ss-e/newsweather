@@ -37,7 +37,7 @@ const (
 	iexsite              = "https://cloud.iexapis.com/"
 	cryptoapi            = "https://api.cryptowat.ch/markets/binance/"
 	userAgent            = "newsweather/0.1"
-	delayStockInfo       = 3
+	delayStockInfo       = 5
 	delayStockChartData  = 15
 	delayCryptoInfo      = 5
 	delayCryptoChartData = 15
