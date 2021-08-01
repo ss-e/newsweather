@@ -37,8 +37,8 @@ const (
 	iexsite              = "https://cloud.iexapis.com/"
 	cryptoapi            = "https://api.cryptowat.ch/markets/binance/"
 	userAgent            = "newsweather/0.1"
-	delayStockInfo       = 6
-	delayStockChartData  = 30
+	delayStockInfo       = 3
+	delayStockChartData  = 15
 	delayCryptoInfo      = 5
 	delayCryptoChartData = 15
 )
@@ -110,7 +110,24 @@ func getStockInfo(nc *http.Client) {
 	//batch requests
 	var stockListTemp []string
 	for x := range StockDB {
-		stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+		t := time.Now()
+		//check to see if we are in business hours
+		if int(t.Weekday()) != 6 || int(t.Weekday()) != 0 {
+			//allow for some delay after hours
+			if t.Hour() > 9 || (t.Hour() < 4 && t.Minute() < 30) {
+				stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+				continue
+			}
+		}
+		//if not, is there an entry
+		if StockDB[x].Value == 0 {
+			stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+		}
+		//if there is an entry, there is no updated information to be added and we can skip entry
+	}
+	if len(stockListTemp) == 0 {
+		debugOutput("No stock information to grab")
+		return
 	}
 	stockList := strings.Join(stockListTemp, ",")
 	debugOutput("getting stock batch: " + stockList)
@@ -164,7 +181,24 @@ func getStockInfo(nc *http.Client) {
 func getStockChartData(nc *http.Client) {
 	var stockListTemp []string
 	for x := range StockDB {
-		stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+		t := time.Now()
+		//check to see if we are in business hours
+		if int(t.Weekday()) != 6 || int(t.Weekday()) != 0 {
+			//allow for some delay after hours
+			if t.Hour() > 9 || (t.Hour() < 5) {
+				stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+				continue
+			}
+		}
+		//if not, is there an entry
+		if StockDB[x].Value == 0 {
+			stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+		}
+		//if there is an entry, there is no updated information to be added and we can skip entry
+	}
+	if len(stockListTemp) == 0 {
+		debugOutput("No stock chart data to grab")
+		return
 	}
 	stockList := strings.Join(stockListTemp, ",")
 	debugOutput("getting stock chart batch: " + stockList)

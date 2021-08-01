@@ -123,7 +123,7 @@ func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
 		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
-		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s32le", "-i", "hw:0,1",
+		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s16le", "-i", "hw:0,1", "-thread_queue_size", "128",
 		"-f", "flv", "-ac", "2", "-ar", "48000",
 		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
@@ -206,10 +206,10 @@ func main() {
 		}
 	}()
 	//startup service modules to grab data, persistently running in order to avoid needing to grab too much data from providers on refresh
-	finance.Startup(nc)
 	weather.Startup(nc)
 	news.Startup(nc)
 	inet.Startup(nc)
+	finance.Startup(nc)
 	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
 	go webViewHelper()
