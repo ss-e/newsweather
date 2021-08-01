@@ -114,7 +114,7 @@ func getStockInfo(nc *http.Client) {
 	}
 	stockList := strings.Join(stockListTemp, ",")
 	debugOutput("getting stock batch: " + stockList)
-	req, err := http.NewRequest("GET", iexsite+"stable/stock/market/batch?symbols="+stockList+"&token="+iexapikey, nil)
+	req, err := http.NewRequest("GET", iexsite+"stable/stock/market/batch?symbols="+stockList+"&types=quote&token="+iexapikey, nil)
 	req.Header.Set("user-agent", userAgent)
 	response, err := nc.Do(req)
 	if err != nil {
@@ -130,7 +130,6 @@ func getStockInfo(nc *http.Client) {
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
 		debugOutput("Error decoding getStockInfo() json: " + err.Error())
-		fmt.Println("responseBody: ", response.Body)
 	} else {
 		fmt.Println("jsonResponse: ", jsonResponse)
 		for _, x := range jsonResponse {
@@ -186,7 +185,6 @@ func getStockChartData(nc *http.Client) {
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	for i := range StockDB {
 		item := jsonResponse[StockDB[i].Ticker].(map[string]interface{})
-		//tdb2, ok := item["intraday-prices"].([]map[string]interface{})
 		tdb2, ok := item["intraday-prices"].([]interface{})
 		if !ok {
 			debugOutput("Error response to getstockchartdata for ticker item " + StockDB[i].Ticker)
@@ -225,6 +223,11 @@ func getStockChartData(nc *http.Client) {
 					}
 				}
 			}
+		}
+		if StockDB[i].Chartdata != nil {
+			debugOutput("Updated " + StockDB[i].Ticker + " stock chart entry")
+		} else {
+			debugOutput("Error updating " + StockDB[i].Ticker + " stock chart entry")
 		}
 	}
 }
