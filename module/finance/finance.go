@@ -37,8 +37,8 @@ const (
 	iexsite              = "https://cloud.iexapis.com/"
 	cryptoapi            = "https://api.cryptowat.ch/markets/binance/"
 	userAgent            = "newsweather/0.1"
-	delayStockInfo       = 5
-	delayStockChartData  = 15
+	delayStockInfo       = 6
+	delayStockChartData  = 30
 	delayCryptoInfo      = 5
 	delayCryptoChartData = 15
 )
@@ -107,38 +107,54 @@ func getFxInfo(nc *http.Client) {
 }
 
 func getStockInfo(nc *http.Client) {
-	for i := range StockDB {
-		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/book?token="+iexapikey, nil)
-		req.Header.Set("user-agent", userAgent)
-		response, err := nc.Do(req)
-		if err != nil {
-			debugOutput("err getting stock data:" + err.Error())
-			continue
-		}
-		defer response.Body.Close()
-		if response.Body == nil {
-			debugOutput("Did not recieve a response from server.")
-			return
-		}
-		var jsonResponse map[string]interface{}
-		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
-		if err != nil {
-			debugOutput("Error decoding getStockInfo() json: " + err.Error())
-		} else {
-			tdb1, ok := jsonResponse["quote"].(map[string]interface{})
+	//batch requests
+	var stockListTemp []string
+	for x := range StockDB {
+		stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+	}
+	stockList := strings.Join(stockListTemp, ",")
+	debugOutput("getting stock batch: " + stockList)
+	req, err := http.NewRequest("GET", iexsite+"stable/stock/market/batch?symbols="+stockList+"&token="+iexapikey, nil)
+	req.Header.Set("user-agent", userAgent)
+	response, err := nc.Do(req)
+	if err != nil {
+		debugOutput("err getting stock data:" + err.Error())
+		return
+	}
+	defer response.Body.Close()
+	if response.Body == nil {
+		debugOutput("Did not recieve a response from server.")
+		return
+	}
+	var jsonResponse []interface{}
+	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
+	if err != nil {
+		debugOutput("Error decoding getStockInfo() json: " + err.Error())
+	} else {
+		for _, x := range jsonResponse {
+			y, ok2 := x.(map[string]interface{})
+			if !ok2 {
+				debugOutput("error decoding jsonResponse")
+			}
+			tdb1, ok := y["quote"].(map[string]interface{})
 			if !ok {
-				debugOutput("Error response to getstockinfo for ticker item " + StockDB[i].Ticker)
+				debugOutput("Error response to getstockinfo for ticker item " + tdb1["symbol"].(string))
 			} else {
-				value, ok := tdb1["latestPrice"].(float64)
-				open, ok := tdb1["open"].(float64)
-				changepercent, ok := tdb1["changePercent"].(float64)
-				debugOutput("for: " + StockDB[i].Ticker + " got value: " + fmt.Sprintf("%f", value) + " open: " + fmt.Sprintf("%f", open) + " changepercent: " + fmt.Sprintf("%f", changepercent))
-				if ok {
-					StockDB[i].Value = value
-					StockDB[i].Open = open
-					StockDB[i].ChangePercent = changepercent * 100
-				} else {
-					debugOutput("error copying response in getstockinfo for item " + StockDB[i].Ticker)
+				for i := range StockDB {
+					if StockDB[i].Ticker == tdb1["symbol"].(string) {
+						value, ok := tdb1["latestPrice"].(float64)
+						open, ok := tdb1["open"].(float64)
+						changepercent, ok := tdb1["changePercent"].(float64)
+						debugOutput("for: " + StockDB[i].Ticker + " got value: " + fmt.Sprintf("%f", value) + " open: " + fmt.Sprintf("%f", open) + " changepercent: " + fmt.Sprintf("%f", changepercent))
+						if ok {
+							StockDB[i].Value = value
+							StockDB[i].Open = open
+							StockDB[i].ChangePercent = changepercent * 100
+						} else {
+							debugOutput("error copying response in getstockinfo for item " + StockDB[i].Ticker)
+						}
+						break
+					}
 				}
 			}
 		}
@@ -146,24 +162,31 @@ func getStockInfo(nc *http.Client) {
 }
 
 func getStockChartData(nc *http.Client) {
+	var stockListTemp []string
+	for x := range StockDB {
+		stockListTemp = append(stockListTemp, StockDB[x].Ticker)
+	}
+	stockList := strings.Join(stockListTemp, ",")
+	debugOutput("getting stock batch: " + stockList)
+	req, err := http.NewRequest("GET", iexsite+"stable/stock/market/batch?symbols="+stockList+"&types=intraday-prices&chartInterval=5&token="+iexapikey, nil)
+	req.Header.Set("user-agent", userAgent)
+	response, err := nc.Do(req)
+	if err != nil {
+		debugOutput("err getting stock data:" + err.Error())
+		return
+	}
+	defer response.Body.Close()
+	if response.Body == nil {
+		debugOutput("Did not recieve a response from server.")
+		return
+	}
+	var jsonResponse map[string]interface{}
+	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	for i := range StockDB {
-		debugOutput("getStockChartData for: " + StockDB[i].Ticker)
-		req, err := http.NewRequest("GET", iexsite+"stable/stock/"+StockDB[i].Ticker+"/intraday-prices?chartInterval=5&token="+iexapikey, nil)
-		req.Header.Set("user-agent", userAgent)
-		response, err := nc.Do(req)
-		if err != nil {
-			debugOutput("err getStockChartData:" + err.Error())
-			continue
-		}
-		defer response.Body.Close()
-		if response.Body == nil {
-			debugOutput("Did not recieve a response from server.")
-			return
-		}
-		var jsonResponse []interface{}
-		err = json.NewDecoder(response.Body).Decode(&jsonResponse)
-		if err != nil {
-			debugOutput("Error decoding getStockChartData json: " + err.Error())
+		item := jsonResponse[StockDB[i].Ticker].(map[string]interface{})
+		tdb1, ok := item["intraday-prices"].(map[string]interface{})
+		if !ok {
+			debugOutput("Error response to getstockinfo for ticker item " + tdb1["symbol"].(string))
 		} else {
 			StockDB[i].Chartdata = nil
 			for j := range jsonResponse {
