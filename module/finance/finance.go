@@ -192,7 +192,7 @@ func getStockChartData(nc *http.Client) {
 			}
 		}
 		//if not, is there an entry
-		if StockDB[x].Chartdata == nil {
+		if len(StockDB[x].Chartdata) == 0 {
 			stockListTemp = append(stockListTemp, StockDB[x].Ticker)
 		}
 		//if there is an entry, there is no updated information to be added and we can skip entry

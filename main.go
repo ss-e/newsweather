@@ -56,7 +56,9 @@ func debugOutput(t string) {
 // initAudio ensure that audio playlist is loaded and that audio backend is ready
 func initAudio() {
 	debugOutput("attempting speaker init")
-	speaker.Init(sr, sr.N(time.Second/2))
+	//make buffer size real big for testing purposes
+	bufSize := sr.N(time.Second * 3)
+	speaker.Init(sr, bufSize)
 	debugOutput("speaker init completed")
 	for {
 		debugOutput("loading playlist")
