@@ -101,12 +101,19 @@ func playAudio(i int) {
 		debugOutput("playlist vorbis decode error:" + err.Error())
 		return
 	}
+	audioSampleRate := int(format.SampleRate)
 	defer streamer.Close()
-	debugOutput("playing file " + fmt.Sprintf("%d", i) + " with name: " + audioDB[i])
-	resampled := beep.Resample(4, format.SampleRate, sr, streamer)
+	debugOutput("playing file " + fmt.Sprintf("%d", i) + " with name: " + audioDB[i] + " and sample rate: " + string(audioSampleRate))
+	var finalStreamer beep.Streamer
+	//check if we need to resample
+	if format.SampleRate != sr {
+		finalStreamer = beep.Resample(2, format.SampleRate, sr, streamer)
+	} else {
+		finalStreamer = streamer
+	}
 	//attempt play
 	done := make(chan bool)
-	speaker.Play(beep.Seq(resampled, beep.Callback(func() {
+	speaker.Play(beep.Seq(finalStreamer, beep.Callback(func() {
 		defer func() {
 			if err := recover(); err != nil {
 				debugOutput("Audio stream panic!")
