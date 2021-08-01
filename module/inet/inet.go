@@ -157,7 +157,7 @@ func getCurrentInetStatus(nc *http.Client) {
 						InetDB[i].Status = append(InetDB[i].Status, temp)
 					}
 				}
-				debugOutput("inet: " + InetDB[i].Name + " parsed successfully with " + strconv.Itoa(len(InetDB[i].Status)) + "items")
+				debugOutput("inet: " + InetDB[i].Name + " parsed successfully with " + strconv.Itoa(len(InetDB[i].Status)) + " items")
 			}
 		}
 	}
