@@ -187,45 +187,45 @@ func getStockChartData(nc *http.Client) {
 	for i := range StockDB {
 		item := jsonResponse[StockDB[i].Ticker].(map[string]interface{})
 		//tdb2, ok := item["intraday-prices"].([]map[string]interface{})
-		tdb2 := item["intraday-prices"].([]map[string]interface{})
-		/*if !ok {
+		tdb2, ok := item["intraday-prices"].([]interface{})
+		if !ok {
 			debugOutput("Error response to getstockchartdata for ticker item " + StockDB[i].Ticker)
-		} else {*/
-		StockDB[i].Chartdata = nil
-		for _, tdb1 := range tdb2 {
-			//tdb1, ok := x
-			//if !ok {
-			//	debugOutput("error response to chartdatainfo for ticker item " + StockDB[i].Ticker)
-			//} else {
-			temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
-			if err != nil {
-				//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
+		} else {
+			StockDB[i].Chartdata = nil
+			for _, x := range tdb2 {
+				tdb1, ok := x.(map[string]interface{})
+				if !ok {
+					debugOutput("error response to chartdatainfo for ticker item " + StockDB[i].Ticker)
+				} else {
+					temp, err := time.Parse("2006-01-02 15:04", tdb1["date"].(string)+" "+tdb1["minute"].(string))
+					if err != nil {
+						//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
+					}
+					date := temp.Unix()
+					open, err3 := tdb1["open"].(float64)
+					if !err3 {
+						//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
+					}
+					high, err4 := tdb1["high"].(float64)
+					if !err4 {
+						//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
+					}
+					low, err5 := tdb1["low"].(float64)
+					if !err5 {
+						//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
+					}
+					close, err6 := tdb1["close"].(float64)
+					if !err6 {
+						//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
+					}
+					if err == nil && err3 && err4 && err5 && err6 {
+						//debugOutput("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
+						entry := []float64{float64(date) * 1000, open, high, low, close}
+						StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
+					}
+				}
 			}
-			date := temp.Unix()
-			open, err3 := tdb1["open"].(float64)
-			if !err3 {
-				//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
-			}
-			high, err4 := tdb1["high"].(float64)
-			if !err4 {
-				//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
-			}
-			low, err5 := tdb1["low"].(float64)
-			if !err5 {
-				//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
-			}
-			close, err6 := tdb1["close"].(float64)
-			if !err6 {
-				//debugOutput("for " + StockDB[i].Ticker + ", error parsing stock chart data, date " + err.Error())
-			}
-			if err == nil && err3 && err4 && err5 && err6 {
-				//debugOutput("inputting entry. [date:", float64(date)*1000, ",open:", open, ",high:", high, ",low:", low, ",close:", close)
-				entry := []float64{float64(date) * 1000, open, high, low, close}
-				StockDB[i].Chartdata = append(StockDB[i].Chartdata, entry)
-			}
-			//}
 		}
-		//}
 	}
 }
 
