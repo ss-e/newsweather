@@ -155,6 +155,10 @@ func getCurrentTemp(nc *http.Client) {
 		}
 		//once we get batch, wait delayBatch seconds for API to be ready again
 		debugOutput("got batch, waiting " + fmt.Sprintf("%d", delayBatch) + " seconds")
+		//don't wait for last item
+		if len(temp) == i+1 {
+			continue
+		}
 		time.Sleep(time.Second * delayBatch)
 		debugOutput("done sleeping")
 	}

@@ -122,8 +122,8 @@ func playAudio(i int) {
 func newCmd() *exec.Cmd {
 	return exec.Command("ffmpeg",
 		"-hide_banner", "-nostats", "-loglevel", "error",
-		"-draw_mouse", "0", "-thread_queue_size", "16", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
-		"-thread_queue_size", "128", "-f", "alsa", "-acodec", "pcm_s16le", "-i", "hw:0,1", "-thread_queue_size", "128",
+		"-draw_mouse", "0", "-thread_queue_size", "64", "-f", "x11grab", "-s", "1920x1080", "-r", "30", "-i", ":99.0",
+		"-thread_queue_size", "512", "-f", "alsa", "-acodec", "pcm_s16le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "48000",
 		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
 		"-acodec", "aac", "-threads", "1", "-strict", "normal",
@@ -143,7 +143,8 @@ func ffmpegHelper() {
 		if err := cmd.Run(); err != nil {
 			debugOutput("Fatal ffmpeg Error: " + stderr.String())
 		}
-		debugOutput("ffmpeg exited")
+		debugOutput("ffmpeg exited. Waiting 5 seconds...")
+		time.Sleep(5 * time.Second)
 	}
 }
 
@@ -188,7 +189,7 @@ func main() {
 				fmt.Println("Segfaulted! Restarting...")
 				os.Exit(2)
 			default:
-				debugOutput("Signal " + sig.String() + "was called! Ignoring...")
+				debugOutput("Signal " + sig.String() + " was called! Ignoring...")
 			}
 		}
 	}()
