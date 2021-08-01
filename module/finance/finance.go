@@ -126,12 +126,11 @@ func getStockInfo(nc *http.Client) {
 		debugOutput("Did not recieve a response from server.")
 		return
 	}
-	var jsonResponse []interface{}
+	var jsonResponse map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&jsonResponse)
 	if err != nil {
 		debugOutput("Error decoding getStockInfo() json: " + err.Error())
 	} else {
-		fmt.Println("jsonResponse: ", jsonResponse)
 		for _, x := range jsonResponse {
 			y, ok2 := x.(map[string]interface{})
 			if !ok2 {
@@ -366,8 +365,8 @@ func readToDB(dbname string, database *[]Item) {
 func Startup(nc *http.Client) error {
 	readToDB("stock", &StockDB)
 	readToDB("crypto", &CryptoDB)
-	getStockChartData(nc)
 	getStockInfo(nc)
+	getStockChartData(nc)
 	getCryptoInfo(nc)
 	getCryptoChartData(nc)
 	t1 := schedule(getStockInfo, delayStockInfo*time.Minute, nc)
