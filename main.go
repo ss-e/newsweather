@@ -56,7 +56,7 @@ func debugOutput(t string) {
 // initAudio ensure that audio playlist is loaded and that audio backend is ready
 func initAudio() {
 	debugOutput("attempting speaker init")
-	speaker.Init(sr, sr.N(time.Second/10))
+	speaker.Init(sr, sr.N(time.Second/5))
 	debugOutput("speaker init completed")
 	for {
 		debugOutput("loading playlist")
@@ -126,7 +126,7 @@ func newCmd() *exec.Cmd {
 		"-thread_queue_size", "512", "-f", "alsa", "-acodec", "pcm_s16le", "-i", "hw:0,1",
 		"-f", "flv", "-ac", "2", "-ar", "48000",
 		"-vcodec", "libx264", "-g", "120", "-keyint_min", "60", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-vf", "scale=1920:-1,format=yuv420p", "-preset", "veryfast",
-		"-acodec", "aac", "-threads", "1", "-strict", "normal",
+		"-acodec", "aac", "-threads", "0", "-strict", "normal",
 		"-bufsize", bitrate, streamSource+streamKey,
 	)
 }
