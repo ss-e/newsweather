@@ -3,6 +3,7 @@ package news
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 	"os"
 	"strings"
@@ -158,7 +159,8 @@ func getCurrentHeadlines(nc *http.Client) {
 				debugOutput("Error with news response data tdb4:" + err.Error())
 			} else {
 				if tdb4["stickied"] == false {
-					HeadlineDB = append(HeadlineDB, tdb4["title"].(string))
+					title := html.UnescapeString(tdb4["title"].(string))
+					HeadlineDB = append(HeadlineDB, title)
 				}
 			}
 		}
