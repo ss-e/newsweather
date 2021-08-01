@@ -112,13 +112,14 @@ func getStockInfo(nc *http.Client) {
 	for x := range StockDB {
 		t := time.Now()
 		//check to see if we are in business hours
-		if int(t.Weekday()) != 6 || int(t.Weekday()) != 0 {
+		if int(t.Weekday()) != 6 && int(t.Weekday()) != 0 {
 			//allow for some delay after hours
-			if t.Hour() > 9 || (t.Hour() < 4 && t.Minute() < 30) {
+			if t.Hour() > 9 && (t.Hour() < 4 && t.Minute() < 30) {
 				stockListTemp = append(stockListTemp, StockDB[x].Ticker)
 				continue
 			}
 		}
+		debugOutput("value is: " + fmt.Sprintf("%f", StockDB[x].Value))
 		//if not, is there an entry
 		if StockDB[x].Value == 0 {
 			stockListTemp = append(stockListTemp, StockDB[x].Ticker)
@@ -183,9 +184,9 @@ func getStockChartData(nc *http.Client) {
 	for x := range StockDB {
 		t := time.Now()
 		//check to see if we are in business hours
-		if int(t.Weekday()) != 6 || int(t.Weekday()) != 0 {
+		if int(t.Weekday()) != 6 && int(t.Weekday()) != 0 {
 			//allow for some delay after hours
-			if t.Hour() > 9 || (t.Hour() < 5) {
+			if t.Hour() > 9 && (t.Hour() < 5) {
 				stockListTemp = append(stockListTemp, StockDB[x].Ticker)
 				continue
 			}
