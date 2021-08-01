@@ -206,10 +206,10 @@ func main() {
 		}
 	}()
 	//startup service modules to grab data, persistently running in order to avoid needing to grab too much data from providers on refresh
+	finance.Startup(nc)
 	weather.Startup(nc)
 	news.Startup(nc)
 	inet.Startup(nc)
-	finance.Startup(nc)
 	//initialize audio, window streaming and frontend client viewer
 	go initAudio()
 	go webViewHelper()
