@@ -114,7 +114,7 @@ func getStockInfo(nc *http.Client) {
 		//check to see if we are in business hours
 		if int(t.Weekday()) != 6 && int(t.Weekday()) != 0 {
 			//allow for some delay after hours
-			if t.Hour() > 9 && (t.Hour() < 4 && t.Minute() < 30) {
+			if t.Hour() > 9 && (t.Hour() < 16 && t.Minute() < 30) {
 				stockListTemp = append(stockListTemp, StockDB[x].Ticker)
 				continue
 			}
@@ -186,7 +186,7 @@ func getStockChartData(nc *http.Client) {
 		//check to see if we are in business hours
 		if int(t.Weekday()) != 6 && int(t.Weekday()) != 0 {
 			//allow for some delay after hours
-			if t.Hour() > 9 && (t.Hour() < 5) {
+			if t.Hour() > 9 && (t.Hour() < 17) {
 				stockListTemp = append(stockListTemp, StockDB[x].Ticker)
 				continue
 			}
