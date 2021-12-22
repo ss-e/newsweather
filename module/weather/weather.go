@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"../debug"
+	"github.com/ss-e/newsweather/module/debug"
 )
 
 //Data contains critical data for weather

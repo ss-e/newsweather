@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"../debug"
+	"github.com/ss-e/newsweather/module/debug"
 )
 
 //Item db, chartdata is [timestamp, open, high, low, close]

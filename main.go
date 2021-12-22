@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"syscall"
 
-	"./module/debug"
-	"./module/finance"
-	"./module/inet"
-	"./module/news"
-	"./module/weather"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/vorbis"
+	"github.com/ss-e/newsweather/module/debug"
+	"github.com/ss-e/newsweather/module/finance"
+	"github.com/ss-e/newsweather/module/inet"
+	"github.com/ss-e/newsweather/module/news"
+	"github.com/ss-e/newsweather/module/weather"
 	"github.com/webview/webview"
 
 	"math/rand"
@@ -186,9 +186,9 @@ func main() {
 		for {
 			sig := <-signalChannel
 			switch sig {
-			case os.Interrupt:
+			case os.Interrupt, syscall.SIGTERM:
 				fmt.Println("OS kill was called! Restarting...")
-				os.Exit(2)
+				os.Exit(1)
 			case os.Kill:
 				fmt.Println("OS interrupt was called! Quitting...")
 				os.Exit(0)
@@ -196,7 +196,7 @@ func main() {
 				//ignore
 			case syscall.SIGSEGV:
 				fmt.Println("Segfaulted! Restarting...")
-				os.Exit(2)
+				os.Exit(1)
 			default:
 				debugOutput("Signal " + sig.String() + " was called! Ignoring...")
 			}

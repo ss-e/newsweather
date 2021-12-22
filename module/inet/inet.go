@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"../debug"
+	"github.com/ss-e/newsweather/module/debug"
 
 	"github.com/mmcdole/gofeed"
 )
