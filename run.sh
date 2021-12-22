@@ -12,13 +12,14 @@ do
     Xvfb :99 -screen 0 1920x1080x24 &
     #./newsweather 2>&1 | tee log.txt
     ./newsweather 2>&1
-    echo "exited on code" $?
-    if [ $? -eq 0 ]
-    then
-        killall ffmpeg
-        killall Xvfb
-        exit 0
-    fi
+    retval=$?
+    echo "exited with code" $retval
     killall ffmpeg
     killall Xvfb
+    if [ $retval -eq 0 ] || [ $retval -eq 137 ]
+    then
+        echo "exiting helper"
+        exit 0
+    fi
+    echo "restarting application"
 done

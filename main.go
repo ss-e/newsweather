@@ -186,11 +186,11 @@ func main() {
 		for {
 			sig := <-signalChannel
 			switch sig {
-			case os.Interrupt, syscall.SIGTERM:
-				fmt.Println("OS kill was called! Restarting...")
+			case os.Interrupt:
+				fmt.Println("OS interrupt was called! Restarting...")
 				os.Exit(1)
-			case os.Kill:
-				fmt.Println("OS interrupt was called! Quitting...")
+			case os.Kill, syscall.SIGTERM:
+				fmt.Println("OS kill was called! Quitting...")
 				os.Exit(0)
 			case syscall.Signal(0x17):
 				//ignore
