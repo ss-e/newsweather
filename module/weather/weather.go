@@ -204,14 +204,16 @@ func get6hrTemp(nc *http.Client) {
 				k := 0
 				for j := h; j < 19; j = j + 6 {
 					//get main temp
-					main := responseArr[j].(map[string]interface{})
-					t1 := main["main"].(map[string]interface{})
-					weatherDB[i].W[k][0] = int(t1["temp"].(float64))
-					//get weather status
-					t2 := main["weather"].([]interface{})
-					t3 := t2[0].(map[string]interface{})
-					weatherDB[i].W[k][1] = int(t3["id"].(float64))
-					k++
+					if k < 3 {
+						main := responseArr[j].(map[string]interface{})
+						t1 := main["main"].(map[string]interface{})
+						weatherDB[i].W[k][0] = int(t1["temp"].(float64))
+						//get weather status
+						t2 := main["weather"].([]interface{})
+						t3 := t2[0].(map[string]interface{})
+						weatherDB[i].W[k][1] = int(t3["id"].(float64))
+						k++
+					}
 				}
 				//debugOutput("weather 6hr index:" + fmt.Sprintf("%d", i) + "w1:" + fmt.Sprintf("%d", weatherDB[i].W[0][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[0][1]) + "w2:" + fmt.Sprintf("%d", weatherDB[i].W[1][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[1][1]) + "w3:" + fmt.Sprintf("%d", weatherDB[i].W[2][0]) + "," + fmt.Sprintf("%d", weatherDB[i].W[2][1]))
 				debugOutput("grabbed 6hr index for item: " + fmt.Sprintf("%d", i))

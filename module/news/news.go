@@ -158,9 +158,12 @@ func getCurrentHeadlines(nc *http.Client) {
 			if !ok {
 				debugOutput("Error with news response data tdb4:" + err.Error())
 			} else {
+				//if tdb4["stickied"] == false && !strings.Contains(tdb4["title"].(string), "/r/worldnews") {
 				if tdb4["stickied"] == false {
 					title := html.UnescapeString(tdb4["title"].(string))
-					HeadlineDB = append(HeadlineDB, title)
+					if !strings.Contains(title, "/r/worldnews") {
+						HeadlineDB = append(HeadlineDB, title)
+					}
 				}
 			}
 		}
